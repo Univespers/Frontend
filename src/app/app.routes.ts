@@ -14,15 +14,15 @@ import { unsavedChangesGuard } from './pages/unsaved-changes.guard';
 
 export const routes: Routes = [
 
-  // Visitor only
-  { path: "", pathMatch: "full", redirectTo: "login", canMatch: [ guestAccessGuard ] },
+  // Guest only
+  { path: "", redirectTo: "login", pathMatch: "full", canMatch: [ guestAccessGuard ] },
   { path: "", children: [
     { path: "login", component: LoginComponent },
     { path: "signin", component: SigninComponent, canDeactivate: [ unsavedChangesGuard ] },
   ], canActivateChild: [ guestAccessGuard ]},
 
   // Student only
-  { path: "", pathMatch: "full", redirectTo: "colleagues", canMatch: [ studentAccessGuard ] },
+  { path: "", redirectTo: "colleagues", pathMatch: "full", canMatch: [ studentAccessGuard ] },
   { path: "", children: [
     { path: "colleagues", component: ColleaguesComponent },
     { path: "profile", component: ProfileComponent },
@@ -31,7 +31,6 @@ export const routes: Routes = [
   ], canActivateChild: [ studentAccessGuard ]},
 
   // All
-  { path: "not-found", component: NotFoundComponent },
-  { path: "**", redirectTo: "not-found" }
+  { path: "**", component: NotFoundComponent }
 
 ];
