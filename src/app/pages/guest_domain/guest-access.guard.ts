@@ -1,18 +1,17 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateChildFn, Router } from '@angular/router';
 
 import { AuthService } from 'src/app/utils/auth.service';
 
-export const guestAccessGuard: CanActivateFn = () => {
+export const guestAccessGuard: CanActivateChildFn = () => {
   const router = inject(Router);
   const auth = inject(AuthService);
 
   if (auth.isUserGuest()) {
-    // It's a guest
+    // It's a student
     return true;
   } else {
-    // It's a student
-    router.navigate(['/colleagues']);
+    router.navigate([ "/redirect" ]);
     return false;
   }
-};
+}
