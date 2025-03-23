@@ -1,8 +1,9 @@
 export class CurrentStatus {
 
-  public static projectName = "Univespers";
-  public static currentYear = new Date().getFullYear();
-  public static currentVersion = "0.0.2";
+  public static GROUP_NAME = "Univespers";
+  public static PROJECT_NAME = "Univespers";
+  public static CURRENT_YEAR = new Date().getFullYear();
+  public static CURRENT_VERSION = "0.0.2";
 
   constructor() {}
 }
