@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { RequiresSave } from 'src/app/pages/requires-save.interface';
+import { RequiresSave } from 'src/app/utils/requires-save.interface';
 
 @Component({
   selector: 'app-profile-edit',
