@@ -2,11 +2,38 @@
 
     <!-- Login -->
     <div id="login-container">
-        <form>
+        <form #login="ngForm" (ngSubmit)="submit(login)">
             <img src="" alt="UNIVESPERS" />
-            <input id="username" type="email" name="username_input" placeholder="Email"/>
-            <input id="password" type="password" name="password_input" placeholder="Senha"/>
-            <button id="login">Entrar</button>
+            <input id="email"
+                type="email"
+                placeholder="Email"
+                required
+                minlength="6"
+                maxlength="100"
+                name="userEmail"
+                #userEmail="ngModel"
+                ngModel/>
+            <div *ngIf="userEmail.touched && !userEmail.valid && userEmail.errors">
+                <div *ngIf="userEmail.errors['required']">
+                    O email deve ser preenchido
+                </div>
+                <div *ngIf="userEmail.errors['minlength']">
+                    <!-- TODO: (Login) Error message -->
+                </div>
+                <div *ngIf="userEmail.errors['maxlength']">
+                    <!-- TODO: (Login) Error message -->
+                </div>
+            </div>
+            <input id="password"
+                type="password"
+                placeholder="Senha"
+                required
+                minlength="6"
+                maxlength="100"
+                name="userPassword"
+                #userPassword="ngModel"
+                ngModel/>
+            <button id="login" [class.disabled]="!login.valid">Entrar</button>
             <button id="forgot">Esqueceu a senha?</button>
             <div class="dashed-text-container">
                 <hr /> <span>ou</span> <hr />
