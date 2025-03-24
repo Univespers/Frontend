@@ -1,0 +1,77 @@
+@import "src/styles.scss";
+
+#main {
+    display: flex;
+    flex-direction: row; // Left-to-right
+    justify-content: center; // Center horizontally
+    align-items: center; // Center vertically
+
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    // background-image: url();
+
+    #login-container {
+        width: 220px;
+        padding-inline: 10px;
+        padding-block: 20px;
+
+        @include font-text-body;
+        color: $color-text-descriptive-dark;
+        background-color: rgba(0, 0, 0, 0.4);
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-items: stretch;
+        }
+        img, input {
+            margin-bottom: 20px;
+        }
+        img {
+            
+        }
+        input {
+            height: 30px;
+            padding-inline: 10px;
+        }
+        .dashed-text-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-inline: -10px; // Reverses "#login-container" padding
+            margin-bottom: 10px;
+
+            hr {
+                flex-grow: 1;
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                height: 0px;
+            }
+            span {
+                margin-inline: 15px;
+            }
+        }
+        button {
+            height: 30px;
+            border: none;
+            color: $color-text-descriptive-dark;
+            padding-inline: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            @include font-button;
+        }
+        button#login {
+            background-color: $color-button-primary;
+        }
+        button#forgot {
+            background-color: transparent;
+        }
+        button#signin {
+            background-color: $color-button-secondary;
+        }
+    }
+}
