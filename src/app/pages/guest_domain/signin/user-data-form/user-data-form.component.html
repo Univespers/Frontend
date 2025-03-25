@@ -1,0 +1,74 @@
+<form #userDataForm="ngForm" (ngSubmit)="submit(userDataForm)">
+    <p class="step-title">
+        <b>Dados pessoais</b>
+    </p>
+    <input id="name"
+        type="text"
+        placeholder="Nome"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userName"
+        #userName="ngModel"
+        ngModel/>
+    <input id="institutionalEmail"
+        type="email"
+        placeholder="Email institucional"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userInstitutionalEmail"
+        #userInstitutionalEmail="ngModel"
+        ngModel/>
+    <div>
+        <input id="telephone"
+            type="tel"
+            placeholder="Telefone"
+            name="userTelephone"
+            #userTelephone="ngModel"
+            ngModel/>
+        <input id="showTelephone"
+            type="checkbox"
+            name="userShowTelephone"
+            #userShowTelephone="ngModel"
+            ngModel/>
+        <label for="userShowTelephone"> Exibir para os colegas</label>
+        <input id="isWhatsapp"
+            type="checkbox"
+            name="userTelIsWhatsapp"
+            #userTelIsWhatsapp="ngModel"
+            ngModel/>
+        <label for="userTelIsWhatsapp"> WhatsApp</label>
+    </div>
+    <input id="password"
+        type="password"
+        placeholder="Senha"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userPassword"
+        #userPassword="ngModel"
+        ngModel/>
+    <input id="passwordConfirmation"
+        type="password"
+        placeholder="Confirmar senha"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userPasswordConfirmation"
+        #userPasswordConfirmation="ngModel"
+        ngModel/>
+    <div>
+        <textarea id="description"
+            placeholder="Sobre mim"
+            name="userDescription"
+            #userDescription="ngModel"
+            ngModel></textarea>
+        <input id="showDescription"
+            type="checkbox"
+            name="userShowDescription"
+            #userShowDescription="ngModel"
+            ngModel/>
+        <label for="userShowDescription"> Exibir para os colegas</label>
+    </div>
+</form>
