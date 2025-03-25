@@ -1,1 +1,59 @@
-<p>user-course-form works!</p>
+<form #userCourseForm="ngForm" (ngSubmit)="submit(userCourseForm)">
+    <p class="step-title">
+        <b>Dados do curso</b>
+    </p>
+    <input id="course"
+        type="text"
+        placeholder="Curso"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userCourse"
+        #userCourse="ngModel"
+        ngModel/>
+    <input id="pole"
+        type="text"
+        placeholder="Polo"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userPole"
+        #userPole="ngModel"
+        ngModel/>
+    <input id="currentSemester"
+        type="text"
+        placeholder="Semestre atual"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userCurrentSemester"
+        #userCurrentSemester="ngModel"
+        ngModel/>
+    <input id="interests"
+        type="text"
+        placeholder="Temas de interesse de pesquisa"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userInterests"
+        #userInterests="ngModel"
+        ngModel/>
+    <input id="skills"
+        type="text"
+        placeholder="Habilidades e competências"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userSkills"
+        #userSkills="ngModel"
+        ngModel/>
+    <input id="subjects"
+        type="text"
+        placeholder="Matérias cursando atualmente"
+        required
+        minlength="6"
+        maxlength="100"
+        name="userSubjects"
+        #userSubjects="ngModel"
+        ngModel/>
+</form>

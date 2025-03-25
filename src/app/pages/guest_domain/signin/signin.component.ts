@@ -27,7 +27,7 @@ export class SigninComponent implements RequiresSave {
     return this.isChanged;
   }
 
-  currentStep = 1;
+  currentStep = 2;
   submit(form: any) {
     console.log(form.value);
   }
