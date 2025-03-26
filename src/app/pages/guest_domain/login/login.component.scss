@@ -8,16 +8,21 @@
 
     width: 100vw;
     height: 100vh;
-    // background-image: url();
+    background-image: url("public/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    $horizontalPadding: 10px;
+    $verticalPadding: 15px;
 
     #login-container {
         width: 220px;
-        padding-inline: 10px;
-        padding-block: 20px;
+        padding-inline: $horizontalPadding;
+        padding-bottom: $verticalPadding;
 
         @include font-text-body;
         color: $color-text-descriptive-dark;
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: rgba($color-background-secondary-dark, 0.7);
 
         form {
             display: flex;
@@ -26,26 +31,26 @@
             align-items: stretch;
         }
         img, input {
-            margin-bottom: 20px;
+            margin-bottom: $verticalPadding;
         }
         img {
-            
+            pointer-events: none; // Undraggable image
         }
         input {
             height: 30px;
-            padding-inline: 10px;
+            padding-inline: $horizontalPadding;
         }
         .dashed-text-container {
             display: flex;
             flex-direction: row;
             align-items: center;
-            margin-inline: -10px; // Reverses "#login-container" padding
+            margin-inline: -$horizontalPadding; // Reverses "#login-container" padding
             margin-bottom: 10px;
 
             hr {
                 flex-grow: 1;
                 border: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                border-bottom: 2px solid rgba($color-background-secondary-light, 0.3);
                 height: 0px;
             }
             span {
