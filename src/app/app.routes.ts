@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { LoginComponent } from './pages/guest_domain/login/login.component';
 import { SigninComponent } from './pages/guest_domain/signin/signin.component';
+import { DashboardComponent } from './pages/student_domain/dashboard/dashboard.component';
 import { ColleaguesComponent } from './pages/student_domain/colleagues/colleagues.component';
 import { ProfileComponent } from './pages/student_domain/profile/profile.component';
 import { ProfileEditComponent } from './pages/student_domain/profile-edit/profile-edit.component';
@@ -26,7 +27,7 @@ export const routes: Routes = [
   ], canActivateChild: [ guestAccessGuard ]},
 
   // Student only
-  { path: "", children: [
+  { path: "", component: DashboardComponent, children: [
     { path: "colegas", component: ColleaguesComponent },
     { path: "perfil", component: ProfileComponent },
     { path: "perfil/editar", component: ProfileEditComponent, canDeactivate: [ unsavedChangesGuard ] },

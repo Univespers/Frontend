@@ -1,0 +1,34 @@
+@import "src/styles.scss";
+
+#main {
+    display: flex;
+    flex-direction: row;
+
+    width: 100vw;
+    height: 100vh;
+
+    #sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+
+        flex-grow: 0;
+        width: 150px;
+        background-color: rgba($color-background-secondary-dark, 0.7);
+
+        #logo {
+            top: 0px;
+            width: 100%;
+            margin-left: 5px; // Move a little to the right
+            margin-bottom: 10px;
+        }
+        .page-link {
+            margin-block: 10px;
+            @include font-title;
+            color: $color-background-highlight;
+        }
+        .highlighted {
+            color: $color-background-support;
+        }
+    }
+}
