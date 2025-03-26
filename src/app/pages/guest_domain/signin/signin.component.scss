@@ -55,10 +55,11 @@
             margin-bottom: $verticalPadding;
         }
         app-stepper {
-            width: 80%;
+            width: 80%; // 20% smaller
         }
         app-user-data-form, app-user-contacts-form, app-user-course-form {
-            width: 100%;
+            width: 120%; // Larger than "stepper"= 20% bigger
+            margin-left: -10%; // Centered = (20 / 2)% to the left
         }
     }
     button {

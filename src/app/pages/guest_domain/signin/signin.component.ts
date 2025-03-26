@@ -29,9 +29,9 @@ export class SigninComponent implements RequiresSave {
     return this.isChanged;
   }
 
-  currentStep = 0;
-  setStep(index:number) {
-    this.currentStep = index;
+  currentStep:number = 0;
+  nextStep() {
+    this.currentStep++;
   }
 
   submit(form: any) {
