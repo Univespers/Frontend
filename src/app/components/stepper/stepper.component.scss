@@ -1,0 +1,39 @@
+@import "src/styles.scss";
+
+#stepper-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-grow: 1;
+    }
+    div.first {
+        flex-grow: 0; // The first doesn't have a line = Should be small
+    }
+
+    .icon {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        justify-content: center;
+        flex-grow: 0;
+        user-select: none; // Undraggable text
+    }
+    .icon-disabled {
+        background-color: $color-background-secondary-light;
+    }
+    .icon-enabled {
+        background-color: $color-background-support;
+    }
+    .line {
+        flex-grow: 1;
+        height: 4px;
+        background-color: $color-background-secondary-light;
+    }
+
+}

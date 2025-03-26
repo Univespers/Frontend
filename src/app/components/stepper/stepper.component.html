@@ -1,0 +1,11 @@
+<div id="stepper-container">
+    <div *ngFor="let step of stepsList;let i = index" [class.first]="i == 0">
+        <div *ngIf="i != 0" class="line"></div>
+        <div class="icon"
+            [class.icon-enabled]="i == currentStep"
+            [class.icon-disabled]="i != currentStep"
+            (click)="setStep(i)">
+            <span>{{ step }}</span>
+        </div>
+    </div>
+</div>
