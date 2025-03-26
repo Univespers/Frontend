@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: row; // Left-to-right
     justify-content: center; // Center horizontally
-    align-items: center; // Center vertically
+    align-items: start; // Center vertically
 
     width: 100vw;
     height: 100vh;
@@ -28,6 +28,7 @@
         align-items: center;
         width: 100%;
         z-index: 2; // Content is in front of the side-logo
+        margin-block: 40px;
     }
 
     #signin-container {
@@ -42,7 +43,7 @@
 
         @include font-text-body;
         color: $color-text-body-light;
-        background-color: $color-background-highlight;
+        background-color: rgba($color-background-highlight, 0.8);
 
         .header {
             text-align: center;
