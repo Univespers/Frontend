@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { RequiresSave } from 'src/app/utils/requires-save.interface';
+import { StepperComponent } from 'src/app/components/stepper/stepper.component';
 import { UserDataFormComponent } from './user-data-form/user-data-form.component';
 import { UserContactsFormComponent } from './user-contacts-form/user-contacts-form.component';
 import { UserCourseFormComponent } from './user-course-form/user-course-form.component';
@@ -13,6 +14,7 @@ import { UserCourseFormComponent } from './user-course-form/user-course-form.com
   imports: [
     CommonModule,
     FormsModule,
+    StepperComponent,
     UserDataFormComponent,
     UserContactsFormComponent,
     UserCourseFormComponent,
@@ -27,7 +29,11 @@ export class SigninComponent implements RequiresSave {
     return this.isChanged;
   }
 
-  currentStep = 2;
+  currentStep = 0;
+  setStep(index:number) {
+    this.currentStep = index;
+  }
+
   submit(form: any) {
     console.log(form.value);
   }

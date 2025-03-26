@@ -1,7 +1,7 @@
 <div id="main">
 
     <!-- Logo -->
-    <img />
+    <img id="side-logo" src="side-logo.png"/>
 
     <div id="parent-container">
         <!-- Signin -->
@@ -9,9 +9,12 @@
             <div class="header">
                 Criar uma nova conta
             </div>
+            <app-stepper [steps]="3" [index]="currentStep" (nextStep)="setStep($event)"/>
+
             <app-user-data-form *ngIf="currentStep == 0"/>
             <app-user-contacts-form *ngIf="currentStep == 1"/>
             <app-user-course-form *ngIf="currentStep == 2"/>
+
         </div>
 
         <!-- Signin button -->
