@@ -14,3 +14,7 @@ export class Auth {
   }
 
 }
+
+export enum AuthType {
+  Guest, Student
+}
