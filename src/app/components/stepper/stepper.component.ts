@@ -20,6 +20,7 @@ export class StepperComponent implements AfterContentInit, OnChanges {
     nextStep = Math.max(nextStep, 0);
     this._currentStep = nextStep;
     this.currentStepChange.emit(this._currentStep);
+    this.updateStepper();
   }
   get currentStep(): number {
     return this._currentStep;
