@@ -8,4 +8,9 @@
     font-size: 10px;
     padding-inline: 10px;
     @include font-text-body;
+    color: black;
+}
+
+#main.darkBackground {
+    color: white;
 }

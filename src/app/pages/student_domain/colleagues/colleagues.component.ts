@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component } from '@angular/core';
+import { Theme, ThemeService } from 'src/app/utils/theme.service';
 
 @Component({
   selector: 'app-colleagues',
@@ -7,6 +8,12 @@ import { Component } from '@angular/core';
   templateUrl: './colleagues.component.html',
   styleUrl: './colleagues.component.scss'
 })
-export class ColleaguesComponent {
+export class ColleaguesComponent implements AfterContentInit {
+
+  constructor(private themeService: ThemeService) {}
+
+  ngAfterContentInit() {
+    this.themeService.setBackgroundTheme(Theme.Light);
+  }
 
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { CurrentStatus } from 'src/app/current-status';
+import { ThemeService } from 'src/app/utils/theme.service';
 
 @Component({
   selector: 'app-footer',
@@ -10,7 +11,15 @@ import { CurrentStatus } from 'src/app/current-status';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  groupName = CurrentStatus.GROUP_NAME;
-  currentYear = CurrentStatus.CURRENT_YEAR;
-  currentVersion = CurrentStatus.CURRENT_VERSION;
+  public groupName = CurrentStatus.GROUP_NAME;
+  public currentYear = CurrentStatus.CURRENT_YEAR;
+  public currentVersion = CurrentStatus.CURRENT_VERSION;
+
+  public isBackgroundDark = false;
+
+  constructor(private themeService: ThemeService) {
+    themeService.isBackgroundDark().subscribe((value) => {
+      this.isBackgroundDark = value;
+    });
+  }
 }

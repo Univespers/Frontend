@@ -8,9 +8,9 @@ export class AuthService {
 
   }
   isUserStudent() {
-    return true;
+    return false;
   }
   isUserGuest() {
-    return false;
+    return true;
   }
 }
