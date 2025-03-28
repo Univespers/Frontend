@@ -12,14 +12,23 @@
     width: 100%;
     height: 100%;
 
-    #search {
+    #search-container {
         flex-grow: 0;
         width: 80%;
         height: 30px;
         margin-top: 10vh;
         margin-bottom: 5vh;
-        background-color: $color-background-highlight;
-        border: 2px solid darken($color-background-highlight, 20%);
+        #search {
+            width: 100%;
+            height: 100%;
+            background-color: $color-background-highlight;
+            border: 2px solid darken($color-background-highlight, 20%);
+        }
+        .search-icon {
+            $icon-size: 30px;
+            width: $icon-size;
+            margin-left: -$icon-size;
+        }
     }
     #panel-container {
         width: calc(100% - 40px - 40px);

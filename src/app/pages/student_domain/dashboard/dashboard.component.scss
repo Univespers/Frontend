@@ -4,8 +4,11 @@
     display: flex;
     flex-direction: row;
 
-    width: 100vw;
-    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    height: fit-content;
+    width: fit-content;
+    overflow: auto;
 
     #sidebar {
         display: flex;
@@ -21,11 +24,19 @@
             width: 100%;
             margin-left: 5px; // Move a little to the right
             margin-bottom: 10px;
+            pointer-events: none; // Undraggable
         }
         .page-link {
             margin-block: 10px;
             @include font-title;
             color: $color-background-highlight;
+            user-select: none; // Undraggable
+
+            .item-icon {
+                width: 20px;
+                margin-left: 15px;
+                margin-right: 5px;
+            }
         }
         .highlighted {
             color: $color-background-support;
