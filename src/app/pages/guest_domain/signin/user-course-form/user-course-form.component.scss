@@ -5,6 +5,8 @@ form {
     flex-direction: column;
     align-items: center;
     align-items: stretch;
+
+    @include font-text-body;
 }
 .step-title {
     color: $color-text-title-highlight-light;
@@ -13,4 +15,5 @@ input {
     height: 30px;
     padding-inline: 10px;
     margin-bottom: 20px;
+    @include font-text-body;
 }

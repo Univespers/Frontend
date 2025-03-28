@@ -27,18 +27,24 @@
             name="userTelephone"
             #userTelephone="ngModel"
             ngModel/>
-        <input id="showTelephone"
-            type="checkbox"
-            name="userShowTelephone"
-            #userShowTelephone="ngModel"
-            ngModel/>
-        <label for="userShowTelephone"> Exibir para os colegas</label>
-        <input id="isWhatsapp"
-            type="checkbox"
-            name="userTelIsWhatsapp"
-            #userTelIsWhatsapp="ngModel"
-            ngModel/>
-        <label for="userTelIsWhatsapp"> WhatsApp</label>
+        <div>
+            <div>
+                <input id="showTelephone"
+                    type="checkbox"
+                    name="userShowTelephone"
+                    #userShowTelephone="ngModel"
+                    ngModel/>
+                <label for="userShowTelephone"> Exibir para os colegas</label>
+            </div>
+                <div>
+                <input id="isWhatsapp"
+                    type="checkbox"
+                    name="userTelIsWhatsapp"
+                    #userTelIsWhatsapp="ngModel"
+                    ngModel/>
+                <label for="userTelIsWhatsapp"> WhatsApp</label>
+            </div>
+        </div>
     </div>
     <input id="password"
         type="password"

@@ -5,6 +5,8 @@ form {
     flex-direction: column;
     align-items: center;
     align-items: stretch;
+
+    @include font-text-body;
 }
 .step-title {
     color: $color-text-title-highlight-light;
@@ -13,9 +15,24 @@ input {
     height: 30px;
     padding-inline: 10px;
     margin-bottom: 20px;
+    @include font-text-body;
 }
 textarea {
-    min-width: calc(100% - 8px); // (width - borders - paddings)
-    max-width: calc(100% - 8px); // (width - borders - paddings)
+    min-width: calc(100% - 3px - 20px); // (width - borders - paddings)
+    max-width: calc(100% - 3px - 20px); // (width - borders - paddings)
+    height: 30px;
+    min-height: 30px;
     max-height: 150px;
+    padding-inline: 10px;
+    padding-top: 8px;
+    @include font-text-body;
+    font-size: 13px;
+}
+#telephone + div {
+    display: flex;
+    flex-direction: column;
+}
+div:has(#telephone) {
+    display: flex;
+    flex-direction: row;
 }

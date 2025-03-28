@@ -6,8 +6,10 @@
     justify-content: center; // Center horizontally
     align-items: center; // Center vertically
 
-    width: 100vw;
-    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    height: fit-content;
+    width: fit-content;
     background-image: url("public/background.png");
     background-repeat: no-repeat;
     background-size: cover;

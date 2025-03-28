@@ -4,10 +4,12 @@
 // Font Awesome
 @import url('https://use.fontawesome.com/releases/v5.7.0/css/all.css');
 
-// Remove page borders
-html, body {
+html, body { // Remove empty borders
   padding: 0;
   margin: 0;
+}
+body { // Page scroll
+  overflow: auto;
 }
 
 
