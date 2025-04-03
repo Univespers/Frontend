@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ThemeService, Theme } from 'src/app/utils/theme.service';
-import { AuthService } from 'src/app/utils/auth.service';
-import { AuthType } from 'src/app/utils/auth.model';
+import { AuthService } from 'src/app/entities/auth/auth.service';
+import { AuthType } from 'src/app/entities/auth/auth.model';
 
 @Component({
   selector: 'app-login',
