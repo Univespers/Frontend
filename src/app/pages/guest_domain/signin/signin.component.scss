@@ -75,8 +75,14 @@
         @include font-button;
     }
     button#signin {
-        background-color: $color-button-active-tertiary;
+        background-color: $color-button-tertiary;
         width: 100px;
         margin-top: $verticalPadding;
+    }
+    button#signin:hover {
+        background-color: $color-button-hover-tertiary;
+    }
+    button#signin:active {
+        background-color: $color-button-active-tertiary;
     }
 }

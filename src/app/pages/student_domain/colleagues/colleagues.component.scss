@@ -65,7 +65,7 @@
                 margin-bottom: 10px;
                 @include font-text-body;
             }
-            .card-details {
+            button.card-details {
                 align-self: flex-end;
                 margin: 10px;
                 margin-top: auto;
@@ -75,10 +75,16 @@
                 border: none;
                 border-radius: 50%;
                 color: $color-text-descriptive-dark;
-                background-color: $color-button-active-primary;
+                background-color: $color-button-primary;
                 text-align: center;
                 text-decoration: none;
                 @include font-button;
+            }
+            button.card-details:hover {
+                background-color: $color-button-hover-primary;
+            }
+            button.card-details:active {
+                background-color: $color-button-active-primary;
             }
         }
     }

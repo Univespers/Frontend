@@ -24,14 +24,13 @@ $color-background-support: #00b8b0; // "bg/cor4": Apoio (Diferencial / Chamadas)
 
 // Buttons
 
-$color-button-hover-primary: #911416; // "bt/cor1"
-$color-button-hover-secondary: #4f46c2; // "bt/cor2"
-$color-button-hover-tertiary: #444444; // "bt/cor3"
+$color-button-primary: #911416; // "": Chamada para Ação(CTA)
+$color-button-secondary: #4f46c2; // "": Alternativo/Menos urgente
+$color-button-tertiary: #444444; // "": Discreto / Links / Menus
 
-$color-button-primary: $color-button-hover-primary; // "": Chamada para Ação(CTA)
-$color-button-secondary: $color-button-hover-secondary; // "": Alternativo/Menos urgente
-$color-button-tertiary: $color-button-hover-tertiary; // "": Discreto / Links / Menus
-//TODO: (Styles) Definir cores do botão normal
+$color-button-hover-primary: #a81a1d; // "bt/cor1"
+$color-button-hover-secondary: #5249d5; // "bt/cor2"
+$color-button-hover-tertiary: #525252; // "bt/cor3"
 
 $color-button-active-primary: #7a1213; // "bt/cor1 2"
 $color-button-active-secondary: #3e379d; // "bt/cor2 2"

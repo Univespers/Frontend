@@ -63,6 +63,7 @@
             height: 30px;
             border: none;
             color: $color-text-descriptive-dark;
+            background-color: transparent;
             padding-inline: 10px;
             text-align: center;
             text-decoration: none;
@@ -72,11 +73,29 @@
         button#login {
             background-color: $color-button-primary;
         }
+        button#login:hover {
+            background-color: $color-button-hover-primary;
+        }
+        button#login:active {
+            background-color: $color-button-active-primary;
+        }
         button#forgot {
-            background-color: transparent;
+            color: rgba($color-text-descriptive-dark, 0.9);
+        }
+        button#forgot:hover {
+            color: rgba($color-text-descriptive-dark, 1.0);
+        }
+        button#forgot:active {
+            color: rgba($color-text-descriptive-dark, 0.8);
         }
         button#signin {
             background-color: $color-button-secondary;
+        }
+        button#signin:hover {
+            background-color: $color-button-hover-secondary;
+        }
+        button#signin:active {
+            background-color: $color-button-active-secondary;
         }
     }
 }

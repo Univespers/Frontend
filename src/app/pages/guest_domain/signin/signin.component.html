@@ -20,7 +20,7 @@
             </div>
 
             <!-- Signin button -->
-            <button id="signin" (click)="nextStep()">Avançar</button>
+            <button id="signin" (click)="nextStep()">{{ currentStep === 2? "Cadastre-se" : "Avançar" }}</button>
         </div>
     }
 
