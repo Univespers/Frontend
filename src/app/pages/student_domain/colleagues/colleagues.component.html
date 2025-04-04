@@ -1,27 +1,26 @@
 <div id="main">
+
+    <!-- Search bar -->
     <div id="search-container">
         <input id="search"
             type="text"
             placeholder="Busque pelo nome, curso ou polo"/>
         <i class="search-icon fa fa-search fa-lg"></i>
     </div>
+
+    <!-- Colleagues -->
     <div id="panel-container">
         <div id="panel">
-    
-            <!-- Examples -->
-            <div class="card">
-                <span class="card-title">Guilherme Duarte</span>
-                <span class="card-body">Ciência de dados</span>
-                <span class="card-body">Jardim Paulistano</span>
+
+            <!-- Colleague -->
+            <div class="card" *ngFor="let colleague of getColleagues()">
+                <span class="card-title">{{ colleague.name }}</span>
+                <span class="card-body">{{ colleague.course }}</span>
+                <span class="card-body">{{ colleague.pole }}</span>
                 <button class="card-details">...</button>
             </div>
-            <div class="card">
-                <span class="card-title">Kenneth Stanley</span>
-                <span class="card-body">BTI</span>
-                <span class="card-body">Alto Alegre</span>
-                <button class="card-details">...</button>
-            </div>
-    
+
         </div>
     </div>
+
 </div>

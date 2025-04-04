@@ -28,11 +28,13 @@
             $icon-size: 30px;
             width: $icon-size;
             margin-left: -$icon-size;
+            display: inline;
         }
     }
     #panel-container {
         width: calc(100% - 40px - 40px);
         height: auto;
+        margin-bottom: 40px;
     }
     #panel {
         display: flex;
