@@ -6,7 +6,7 @@
     justify-content: center; // Center horizontally
     align-items: start; // Center vertically
 
-    min-width: 100vw;
+    min-width: calc(100vw - (100vw - 100%)); // Chrome has scroll, which takes space
     min-height: 100vh;
     height: fit-content;
     width: fit-content;
