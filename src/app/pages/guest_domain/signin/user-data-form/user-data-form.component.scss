@@ -11,16 +11,22 @@ form {
 .step-title {
     color: $color-text-title-highlight-light;
 }
-input {
+.text-field-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.text-field {
+    width: 60%;
     height: 30px;
     padding-inline: 10px;
-    margin-bottom: 20px;
     @include font-text-body;
 }
 textarea {
-    min-width: calc(100% - 3px - 20px); // (width - borders - paddings)
-    max-width: calc(100% - 3px - 20px); // (width - borders - paddings)
     height: 30px;
+    min-width: calc(60%); // (width - borders - paddings)
+    max-width: calc(60%); // (width - borders - paddings)
     min-height: 30px;
     max-height: 150px;
     padding-inline: 10px;

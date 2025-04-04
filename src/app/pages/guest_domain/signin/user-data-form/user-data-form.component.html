@@ -2,26 +2,30 @@
     <p class="step-title">
         <b>Dados pessoais</b>
     </p>
-    <input id="name"
-        type="text"
-        placeholder="Nome"
-        required
-        minlength="6"
-        maxlength="100"
-        name="userName"
-        #userName="ngModel"
-        ngModel/>
-    <input id="institutionalEmail"
-        type="email"
-        placeholder="Email institucional"
-        required
-        minlength="6"
-        maxlength="100"
-        name="userInstitutionalEmail"
-        #userInstitutionalEmail="ngModel"
-        ngModel/>
-    <div>
-        <input id="telephone"
+    <div class="text-field-container">
+        <input id="name" class="text-field"
+            type="text"
+            placeholder="Nome"
+            required
+            minlength="6"
+            maxlength="100"
+            name="userName"
+            #userName="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="institutionalEmail" class="text-field"
+            type="email"
+            placeholder="Email institucional"
+            required
+            minlength="6"
+            maxlength="100"
+            name="userInstitutionalEmail"
+            #userInstitutionalEmail="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="telephone" class="text-field"
             type="tel"
             placeholder="Telefone"
             name="userTelephone"
@@ -36,7 +40,7 @@
                     ngModel/>
                 <label for="userShowTelephone"> Exibir para os colegas</label>
             </div>
-                <div>
+            <div>
                 <input id="isWhatsapp"
                     type="checkbox"
                     name="userTelIsWhatsapp"
@@ -46,25 +50,29 @@
             </div>
         </div>
     </div>
-    <input id="password"
-        type="password"
-        placeholder="Senha"
-        required
-        minlength="6"
-        maxlength="100"
-        name="userPassword"
-        #userPassword="ngModel"
-        ngModel/>
-    <input id="passwordConfirmation"
-        type="password"
-        placeholder="Confirmar senha"
-        required
-        minlength="6"
-        maxlength="100"
-        name="userPasswordConfirmation"
-        #userPasswordConfirmation="ngModel"
-        ngModel/>
-    <div>
+    <div class="text-field-container">
+        <input id="password" class="text-field"
+            type="password"
+            placeholder="Senha"
+            required
+            minlength="6"
+            maxlength="100"
+            name="userPassword"
+            #userPassword="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="passwordConfirmation" class="text-field"
+            type="password"
+            placeholder="Confirmar senha"
+            required
+            minlength="6"
+            maxlength="100"
+            name="userPasswordConfirmation"
+            #userPasswordConfirmation="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
         <textarea id="description"
             placeholder="Sobre mim"
             name="userDescription"

@@ -11,9 +11,15 @@ form {
 .step-title {
     color: $color-text-title-highlight-light;
 }
-input {
+.text-field-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.text-field {
+    width: 60%;
     height: 30px;
     padding-inline: 10px;
-    margin-bottom: 20px;
     @include font-text-body;
 }
