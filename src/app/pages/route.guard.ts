@@ -7,7 +7,7 @@ export const routeGuard: CanActivateFn = () => {
   const router = inject(Router);
   const auth = inject(AuthService);
 
-  switch (true) {
+  switch(true) {
     case auth.isUserGuest():
       router.navigate([ "/login" ]);
       return true;

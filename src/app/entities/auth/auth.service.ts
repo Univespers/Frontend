@@ -1,27 +1,27 @@
-import { afterNextRender, EventEmitter, Injectable } from '@angular/core';
+import { afterNextRender, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
-import { AuthEndpointService, AuthOkResponse, AuthResponseData } from 'src/app/endpoints/auth-endpoint.service';
+import { AuthEndpointService, AuthOkResponse } from 'src/app/endpoints/auth-endpoint.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  public auth?: Auth;
+  public auth: Auth = new Auth("guest", AuthType.Guest);
 
   private static _LOCAL_AUTH_DATA_NAME = "authorization";
   private _logoutTimer: NodeJS.Timeout | null = null;
-  private _localStorage?: Storage;
+  private _localStorage = new BehaviorSubject<Storage | null>(null);
 
   constructor(
     private authEndpointService: AuthEndpointService,
     private router: Router
   ) {
     afterNextRender(() => {
-      this._localStorage = localStorage; // "localStorage" is a browser thing. SSR doesn't have that
+      this._localStorage.next(localStorage); // "localStorage" is a browser thing. SSR doesn't have that
     });
   }
 
@@ -48,13 +48,15 @@ export class AuthService {
   }
 
   // AutoLogin when page reloads
-  public autoLogin() {
-    const auth = this._getAuthLocally();
-    if(!auth?.token) return;
-    this.auth = auth;
-    const expiresIn = +auth.tokenExpiration - new Date().getTime();
-    this._setAutoLogout(expiresIn);
-    this.router.navigate([ "/colegas" ]);
+  public autoLogin(): Observable<Auth> {
+    return this._getAuthLocally().pipe(
+      tap(auth => {
+        this.auth = auth;
+        if(!auth?.token || !auth?.tokenExpiration) return;
+        const expiresIn = +auth.tokenExpiration - new Date().getTime();
+        this._setAutoLogout(expiresIn);
+      })
+    );
   }
 
   // Logout
@@ -76,16 +78,24 @@ export class AuthService {
 
   // Manages auth in the local browser storage
   private _storeAuthLocally(auth: Auth) {
-    this._localStorage?.setItem(AuthService._LOCAL_AUTH_DATA_NAME, JSON.stringify(auth));
+    this._localStorage.subscribe(localStorage => {
+      localStorage?.setItem(AuthService._LOCAL_AUTH_DATA_NAME, JSON.stringify(auth));
+    });
   }
-  private _getAuthLocally(): Auth | null {
-    const authData = this._localStorage?.getItem(AuthService._LOCAL_AUTH_DATA_NAME);
-    if(!authData) return null;
-    const protoAuth = JSON.parse(authData); // It does not contain functions!
-    return new Auth(protoAuth.id, protoAuth.type, protoAuth._token, new Date(protoAuth.tokenExpiration));
+  private _getAuthLocally(): Observable<Auth> {
+    return this._localStorage.pipe(
+      map(localStorage => {
+        const authData = localStorage?.getItem(AuthService._LOCAL_AUTH_DATA_NAME);
+        if(!authData) return new Auth("guest", AuthType.Guest, "", new Date());
+        const protoAuth = JSON.parse(authData); // It does not contain functions!
+        return new Auth(protoAuth.id, protoAuth.type, protoAuth._token, new Date(protoAuth.tokenExpiration));
+      })
+    );
   }
   private _removeAuthLocally() {
-    this._localStorage?.removeItem(AuthService._LOCAL_AUTH_DATA_NAME);
+    this._localStorage.subscribe(localStorage => {
+      localStorage?.removeItem(AuthService._LOCAL_AUTH_DATA_NAME);
+    });
   }
 
   // AutoLogout when token expires

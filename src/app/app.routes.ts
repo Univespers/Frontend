@@ -13,6 +13,7 @@ import { routeGuard } from './pages/route.guard';
 import { studentAccessGuard } from './pages/student_domain/student-access.guard';
 import { guestAccessGuard } from './pages/guest_domain/guest-access.guard';
 import { unsavedChangesGuard } from './pages/unsaved-changes.guard';
+import { authResolver } from './utils/auth.resolver';
 
 export const routes: Routes = [
 

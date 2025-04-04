@@ -3,8 +3,8 @@ export class Auth {
   constructor(
     public id: string,
     public type: AuthType,
-    private _token: string,
-    public tokenExpiration: Date
+    private _token?: string,
+    public tokenExpiration?: Date
   ) {}
 
   get token() {

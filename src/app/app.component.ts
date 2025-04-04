@@ -16,10 +16,8 @@ export class AppComponent {
   public title = 'Univespers';
 
   constructor(private authService: AuthService) {
-    afterNextRender(() => { // Necessary, as "localStorage" is only available after
-      setTimeout(() => { // Delay, to be sure
-        this.authService.autoLogin();
-      }, 1);
+    afterNextRender(() => { // Necessary, as "localStorage" is only available in the browser, after SSR
+      this.authService.autoLogin().subscribe();
     });
   }
 
