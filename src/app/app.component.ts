@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { afterNextRender, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { FooterComponent } from 'src/app/components/footer/footer.component';
+import { AuthService } from './entities/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,15 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'Univespers';
+
+  public title = 'Univespers';
+
+  constructor(private authService: AuthService) {
+    afterNextRender(() => { // Necessary, as "localStorage" is only available after
+      setTimeout(() => { // Delay, to be sure
+        this.authService.autoLogin();
+      }, 1);
+    });
+  }
+
 }

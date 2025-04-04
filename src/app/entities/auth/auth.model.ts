@@ -1,13 +1,15 @@
 export class Auth {
+
   constructor(
-    public email: string,
     public id: string,
+    public type: AuthType,
     private _token: string,
-    private _tokenValidade: Date
+    public tokenExpiration: Date
   ) {}
 
   get token() {
-    if (this._tokenValidade && new Date() < this._tokenValidade) {
+    const now = new Date();
+    if(this.tokenExpiration && this.tokenExpiration > now) {
       return this._token;
     }
     return null;
@@ -16,5 +18,5 @@ export class Auth {
 }
 
 export enum AuthType {
-  Guest, Student
+  Guest = "GUEST", Student = "STUDENT", Admin = "ADMIN"
 }

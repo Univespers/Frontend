@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 import { ThemeService, Theme } from 'src/app/utils/theme.service';
 import { AuthService } from 'src/app/entities/auth/auth.service';
-import { AuthType } from 'src/app/entities/auth/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +14,8 @@ import { AuthType } from 'src/app/entities/auth/auth.model';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements AfterContentInit {
+
+  public error: string = "";
 
   constructor(
     private themeService: ThemeService,
@@ -28,13 +29,28 @@ export class LoginComponent implements AfterContentInit {
 
   // Form
   submit(form: any) {
-    console.log(form.value);
-    if(form.value.userEmail == "aluno" && form.value.userPassword == "1234") {
-      this.authService.setAuthType(AuthType.Student);
-      this.router.navigate([ "/colegas" ]);
-    } else {
-      this.authService.setAuthType(AuthType.Guest);
-    }
+
+    console.log(form.valid); // TODO: Deletar
+    console.log(form.value); // TODO: Deletar
+
+    // if(!form.valid) return; // TODO: (Login) Validar
+    const email = form.value.userEmail;
+    const password = form.value.userPassword;
+    this.authService.loginUser(email, password).subscribe({
+      next: (data) => {
+        console.log("OK"); // TODO: Deletar
+        form.reset();
+        switch(true) {
+          case this.authService.isUserStudent():
+            this.router.navigate([ "/colegas" ]);
+            break;
+        }
+      },
+      error: (error) => {
+        console.log(error); // TODO: Deletar
+        this.error = error;
+      }
+    });
   }
 
 }
