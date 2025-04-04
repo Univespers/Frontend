@@ -1,7 +1,8 @@
-import { AfterContentInit, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterContentInit, Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformServer } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { RequiresSave } from 'src/app/utils/requires-save.interface';
 import { StepperComponent } from 'src/app/components/stepper/stepper.component';
 import { UserDataFormComponent } from './user-data-form/user-data-form.component';
@@ -19,13 +20,21 @@ import { Theme, ThemeService } from 'src/app/utils/theme.service';
     UserDataFormComponent,
     UserContactsFormComponent,
     UserCourseFormComponent,
+    LoadingComponent
   ],
   templateUrl: './signin.component.html',
   styleUrl: './signin.component.scss'
 })
 export class SigninComponent implements AfterContentInit, RequiresSave {
 
-  constructor(private themeService: ThemeService) {}
+  public isServer = false;
+
+  constructor(
+    private themeService: ThemeService,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isServer = isPlatformServer(platformId);
+  }
 
   ngAfterContentInit() {
     this.themeService.setBackgroundTheme(Theme.Dark);

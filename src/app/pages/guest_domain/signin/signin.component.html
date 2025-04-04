@@ -1,23 +1,27 @@
 <div id="main">
 
-    <!-- Logo -->
-    <img id="side-logo" src="side-logo.png"/>
+    @if(isServer) {
+        <app-loading/>
+    } @else {
+        <!-- Logo -->
+        <img id="side-logo" src="side-logo.png"/>
 
-    <div id="parent-container">
-        <!-- Signin -->
-        <div id="signin-container">
-            <div class="header">
-                Criar uma nova conta
+        <div id="parent-container">
+            <!-- Signin -->
+            <div id="signin-container">
+                <div class="header">
+                    Criar uma nova conta
+                </div>
+                <app-stepper [(currentStep)]="currentStep">
+                    <app-user-data-form/>
+                    <app-user-contacts-form/>
+                    <app-user-course-form/>
+                </app-stepper>
             </div>
-            <app-stepper [(currentStep)]="currentStep">
-                <app-user-data-form/>
-                <app-user-contacts-form/>
-                <app-user-course-form/>
-            </app-stepper>
-        </div>
 
-        <!-- Signin button -->
-        <button id="signin" (click)="nextStep()">Avançar</button>
-    </div>
+            <!-- Signin button -->
+            <button id="signin" (click)="nextStep()">Avançar</button>
+        </div>
+    }
 
 </div>

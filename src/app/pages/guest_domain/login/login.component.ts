@@ -1,27 +1,32 @@
-import { Component, AfterContentInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, AfterContentInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformServer } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/utils/theme.service';
 import { AuthService } from 'src/app/entities/auth/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
+  imports: [ CommonModule, FormsModule, LoadingComponent ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements AfterContentInit {
 
+  public isServer = false;
   public error: string = "";
 
   constructor(
     private themeService: ThemeService,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isServer = isPlatformServer(platformId);
+  }
 
   ngAfterContentInit() {
     this.themeService.setBackgroundTheme(Theme.Light);

@@ -1,45 +1,49 @@
 <div id="main">
 
-    <!-- Login -->
-    <div id="login-container">
-        <form #login="ngForm" (ngSubmit)="submit(login)">
-            <img src="logo.png" alt="UNIVESPERS" />
-            <input id="email"
-                type="email"
-                placeholder="Email"
-                required
-                minlength="6"
-                maxlength="100"
-                name="userEmail"
-                #userEmail="ngModel"
-                ngModel/>
-            <div *ngIf="userEmail.touched && !userEmail.valid && userEmail.errors">
-                <div *ngIf="userEmail.errors['required']">
-                    O email deve ser preenchido
+    @if(isServer) {
+        <app-loading/>
+    } @else {
+        <!-- Login -->
+        <div id="login-container">
+            <form #login="ngForm" (ngSubmit)="submit(login)">
+                <img src="logo.png" alt="UNIVESPERS" />
+                <input id="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                    minlength="6"
+                    maxlength="100"
+                    name="userEmail"
+                    #userEmail="ngModel"
+                    ngModel/>
+                <div *ngIf="userEmail.touched && !userEmail.valid && userEmail.errors">
+                    <div *ngIf="userEmail.errors['required']">
+                        O email deve ser preenchido
+                    </div>
+                    <div *ngIf="userEmail.errors['minlength']">
+                        <!-- TODO: (Login) Error message -->
+                    </div>
+                    <div *ngIf="userEmail.errors['maxlength']">
+                        <!-- TODO: (Login) Error message -->
+                    </div>
                 </div>
-                <div *ngIf="userEmail.errors['minlength']">
-                    <!-- TODO: (Login) Error message -->
+                <input id="password"
+                    type="password"
+                    placeholder="Senha"
+                    required
+                    minlength="6"
+                    maxlength="100"
+                    name="userPassword"
+                    #userPassword="ngModel"
+                    ngModel/>
+                <button id="login" [class.disabled]="!login.valid">Entrar</button>
+                <button id="forgot">Esqueceu a senha?</button>
+                <div class="dashed-text-container">
+                    <hr /> <span>ou</span> <hr />
                 </div>
-                <div *ngIf="userEmail.errors['maxlength']">
-                    <!-- TODO: (Login) Error message -->
-                </div>
-            </div>
-            <input id="password"
-                type="password"
-                placeholder="Senha"
-                required
-                minlength="6"
-                maxlength="100"
-                name="userPassword"
-                #userPassword="ngModel"
-                ngModel/>
-            <button id="login" [class.disabled]="!login.valid">Entrar</button>
-            <button id="forgot">Esqueceu a senha?</button>
-            <div class="dashed-text-container">
-                <hr /> <span>ou</span> <hr />
-            </div>
-            <button id="signin">Criar nova conta</button>
-        </form>
-    </div>
+                <button id="signin">Criar nova conta</button>
+            </form>
+        </div>
+    }
 
 </div>

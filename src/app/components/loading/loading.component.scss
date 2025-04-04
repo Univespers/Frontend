@@ -1,0 +1,36 @@
+@import "src/styles.scss";
+
+#main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100vh;
+    width: 100vw;
+    background-color: $color-background-secondary-light;
+
+    #loading {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 3px solid rgba($color-background-secondary-dark, 0.3);
+        border-top-color: $color-background-secondary-dark;
+        animation: spin 1s ease-in-out infinite;
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    }
+}
+
+#main.darkBackground {
+    background-color: $color-background-secondary-dark;
+
+    #loading {
+        border: 3px solid rgba($color-background-secondary-light, 0.3);
+        border-top-color: $color-background-secondary-light;
+    }
+}
