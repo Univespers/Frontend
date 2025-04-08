@@ -50,7 +50,7 @@ export class AuthEndpointService {
       setTimeout(() => {
         subscriber.next(response);
         subscriber.complete();
-      }, 2000);
+      }, 1200);
     }).pipe(
       switchMap(authData => { // Server ok, but with an error = Server error
         const error = (authData as AuthErrorResponse).error;
@@ -100,7 +100,7 @@ export class AuthEndpointService {
       setTimeout(() => {
         subSubscriber.next(response);
         subSubscriber.complete();
-      }, 2000);
+      }, 1200);
     }).pipe(
       switchMap(authData => { // Server ok, but with an error = Server error
         const error = (authData as AuthErrorResponse).error;
