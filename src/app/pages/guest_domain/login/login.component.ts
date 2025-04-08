@@ -58,4 +58,8 @@ export class LoginComponent implements AfterContentInit {
     });
   }
 
+  newAccount() {
+    this.router.navigate([ "/cadastro" ]);
+  }
+
 }
