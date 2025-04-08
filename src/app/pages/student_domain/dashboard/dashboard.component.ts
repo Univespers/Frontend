@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,5 +9,13 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+
+  constructor(
+    private router: Router
+  ) {}
+
+  logout() {
+    this.router.navigate([ "/logout" ]);
+  }
 
 }
