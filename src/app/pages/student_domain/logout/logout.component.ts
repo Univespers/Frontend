@@ -1,4 +1,5 @@
-import { afterNextRender, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/entities/auth/auth.service';
 
 @Component({
@@ -10,12 +11,17 @@ import { AuthService } from 'src/app/entities/auth/auth.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+
   }
-  
+
   ngOnInit() {
     console.log("LOGOUT");
     this.authService.logout();
+    window.location.reload(); // TODO: (Logout) Nada de reload! Refazer
   }
 
 }
