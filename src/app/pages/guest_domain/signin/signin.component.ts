@@ -27,13 +27,13 @@ import { Theme, ThemeService } from 'src/app/utils/theme.service';
 })
 export class SigninComponent implements AfterContentInit, RequiresSave {
 
-  public isServer = false;
+  public isLoading = false;
 
   constructor(
     private themeService: ThemeService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
-    this.isServer = isPlatformServer(platformId);
+    this.isLoading = isPlatformServer(platformId);
   }
 
   ngAfterContentInit() {
@@ -55,7 +55,9 @@ export class SigninComponent implements AfterContentInit, RequiresSave {
 
   // Form
   submit(form: any) {
+    this.isLoading = true;
     console.log(form.value);
+    this.isLoading = false;
   }
 
 }

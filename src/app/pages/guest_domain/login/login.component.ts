@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/utils/theme.service';
 import { AuthService } from 'src/app/entities/auth/auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { AuthService } from 'src/app/entities/auth/auth.service';
 })
 export class LoginComponent implements AfterContentInit {
 
-  public isServer = false;
+  public isLoading = false;
   public error: string = "";
 
   constructor(
@@ -25,7 +26,7 @@ export class LoginComponent implements AfterContentInit {
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
-    this.isServer = isPlatformServer(platformId);
+    this.isLoading = isPlatformServer(platformId);
   }
 
   ngAfterContentInit() {
@@ -34,6 +35,7 @@ export class LoginComponent implements AfterContentInit {
 
   // Form
   submit(form: any) {
+    this.isLoading = true;
 
     console.log(form.valid); // TODO: Deletar
     console.log(form.value); // TODO: Deletar
@@ -41,7 +43,11 @@ export class LoginComponent implements AfterContentInit {
     // if(!form.valid) return; // TODO: (Login) Validar
     const email = form.value.userEmail;
     const password = form.value.userPassword;
-    this.authService.loginUser(email, password).subscribe({
+    this.authService.loginUser(email, password).pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
       next: (data) => {
         console.log("OK"); // TODO: Deletar
         form.reset();
