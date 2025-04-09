@@ -9,7 +9,9 @@ import { AuthType } from 'src/app/entities/auth/auth.model';
 })
 export class AuthEndpointService {
 
-  private authEndpoint = "https://AUTH_ENDPOINT"; // TODO: (Auth) Endpoint
+  private mock = true; // TODO: (Auth) Remover mocks
+
+  private authEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
   private authSigninEndpoint = `${this.authEndpoint}/user/new`;
   private authLoginEndpoint = `${this.authEndpoint}/user/login`;
 
@@ -40,27 +42,29 @@ export class AuthEndpointService {
   // Signin
   public registerUser(email: string, password: string): Observable<AuthOkResponse> {
 
-    const response = JSON.parse(`{
-      "authId": "abc123",
-      "authType": "STUDENT",
-      "token": "123456abcdef",
-      "expiresIn": 3600000
-    }`);
-    return new Observable<AuthResponseData>((subscriber) => {
-      setTimeout(() => {
-        subscriber.next(response);
-        subscriber.complete();
-      }, 1200);
-    }).pipe(
-      switchMap(authData => { // Server ok, but with an error = Server error
-        const error = (authData as AuthErrorResponse).error;
-        if(error) {
-          return throwError(() => new HttpErrorResponse({ error: error }));
-        } else return of(authData as AuthOkResponse);
-      }),
-      catchError(this.errorHandler) // Server error = Error message
-    );
-     // TODO: (Auth) Remover mock
+    if(this.mock) {
+      const response = JSON.parse(`{
+        "authId": "abc123",
+        "authType": "STUDENT",
+        "token": "123456abcdef",
+        "expiresIn": 3600000
+      }`);
+      return new Observable<AuthResponseData>((subscriber) => {
+        setTimeout(() => {
+          subscriber.next(response);
+          subscriber.complete();
+        }, 1200);
+      }).pipe(
+        switchMap(authData => { // Server ok, but with an error = Server error
+          const error = (authData as AuthErrorResponse).error;
+          if(error) {
+            return throwError(() => new HttpErrorResponse({ error: error }));
+          } else return of(authData as AuthOkResponse);
+        }),
+        catchError(this.errorHandler) // Server error = Error message
+      );
+    }
+    // TODO: (Auth) Remover mock
 
     return this.http.post<AuthResponseData>(
       this.authSigninEndpoint,
@@ -83,33 +87,35 @@ export class AuthEndpointService {
   // Login
   public loginUser(email: string, password: string): Observable<AuthOkResponse> {
 
-    let response = JSON.parse(`{
-      "error": {
-        "message": "EMAIL_NOT_FOUND"
-      }
-    }`);
-    if(email == "aluno" && password == "1234") {
-      response = JSON.parse(`{
-        "authId": "abc123",
-        "authType": "STUDENT",
-        "token": "123456abcdef",
-        "expiresIn": 3600000
+    if(this.mock) {
+      let response = JSON.parse(`{
+        "error": {
+          "message": "EMAIL_NOT_FOUND"
+        }
       }`);
+      if(email == "aluno" && password == "1234") {
+        response = JSON.parse(`{
+          "authId": "abc123",
+          "authType": "STUDENT",
+          "token": "123456abcdef",
+          "expiresIn": 3600000
+        }`);
+      }
+      return (new Observable<AuthResponseData>(subSubscriber => {
+        setTimeout(() => {
+          subSubscriber.next(response);
+          subSubscriber.complete();
+        }, 1200);
+      }).pipe(
+        switchMap(authData => { // Server ok, but with an error = Server error
+          const error = (authData as AuthErrorResponse).error;
+          if(error) {
+            return throwError(() => new HttpErrorResponse({ error: error }));
+          } else return of(authData as AuthOkResponse);
+        }),
+        catchError(this.errorHandler) // Server error = Error message
+      ));
     }
-    return (new Observable<AuthResponseData>(subSubscriber => {
-      setTimeout(() => {
-        subSubscriber.next(response);
-        subSubscriber.complete();
-      }, 1200);
-    }).pipe(
-      switchMap(authData => { // Server ok, but with an error = Server error
-        const error = (authData as AuthErrorResponse).error;
-        if(error) {
-          return throwError(() => new HttpErrorResponse({ error: error }));
-        } else return of(authData as AuthOkResponse);
-      }),
-      catchError(this.errorHandler) // Server error = Error message
-    ));
     // TODO: (Auth) Remover mock
 
     return this.http.post<AuthResponseData>(
