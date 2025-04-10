@@ -11,9 +11,10 @@ export class AuthEndpointService {
 
   private mock = true; // TODO: (Auth) Remover mocks
 
-  private authEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
-  private authSigninEndpoint = `${this.authEndpoint}/user/new`;
-  private authLoginEndpoint = `${this.authEndpoint}/user/login`;
+  private apiEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
+  private authEndpoint = `${this.apiEndpoint}/user`;
+  private authSigninEndpoint = `${this.authEndpoint}/new`;
+  private authLoginEndpoint = `${this.authEndpoint}/login`;
 
   constructor(
     private http: HttpClient
@@ -140,10 +141,10 @@ export class AuthEndpointService {
 
 // Backend response model
 export interface AuthOkResponse {
-  authId: string; // Unique identifier
+  authId: string; // ID único
   authType: AuthType; // "STUDENT" | "ADMIN"
-  token: string; // The actual token
-  expiresIn: string; // Expiration time, in miliseconds (3600000 = 1h before auto-logout)
+  token: string; // Token = String de números e letras aleatórios
+  expiresIn: string; // Data de validade, em milissegundos (3600000 = 1h antes do logout automático)
 }
 export interface AuthErrorResponse {
   error: {
