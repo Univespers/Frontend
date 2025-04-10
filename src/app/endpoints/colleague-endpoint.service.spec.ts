@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ColleaguesEndpointService } from './colleagues-endpoint.service';
+import { ColleaguesEndpointService } from './colleague-endpoint.service';
 
 describe('ColleaguesEndpointService', () => {
   let service: ColleaguesEndpointService;

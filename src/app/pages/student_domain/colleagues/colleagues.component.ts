@@ -1,9 +1,12 @@
-import { AfterContentInit, Component } from '@angular/core';
+import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Theme, ThemeService } from 'src/app/utils/theme.service';
 import { ColleagueList } from 'src/app/entities/colleague/colleague-list.model';
 import { Colleague } from 'src/app/entities/colleague/colleague.model';
+import { ColleagueService } from 'src/app/entities/colleague/colleague.service';
+import { finalize, map } from 'rxjs';
+import { ColleagueListResponse, ColleagueResponse } from 'src/app/endpoints/colleague-endpoint.service';
 
 @Component({
   selector: 'app-colleagues',
@@ -12,27 +15,43 @@ import { Colleague } from 'src/app/entities/colleague/colleague.model';
   templateUrl: './colleagues.component.html',
   styleUrl: './colleagues.component.scss'
 })
-export class ColleaguesComponent implements AfterContentInit {
+export class ColleaguesComponent implements AfterContentInit, OnInit {
 
-  constructor(private themeService: ThemeService) {}
+  isLoading = false;
+  error = "";
+
+  constructor(
+    private themeService: ThemeService,
+    private colleagueService: ColleagueService
+  ) {}
+
+  ngOnInit() {
+    this.getColleagues();
+  }
 
   ngAfterContentInit() {
     this.themeService.setBackgroundTheme(Theme.Light);
   }
 
   // Colleagues
+  colleaguesList: ColleagueResponse[] = [];
   public getColleagues() {
-    return new ColleagueList([
-      new Colleague("Aluno1", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno2", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno3", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno4", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno5", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno6", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno7", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno8", "EMAIL", "Curso", "Polo"),
-      new Colleague("Aluno9", "EMAIL", "Curso", "Polo"),
-    ]).list;
+    console.log("ListAllCollegues");
+    this.isLoading = true;
+    this.colleagueService.getAllColleagues().pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (data) => {
+        console.log("OK"); // TODO: Deletar
+        this.colleaguesList = data.list;
+      },
+      error: (error) => {
+        console.log(error); // TODO: Deletar
+        this.error = error;
+      }
+    });
   }
 
 }
