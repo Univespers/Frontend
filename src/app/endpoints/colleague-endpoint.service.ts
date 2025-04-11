@@ -1,6 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
+
+import { EndpointUtils, ErrorResponse } from '../utils/endpoint-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -19,20 +21,6 @@ export class ColleagueEndpointService {
       private http: HttpClient
     ) {}
 
-  // Translates server errors into error messages
-  private errorHandler(errorData: HttpErrorResponse) {
-    switch(errorData.error?.message?? errorData.error?.error?.message) {
-      case "NOT_FOUND":
-        return throwError(() => new Error("Colega não encontrado!"));
-      case "OPERATION_NOT_ALLOWED":
-        return throwError(() => new Error("A entrada está desabilitada!"));
-      case "TOO_MANY_ATTEMPTS_TRY_LATER":
-        return throwError(() => new Error("Detectado atividades incomuns! Tente mais tarde!"));
-      default:
-        return throwError(() => new Error("Um erro ocorreu!"));
-    } // TODO: (Colleagues) Definir erros
-  }
-
   // Colleague
   public getColleague(id: string): Observable<ColleagueResponse> {
 
@@ -43,33 +31,15 @@ export class ColleagueEndpointService {
         "course": "Curso1",
         "pole": "Polo1"
       }`);
-      return (new Observable<ColleagueResponseData>(subSubscriber => {
-        setTimeout(() => {
-          subSubscriber.next(response);
-          subSubscriber.complete();
-        }, 1200);
-      }).pipe(
-        switchMap(colleagueData => { // Server ok, but with an error = Server error
-          const error = (colleagueData as ColleagueErrorResponse).error;
-          if(error) {
-            return throwError(() => new HttpErrorResponse({ error: error }));
-          } else return of(colleagueData as ColleagueResponse);
-        }),
-        catchError(this.errorHandler) // Server error = Error message
-      ));
-    }
-    // TODO: (Colleagues) Remover mock
+      return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueResponse, ColleagueErrorResponse>(
+        EndpointUtils.mockEndpoint(response)
+      );
+    } // TODO: (Colleagues) Remover mock
 
-    return this.http.get<ColleagueResponseData>(
-      this.colleagueEndpoint(id)
-    ).pipe(
-      switchMap(colleagueData => { // Server ok, but with an error = Server error
-        const error = (colleagueData as ColleagueErrorResponse).error;
-        if(error) {
-          return throwError(() => new HttpErrorResponse({ error: error }));
-        } else return of(colleagueData as ColleagueResponse);
-      }),
-      catchError(this.errorHandler) // Server error = Error message
+    return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueResponse, ColleagueErrorResponse>(
+      this.http.get<ColleagueResponseData>(
+        this.colleagueEndpoint(id)
+      )
     );
   }
 
@@ -89,33 +59,15 @@ export class ColleagueEndpointService {
           "linkedin": "aluno1"
         }
       }`);
-      return (new Observable<ColleagueResponseData>(subSubscriber => {
-        setTimeout(() => {
-          subSubscriber.next(response);
-          subSubscriber.complete();
-        }, 1200);
-      }).pipe(
-        switchMap(colleagueData => { // Server ok, but with an error = Server error
-          const error = (colleagueData as ColleagueErrorResponse).error;
-          if(error) {
-            return throwError(() => new HttpErrorResponse({ error: error }));
-          } else return of(colleagueData as ColleagueDetailsResponse);
-        }),
-        catchError(this.errorHandler) // Server error = Error message
-      ));
-    }
-    // TODO: (Colleagues) Remover mock
+      return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueDetailsResponse, ColleagueErrorResponse>(
+        EndpointUtils.mockEndpoint(response)
+      );
+    } // TODO: (Colleagues) Remover mock
 
-    return this.http.get<ColleagueResponseData>(
-      this.colleagueDetailsEndpoint(id)
-    ).pipe(
-      switchMap(colleagueData => { // Server ok, but with an error = Server error
-        const error = (colleagueData as ColleagueErrorResponse).error;
-        if(error) {
-          return throwError(() => new HttpErrorResponse({ error: error }));
-        } else return of(colleagueData as ColleagueDetailsResponse);
-      }),
-      catchError(this.errorHandler) // Server error = Error message
+    return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueDetailsResponse, ColleagueErrorResponse>(
+      this.http.get<ColleagueResponseData>(
+        this.colleagueDetailsEndpoint(id)
+      )
     );
   }
 
@@ -145,33 +97,15 @@ export class ColleagueEndpointService {
           }
         ]
       }`);
-      return (new Observable<ColleagueResponseData>(subSubscriber => {
-        setTimeout(() => {
-          subSubscriber.next(response);
-          subSubscriber.complete();
-        }, 1200);
-      }).pipe(
-        switchMap(colleagueData => { // Server ok, but with an error = Server error
-          const error = (colleagueData as ColleagueErrorResponse).error;
-          if(error) {
-            return throwError(() => new HttpErrorResponse({ error: error }));
-          } else return of(colleagueData as ColleagueListResponse);
-        }),
-        catchError(this.errorHandler) // Server error = Error message
-      ));
-    }
-    // TODO: (Colleagues) Remover mock
-  
-    return this.http.get<ColleagueResponseData>(
-      this.allColleaguesEndpoint
-    ).pipe(
-      switchMap(colleagueData => { // Server ok, but with an error = Server error
-        const error = (colleagueData as ColleagueErrorResponse).error;
-        if(error) {
-          return throwError(() => new HttpErrorResponse({ error: error }));
-        } else return of(colleagueData as ColleagueListResponse);
-      }),
-      catchError(this.errorHandler) // Server error = Error message
+      return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueListResponse, ColleagueErrorResponse>(
+        EndpointUtils.mockEndpoint(response)
+      );
+    } // TODO: (Colleagues) Remover mock
+
+    return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueListResponse, ColleagueErrorResponse>(
+      this.http.get<ColleagueResponseData>(
+        this.allColleaguesEndpoint
+      )
     );
   }
 
@@ -202,9 +136,5 @@ export interface ColleagueDetailsResponse extends ColleagueResponse {
 export interface ColleagueListResponse {
   list: ColleagueResponse[];
 }
-export interface ColleagueErrorResponse {
-  error: {
-    message: string; // "EMAIL_NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER"
-  };
-}
-export type ColleagueResponseData = ColleagueResponse | ColleagueListResponse | ColleagueDetailsResponse | ColleagueErrorResponse;
+export interface ColleagueErrorResponse extends ErrorResponse {}
+export type ColleagueResponseData = ColleagueResponse | ColleagueDetailsResponse | ColleagueListResponse | ColleagueErrorResponse;
