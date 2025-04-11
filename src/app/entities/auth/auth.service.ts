@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
-import { AuthEndpointService, AuthOkResponse } from 'src/app/endpoints/auth-endpoint.service';
+import { AuthEndpointService } from 'src/app/endpoints/auth-endpoint.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  public auth: Auth = new Auth("guest", AuthType.Guest);
+  public auth: Auth = new Auth(AuthType.Guest);
 
   private static _LOCAL_AUTH_DATA_NAME = "authorization";
   private _logoutTimer: NodeJS.Timeout | null = null;
@@ -34,16 +34,18 @@ export class AuthService {
   }
 
   // Signin
-  public registerUser(email: string, password: string): Observable<AuthOkResponse> {
+  public registerUser(email: string, password: string): Observable<Auth> {
     return this.authEndpointService.registerUser(email, password).pipe(
-      tap(authData => this._loadAuth(authData))
+      map(data => Auth.getAuth(data)),
+      tap(data => this._loadAuth(data))
     );
   }
 
   // Login
-  public loginUser(email: string, password: string): Observable<AuthOkResponse> {
+  public loginUser(email: string, password: string): Observable<Auth> {
     return this.authEndpointService.loginUser(email, password).pipe(
-      tap(authData => this._loadAuth(authData))
+      map(data => Auth.getAuth(data)),
+      tap(data => this._loadAuth(data))
     );
   }
 
@@ -68,11 +70,11 @@ export class AuthService {
   }
 
   // Loads auth
-  private _loadAuth(authData: AuthOkResponse) {
-    const expiresIn = +authData.expiresIn;
-    const expirationDate = new Date(new Date().getTime() + expiresIn);
-    this.auth = new Auth(authData.authId, authData.authType, authData.token, expirationDate);
+  private _loadAuth(auth: Auth) {
+    this.auth = auth;
     this._storeAuthLocally(this.auth);
+    const currentTime = new Date().getTime();
+    const expiresIn = (this.auth.tokenExpiration?.getTime() ?? currentTime) - currentTime;
     this._setAutoLogout(expiresIn);
   }
 
@@ -86,9 +88,9 @@ export class AuthService {
     return this._localStorage.pipe(
       map(localStorage => {
         const authData = localStorage?.getItem(AuthService._LOCAL_AUTH_DATA_NAME);
-        if(!authData) return new Auth("guest", AuthType.Guest, "", new Date());
+        if(!authData) return new Auth(AuthType.Guest, "", new Date());
         const protoAuth = JSON.parse(authData); // It does not contain functions!
-        return new Auth(protoAuth.id, protoAuth.type, protoAuth._token, new Date(protoAuth.tokenExpiration));
+        return new Auth(protoAuth.type, protoAuth._token, new Date(protoAuth.tokenExpiration));
       })
     );
   }

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ColleagueDetailsResponse, ColleagueEndpointService, ColleagueListResponse, ColleagueResponse } from 'src/app/endpoints/colleague-endpoint.service';
+import { map, Observable } from 'rxjs';
+
+import { ColleagueEndpointService } from 'src/app/endpoints/colleague-endpoint.service';
+import { Colleague, ColleagueDetails } from './colleague.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +13,22 @@ export class ColleagueService {
     private colleagueEndpointService: ColleagueEndpointService
   ) {}
 
-  getColleague(id: string): Observable<ColleagueResponse> {
-    return this.colleagueEndpointService.getColleagueDetails(id);
+  getColleague(id: string): Observable<Colleague> {
+    return this.colleagueEndpointService.getColleague(id).pipe(
+      map(data => Colleague.getColleague(data))
+    );
   }
 
-  getColleagueDetails(id: string): Observable<ColleagueDetailsResponse> {
-    return this.colleagueEndpointService.getColleagueDetails(id);
+  getColleagueDetails(id: string): Observable<ColleagueDetails> {
+    return this.colleagueEndpointService.getColleagueDetails(id).pipe(
+      map(data => ColleagueDetails.getColleagueDetails(data))
+    );
   }
 
-  getAllColleagues(): Observable<ColleagueListResponse> {
-    return this.colleagueEndpointService.getAllColleagues();
+  getAllColleagues(): Observable<Colleague[]> {
+    return this.colleagueEndpointService.getAllColleagues().pipe(
+      map(data => Colleague.getColleagueList(data))
+    );
   }
 
 }

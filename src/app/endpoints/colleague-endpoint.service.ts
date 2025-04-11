@@ -27,9 +27,9 @@ export class ColleagueEndpointService {
     if(this.mock) {
       let response = JSON.parse(`{
         "id": "abc123",
-        "name": "Aluno1",
-        "course": "Curso1",
-        "pole": "Polo1"
+        "nome": "Aluno1",
+        "curso": "Curso1",
+        "polo": "Polo1"
       }`);
       return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueResponse, ColleagueErrorResponse>(
         EndpointUtils.mockEndpoint(response)
@@ -49,12 +49,12 @@ export class ColleagueEndpointService {
     if(this.mock) {
       let response = JSON.parse(`{
         "id": "abc123",
-        "name": "Aluno1",
-        "course": "Curso1",
-        "pole": "Polo1",
-        "studentEmail": "aluno1@email.com",
-        "description": "Oy! Hellow!",
-        "contacts": {
+        "nome": "Aluno1",
+        "curso": "Curso1",
+        "polo": "Polo1",
+        "emailInstitucional": "aluno1@email.com",
+        "descricao": "Oy! Hellow!",
+        "contatos": {
           "email": "aluno1@personalEmail.com",
           "linkedin": "aluno1"
         }
@@ -76,24 +76,24 @@ export class ColleagueEndpointService {
   
     if(this.mock) {
       let response = JSON.parse(`{
-        "list": [
+        "lista": [
           {
               "id": "abc123_1",
-              "name": "Aluno1",
-              "course": "Curso1",
-              "pole": "Polo1"
+              "nome": "Aluno1",
+              "curso": "Curso1",
+              "polo": "Polo1"
           },
           {
               "id": "abc123_2",
-              "name": "Aluno2",
-              "course": "Curso2",
-              "pole": "Polo2"
+              "nome": "Aluno2",
+              "curso": "Curso2",
+              "polo": "Polo2"
           },
           {
               "id": "abc123_3",
-              "name": "Aluno3",
-              "course": "Curso3",
-              "pole": "Polo3"
+              "nome": "Aluno3",
+              "curso": "Curso3",
+              "polo": "Polo3"
           }
         ]
       }`);
@@ -114,16 +114,16 @@ export class ColleagueEndpointService {
 // Backend response model
 export interface ColleagueResponse {
   id: string; // ID único
-  name: string; // Nome
-  course: string; // Curso
-  pole: string; // Polo
+  nome: string; // Nome
+  curso: string; // Curso
+  polo: string; // Polo
 }
 export interface ColleagueDetailsResponse extends ColleagueResponse {
   // Inclui tudo de ColleagueResponse
-  studentEmail: string;
-  telephone?: string;
-  description?: string;
-  contacts?: {
+  emailInstitucional: string;
+  telefone?: string;
+  descricao?: string;
+  contatos?: {
     email?: string;
     linkedin?: string;
     facebook?: string;
@@ -134,7 +134,7 @@ export interface ColleagueDetailsResponse extends ColleagueResponse {
   }
 }
 export interface ColleagueListResponse {
-  list: ColleagueResponse[];
+  lista: ColleagueResponse[];
 }
 export interface ColleagueErrorResponse extends ErrorResponse {}
 export type ColleagueResponseData = ColleagueResponse | ColleagueDetailsResponse | ColleagueListResponse | ColleagueErrorResponse;

@@ -26,10 +26,10 @@ export class AuthEndpointService {
 
     if(this.mock) {
       const response = JSON.parse(`{
-        "authId": "abc123",
-        "authType": "STUDENT",
+        "id": "abc123",
+        "tipo": "STUDENT",
         "token": "123456abcdef",
-        "expiresIn": 3600000
+        "validade": 3600000
       }`);
       return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
         EndpointUtils.mockEndpoint(response)
@@ -59,10 +59,10 @@ export class AuthEndpointService {
       }`);
       if(email == "aluno" && password == "1234") {
         response = JSON.parse(`{
-          "authId": "abc123",
-          "authType": "STUDENT",
+          "id": "abc123",
+          "tipo": "STUDENT",
           "token": "123456abcdef",
-          "expiresIn": 3600000
+          "validade": 3600000
         }`);
       }
       return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
@@ -86,10 +86,10 @@ export class AuthEndpointService {
 
 // Backend response model
 export interface AuthOkResponse {
-  authId: string; // ID único
-  authType: AuthType; // "STUDENT" | "ADMIN"
+  id: string; // ID único
+  tipo: AuthType; // "STUDENT" | "ADMIN"
   token: string; // Token = String de números e letras aleatórios
-  expiresIn: string; // Data de validade, em milissegundos (3600000 = 1h antes do logout automático)
+  validade: string; // Data de validade, em milissegundos (3600000 = 1h antes do logout automático)
 }
 export interface AuthErrorResponse extends ErrorResponse {}
 export type AuthResponseData = AuthOkResponse | AuthErrorResponse;

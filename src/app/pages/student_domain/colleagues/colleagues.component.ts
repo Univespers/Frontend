@@ -2,11 +2,9 @@ import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Theme, ThemeService } from 'src/app/utils/theme.service';
-import { ColleagueList } from 'src/app/entities/colleague/colleague-list.model';
 import { Colleague } from 'src/app/entities/colleague/colleague.model';
 import { ColleagueService } from 'src/app/entities/colleague/colleague.service';
-import { finalize, map } from 'rxjs';
-import { ColleagueListResponse, ColleagueResponse } from 'src/app/endpoints/colleague-endpoint.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-colleagues',
@@ -34,7 +32,7 @@ export class ColleaguesComponent implements AfterContentInit, OnInit {
   }
 
   // Colleagues
-  colleaguesList: ColleagueResponse[] = [];
+  colleaguesList: Colleague[] = [];
   public getColleagues() {
     console.log("ListAllCollegues");
     this.isLoading = true;
@@ -45,7 +43,7 @@ export class ColleaguesComponent implements AfterContentInit, OnInit {
     ).subscribe({
       next: (data) => {
         console.log("OK"); // TODO: Deletar
-        this.colleaguesList = data.list;
+        this.colleaguesList = data;
       },
       error: (error) => {
         console.log(error); // TODO: Deletar
