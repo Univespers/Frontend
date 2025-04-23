@@ -13,20 +13,20 @@ export class ColleagueService {
     private colleagueEndpointService: ColleagueEndpointService
   ) {}
 
-  getColleague(id: string): Observable<Colleague> {
-    return this.colleagueEndpointService.getColleague(id).pipe(
+  getColleague(uuid: string): Observable<Colleague> {
+    return this.colleagueEndpointService.getColleague(uuid).pipe(
       map(data => Colleague.getColleague(data))
     );
   }
 
-  getColleagueDetails(id: string): Observable<ColleagueDetails> {
-    return this.colleagueEndpointService.getColleagueDetails(id).pipe(
+  getColleagueDetails(uuid: string): Observable<ColleagueDetails> {
+    return this.colleagueEndpointService.getColleagueDetails(uuid).pipe(
       map(data => ColleagueDetails.getColleagueDetails(data))
     );
   }
 
-  getAllColleagues(): Observable<Colleague[]> {
-    return this.colleagueEndpointService.getAllColleagues().pipe(
+  searchColleagues(query: string, page: number): Observable<Colleague[]> {
+    return this.colleagueEndpointService.searchColleagues(query, page).pipe(
       map(data => Colleague.getColleagueList(data))
     );
   }
