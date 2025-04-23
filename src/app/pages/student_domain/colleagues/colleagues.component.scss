@@ -43,12 +43,19 @@
         justify-content: flex-start;
         gap: 20px; // Distance between cards
 
+        $cardSize: 180px;
+
+        app-loading {
+            width: 100%;
+            height: $cardSize;
+        }
+
         .card {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
 
-            $cardSize: 180px;
             width: $cardSize;
             height: calc($cardSize - 20px);
             border-radius: 20px;
@@ -59,32 +66,56 @@
                 font-size: 1.1em;
                 margin-block: 15px;
                 @include font-title;
+                user-select: none;
+                cursor: pointer;
             }
             .card-body {
                 display: block;
                 margin-bottom: 10px;
                 @include font-text-body;
             }
-            button.card-details {
+
+            app-button-popup-menu {
                 align-self: flex-end;
                 margin: 10px;
                 margin-top: auto;
-                $buttonSize: 25px;
-                width: $buttonSize;
-                height: $buttonSize;
-                border: none;
-                border-radius: 50%;
-                color: $color-text-descriptive-dark;
-                background-color: $color-button-primary;
-                text-align: center;
-                text-decoration: none;
-                @include font-button;
-            }
-            button.card-details:hover {
-                background-color: $color-button-hover-primary;
-            }
-            button.card-details:active {
-                background-color: $color-button-active-primary;
+
+                .popup-menu {
+                    border-radius: 10px; // Curved corners
+                    border: 1px solid darken($color-background-highlight, 20%);
+                    background-color: $color-background-highlight;
+
+                    .popup-item {
+                        white-space: nowrap;
+                        padding: 5px;
+                        @include font-text-body;
+                        user-select: none;
+                        cursor: pointer;
+                    }
+                    .popup-item[disabled] {
+                        cursor: default;
+                        opacity: 0.4;
+                        pointer-events: none;
+                    }
+                    .popup-item:first-child:not(:last-child) {
+                        border-radius: 10px 10px 0px 0px; // Curved top corners
+                    }
+                    .popup-item:last-child:not(:first-child) {
+                        border-radius: 0px 0px 10px 10px; // Curved bottom corners
+                    }
+                    .popup-item:first-child:last-child {
+                        border-radius: 10px; // Curved corners
+                    }
+                    .popup-item:not(:first-child) {
+                        border-top: 1px solid darken($color-background-highlight, 20%); // Separation line
+                    }
+                    .popup-item:hover {
+                        background-color: lighten($color-background-highlight, 5%);
+                    }
+                    .popup-item:active {
+                        background-color: darken($color-background-highlight, 5%);
+                    }
+                }
             }
         }
     }

@@ -11,16 +11,29 @@
     <!-- Colleagues -->
     <div id="panel-container">
         <div id="panel">
-
-            <!-- Colleague -->
-            <div class="card" *ngFor="let colleague of colleaguesList">
-                <span class="card-title">{{ colleague.name }}</span>
-                <span class="card-body">{{ colleague.course }}</span>
-                <span class="card-body">{{ colleague.pole }}</span>
-                <button class="card-details">...</button>
-            </div>
-
+            @if(isLoading) {
+                <app-loading/>
+            } @else {
+                <!-- Colleague -->
+                <div class="card" *ngFor="let colleague of colleaguesList">
+                    <span class="card-title" (click)="showColleagueDetails(colleague.uuid)">{{ colleague.name }}</span>
+                    <span class="card-body">{{ colleague.course }}</span>
+                    <span class="card-body">{{ colleague.pole }}</span>
+                    <app-button-popup-menu class="card-details" [text]="'...'">
+                        <div class="popup-menu">
+                            <div class="popup-item" (click)="showColleagueDetails(colleague.uuid)">Detalhes</div>
+                            <div class="popup-item" disabled>Começar uma conversa</div>
+                            <div class="popup-item" disabled>Adicionar ao grupo</div>
+                        </div>
+                    </app-button-popup-menu>
+                </div>
+            }
         </div>
     </div>
+
+    <app-popup-dialog [(show)]="showDialog">
+        <!-- Colleague-Details -->
+        <app-colleague-details [uuid]="colleagueDetailsUUID"/>
+    </app-popup-dialog>
 
 </div>
