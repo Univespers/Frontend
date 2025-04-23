@@ -15,6 +15,11 @@
     $horizontalPadding: 50px;
     $verticalPadding: 20px;
 
+    app-loading {
+        width: 100vw;
+        height: 100vh;
+    }
+
     #side-logo {
         position: fixed;
         left: 0px;

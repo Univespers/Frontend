@@ -5,9 +5,8 @@
     align-items: center;
     justify-content: center;
 
-    height: 100vh;
-    width: 100vw;
-    background-color: $color-background-secondary-light;
+    height: 100%;
+    width: 100%;
 
     #loading {
         display: inline-block;
@@ -27,10 +26,15 @@
 }
 
 #main.darkBackground {
-    background-color: $color-background-secondary-dark;
-
     #loading {
         border: 3px solid rgba($color-background-secondary-light, 0.3);
         border-top-color: $color-background-secondary-light;
     }
+}
+
+#main.cover {
+    background-color: $color-background-secondary-light;
+}
+#main.cover.darkBackground {
+    background-color: $color-background-secondary-dark;
 }

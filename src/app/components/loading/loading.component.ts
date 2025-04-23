@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ThemeService } from 'src/app/utils/theme.service';
 
 @Component({
@@ -9,6 +9,8 @@ import { ThemeService } from 'src/app/utils/theme.service';
   styleUrl: './loading.component.scss'
 })
 export class LoadingComponent {
+
+  @Input() cover = false;
 
   public isBackgroundDark = false;
 

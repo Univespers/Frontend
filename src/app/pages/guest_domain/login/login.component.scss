@@ -17,6 +17,11 @@
     $horizontalPadding: 10px;
     $verticalPadding: 15px;
 
+    app-loading {
+        width: 100vw;
+        height: 100vh;
+    }
+
     #login-container {
         width: 220px;
         padding-inline: $horizontalPadding;
