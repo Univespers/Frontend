@@ -1,0 +1,67 @@
+@import "src/styles.scss";
+
+:host {
+    z-index: calc(99999 - 1);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; // Unclickable
+}
+#popup-background {
+    background-color: rgba(0, 0, 0, 0.1);
+
+    #popup-dialog-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        width: 100vw;
+        height: 100vh;
+        pointer-events: all; // Clickable
+    }
+
+    #popup-dialog {
+        min-width: 400px;
+        width: 60%;
+        min-height: 400px;
+        height: 50%;
+        // background-color: $color-background-highlight;
+        // border: 1px solid darken($color-background-highlight, 20%);
+        pointer-events: all; // Clickable
+        position: relative; // Allows X button to be relative to popup
+
+        #close-button {
+            $buttonSize: 25px;
+            width: $buttonSize;
+            height: $buttonSize;
+            border: none;
+            border-radius: 50%;
+            background-color: rgba(white, 0.1);
+            margin: 10px;
+            position: absolute; // Float on top
+            right: 0px; // At the right
+
+            color: $color-text-descriptive-dark;
+            text-align: center;
+            text-decoration: none;
+            @include font-button;
+
+            user-select: none;
+            cursor: pointer;
+        }
+        #close-button:hover {
+            background-color: $color-button-hover-primary;
+        }
+        #close-button:active {
+            background-color: $color-button-active-primary;
+        }
+        #contentContainer {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+        }
+    }
+}

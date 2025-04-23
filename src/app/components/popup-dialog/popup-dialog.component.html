@@ -1,0 +1,10 @@
+<div id="popup-background" [hidden]="!show">
+    <div id="popup-dialog-container" (click)="hidePopup()">
+        <div id="popup-dialog" (click)="stopEvent($event)">
+            <button id="close-button" (click)="hidePopup()">x</button>
+            <div id="contentContainer" #contentContainer>
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </div>
+</div>
