@@ -1,0 +1,44 @@
+@import "src/styles.scss";
+
+#popup-menu {
+    #action-button {
+        $buttonSize: 25px;
+        width: $buttonSize;
+        height: $buttonSize;
+        border: none;
+        border-radius: 50%;
+        background-color: $color-button-primary;
+
+        color: $color-text-descriptive-dark;
+        text-align: center;
+        text-decoration: none;
+        @include font-button;
+
+        user-select: none;
+        cursor: pointer;
+    }
+    #action-button:hover {
+        background-color: $color-button-hover-primary;
+    }
+    #action-button:active {
+        background-color: $color-button-active-primary;
+    }
+
+    #popup-background {
+        z-index: calc(99999 - 1);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #contentContainer {
+        position: absolute;
+        z-index: 99999;
+        user-select: none; // Undraggable text
+    }
+    #contentContainer.hidden {
+        display: none;
+    }
+}
