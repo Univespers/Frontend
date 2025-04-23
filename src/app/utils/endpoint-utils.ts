@@ -3,13 +3,20 @@ import { catchError, Observable, of, switchMap, throwError } from "rxjs";
 
 export class EndpointUtils {
 
-    public static MOCK_RESPONSE_DELAY = 1500;
+    // public static MOCK_RESPONSE_DELAY = 1500;
+    // public static MOCK_RESPONSE_DELAY = 3000;
+    public static MOCK_RESPONSE_DELAY = 500;
 
     constructor() {}
     
     // Translates server errors into error messages
     private static _errorHandler(errorData: HttpErrorResponse) {
-        switch(errorData.error?.message?? errorData.error?.error?.message) {
+        const errorMessage: ErrorResponse = {
+            error: {
+                message: errorData.error?.message?? errorData.error?.error?.message ?? "ERROR"
+            }
+        }
+        switch(errorMessage.error.message) {
             case "EMAIL_NOT_FOUND":
                 return throwError(() => new Error("Email não encontrado!"));
             case "NOT_FOUND":
@@ -46,7 +53,7 @@ export class EndpointUtils {
             setTimeout(() => {
             subscriber.next(response);
             subscriber.complete();
-            }, this.MOCK_RESPONSE_DELAY);
+            }, EndpointUtils.MOCK_RESPONSE_DELAY);
         });
     }
 
@@ -54,6 +61,6 @@ export class EndpointUtils {
 
 export interface ErrorResponse {
     error: {
-      message: string; // "EMAIL_NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER"
+      message: "EMAIL_NOT_FOUND" | "NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER" | "ERROR"
     };
 }
