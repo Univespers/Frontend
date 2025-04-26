@@ -1,27 +1,35 @@
-# Univespers
+# Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.5.
+Desenvolvido com _Angular v18_, é a interface onde o usuário interage com o sistema do projeto.
 
-## Development server
+## Camadas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+_Components_ são partes modulares que juntos formam a interface, incluindo as páginas e elementos que as compõem.
 
-## Code scaffolding
+_Services_ trazem as funcionalidades, permitindo que dados sejam transportados dentre todos os componentes.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+_Endpoints_ tratam de realizar a comunicação com o _Backend_, acessando diversos endereços web e enviando/recebendo dados. Não conhece nada do funcionamento interno do _Backend_, apenas os endereços, os dados que aceitam, e as respostas que dão.
 
-## Build
+## Interface
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Construida com elementos visuais, deve ser uma experiência fluida e de fácil entendimento para o usuário.
 
-## Running unit tests
+Seu foco é ser simples, oferecendo apenas o necessário de forma a livrar o usuário da complexidade que um sistema completo traz.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Implementação
 
-## Running end-to-end tests
+É necessário ter _NPM_ instalado.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+O comando `npm install` instala todas as dependências de um projeto em uma pasta _node\_modules_. A pasta pode ser considerada pesada.
 
-## Further help
+O comando `ng serve` inicia o servidor e indica sua porta onde fica disponível.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Desenvolvimento
+
+Alterações no código automaticamente atualizam o servidor e são refletidas no site. _Angular_ torna o processo bem rápido.
+
+O comando `ng generate component NOME` gera um novo componente chamado `NOME`. O mesmo pode ser feito para `service`, `class`, `guard`, etc.
+
+O comando `ng build` monta o projeto em arquivos HTML, CSS, e JS na pasta _/dist_ e podem ser carregados por qualquer navegador.
+
+Enfim, o comando `ng deploy --base-href=/Frontend/` carrega o projeto para um _GitHub Page_, onde pode ser visualizado. Importante notar que, para isso, cria um novo _commit_ no repositório! Não deve ser usado levianamente.
