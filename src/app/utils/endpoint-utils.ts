@@ -20,7 +20,7 @@ export class EndpointUtils {
             case "EMAIL_NOT_FOUND":
                 return throwError(() => new Error("Email não encontrado!"));
             case "NOT_FOUND":
-                return throwError(() => new Error("Colega não encontrado!"));
+                return throwError(() => new Error("Não encontrado!"));
             case "INVALID_PASSWORD":
                 return throwError(() => new Error("Senha incorreta!"));
             case "USER_DISABLED":
@@ -61,6 +61,7 @@ export class EndpointUtils {
 
 export interface ErrorResponse {
     error: {
-      message: "EMAIL_NOT_FOUND" | "NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER" | "ERROR"
+      message: "EMAIL_NOT_FOUND" | "NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER" | "ERROR",
+      details?: string
     };
 }

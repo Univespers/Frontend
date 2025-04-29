@@ -10,11 +10,11 @@ import { EndpointUtils, ErrorResponse } from 'src/app/utils/endpoint-utils';
 })
 export class AuthEndpointService {
 
-  private mock = true; // TODO: (Auth) Remover mocks
+  private mock = false; // TODO: (Auth) Remover mocks
 
   private apiEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
-  private authEndpoint = `${this.apiEndpoint}/user`;
-  private authSigninEndpoint = `${this.authEndpoint}/new`;
+  private authEndpoint = `${this.apiEndpoint}/usuario`;
+  private authSigninEndpoint = `${this.authEndpoint}/novo`;
   private authLoginEndpoint = `${this.authEndpoint}/login`;
 
   constructor(
@@ -26,9 +26,8 @@ export class AuthEndpointService {
 
     if(this.mock) {
       const response = JSON.parse(`{
-        "id": "abc123",
-        "tipo": "STUDENT",
-        "token": "123456abcdef",
+        "token": "4bbff43d-2539-11f0-bd4c-14ebb6cd199a",
+        "tipo": "ESTUDANTE",
         "validade": 3600000
       }`);
       return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
@@ -41,8 +40,7 @@ export class AuthEndpointService {
         this.authSigninEndpoint,
         {
           email: email,
-          password: password,
-          returnSecureToken: true
+          password: password
         }
       )
     );
@@ -59,9 +57,8 @@ export class AuthEndpointService {
       }`);
       if(email == "aluno" && password == "1234") {
         response = JSON.parse(`{
-          "id": "abc123",
-          "tipo": "STUDENT",
-          "token": "123456abcdef",
+          "token": "4bbff43d-2539-11f0-bd4c-14ebb6cd199a",
+          "tipo": "ESTUDANTE",
           "validade": 3600000
         }`);
       }
@@ -75,8 +72,7 @@ export class AuthEndpointService {
         this.authLoginEndpoint,
         {
           email: email,
-          password: password,
-          returnSecureToken: true
+          password: password
         }
       )
     );
@@ -86,7 +82,6 @@ export class AuthEndpointService {
 
 // Backend response model
 export interface AuthOkResponse {
-  id: string; // ID único
   tipo: AuthType; // "STUDENT" | "ADMIN"
   token: string; // Token = String de números e letras aleatórios
   validade: string; // Data de validade, em milissegundos (3600000 = 1h antes do logout automático)

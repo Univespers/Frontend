@@ -26,5 +26,5 @@ export class Auth {
 }
 
 export enum AuthType {
-  Guest = "GUEST", Student = "STUDENT", Admin = "ADMIN"
+  Guest = "VISITANTE", Student = "ESTUDANTE", Admin = "ADMINISTRADOR"
 }
