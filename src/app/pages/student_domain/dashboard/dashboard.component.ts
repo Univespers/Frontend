@@ -14,8 +14,14 @@ export class DashboardComponent {
     private router: Router
   ) {}
 
-  logout() {
+  toLogout() {
     this.router.navigate([ "/logout" ]);
+  }
+
+  toColleagues() {
+    // this.router.navigate([ "/colegas" ]);
+    window.location.reload(); // Reload = Looks more responsive
+    // TODO: (Dashboard) Trocar reload por re-route quando houver mais do que a página de Colegas
   }
 
 }

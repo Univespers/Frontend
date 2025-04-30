@@ -1,13 +1,21 @@
 <div id="main">
     <div id="sidebar">
-        <img id="logo" src="logo.png" alt="UNIVESPERS"/>
-        <div class="page-link">
+        <div id="logo-container" (click)="toColleagues()">
+            <img id="logo" src="logo.png" alt="UNIVESPERS"/>
+        </div>
+        <div class="page-link" disabled>
             <i class="item-icon fas fa-user fa-lg"></i>Perfil
         </div>
         <div class="page-link highlighted">
             <i class="item-icon fas fa-user-friends fa-flip-horizontal fa-lg"></i>Colegas
         </div>
-        <div class="page-link logout" (click)="logout()">
+        <div class="page-link" disabled>
+            <i class="item-icon fas fa-users-cog fa-flip-horizontal fa-lg"></i>Grupo
+        </div>
+        <div class="page-link" disabled>
+            <i class="item-icon fas fa-comment-alt fa-lg"></i>Conversas
+        </div>
+        <div class="page-link logout" (click)="toLogout()">
             <i class="item-icon fas fa-sign-out-alt fa-lg"></i>Logout
         </div>
     </div>

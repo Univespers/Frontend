@@ -15,9 +15,13 @@
         justify-content: stretch;
 
         flex-grow: 0;
-        width: 150px;
+        width: 200px;
         background-color: rgba($color-background-secondary-dark, 0.7);
 
+        #logo-container {
+            user-select: none; // Undraggable
+            cursor: pointer;
+        }
         #logo {
             top: 0px;
             width: 100%;
@@ -30,12 +34,18 @@
             @include font-title;
             color: $color-background-highlight;
             user-select: none; // Undraggable
+            cursor: pointer;
 
             .item-icon {
                 width: 20px;
                 margin-left: 15px;
                 margin-right: 5px;
             }
+        }
+        .page-link[disabled] {
+            cursor: default;
+            opacity: 0.4;
+            pointer-events: none;
         }
         .highlighted {
             color: $color-background-support;
