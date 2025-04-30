@@ -90,7 +90,12 @@ export class ColleagueEndpointService {
             "reddit": "aluno3@reddit"
           }
         }`
-        : ""
+        : `{
+          "uuid": "abc123",
+          "nome": "Aluno",
+          "curso": "Curso",
+          "polo": "Polo"
+        }`
       );
       return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueDetailsResponse, ColleagueErrorResponse>(
         EndpointUtils.mockEndpoint(response)

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { AfterContentInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-user-contacts-form',
@@ -8,9 +8,18 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user-contacts-form.component.html',
   styleUrl: './user-contacts-form.component.scss'
 })
-export class UserContactsFormComponent {
+export class UserContactsFormComponent implements AfterContentInit {
 
-  submit(form: any) {
-    console.log(form.value);
+  // Form
+  @ViewChild("userContactsForm", { static: true }) userContactsForm?: NgForm;
+  @Output("form") formEmitter = new EventEmitter<NgForm>();
+
+  ngAfterContentInit() {
+    this.formEmitter.emit(this.userContactsForm);
   }
+
+  submit(form: NgForm) {
+    this.formEmitter.emit(form);
+  }
+
 }

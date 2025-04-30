@@ -8,19 +8,21 @@
 
         <div id="parent-container">
             <!-- Signin -->
+            <form #signin="ngForm" (ngSubmit)="submit(userDataForm, userContactsForm, userCourseForm)">
             <div id="signin-container">
                 <div class="header">
                     Criar uma nova conta
                 </div>
-                <app-stepper [(currentStep)]="currentStep">
-                    <app-user-data-form/>
-                    <app-user-contacts-form/>
-                    <app-user-course-form/>
-                </app-stepper>
-            </div>
+                    <app-stepper [(currentStep)]="currentStep">
+                        <app-user-data-form (form)="getUserDataForm($event)"/>
+                        <app-user-contacts-form (form)="getUserContactsForm($event)"/>
+                        <app-user-course-form (form)="getUserCourseForm($event)"/>
+                    </app-stepper>
+                </div>
+            </form>
 
             <!-- Signin button -->
-            <button id="signin" (click)="nextStep()">{{ currentStep === 2? "Cadastre-se" : "Avançar" }}</button>
+            <button id="signin" (click)="nextStep()">{{ isLastStep()? "Cadastre-se" : "Avançar" }}</button>
         </div>
     }
 
