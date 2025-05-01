@@ -11,7 +11,7 @@ import { UserCourseFormComponent } from './user-course-form/user-course-form.com
 import { Theme, ThemeService } from 'src/app/utils/theme.service';
 import { AuthService } from 'src/app/entities/auth/auth.service';
 import { ProfileService } from 'src/app/entities/profile/profile.service';
-import { finalize } from 'rxjs';
+import { finalize, Observable, of, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -43,8 +43,8 @@ export class SigninComponent implements AfterContentInit, RequiresSave {
     private themeService: ThemeService,
     @Inject(PLATFORM_ID) platformId: Object,
     private authService: AuthService,
-    private router: Router,
     private profileService: ProfileService,
+    private router: Router,
   ) {
     this.isLoading = isPlatformServer(platformId);
   }
@@ -81,39 +81,77 @@ export class SigninComponent implements AfterContentInit, RequiresSave {
   getUserCourseForm(form: NgForm) {
     this.userCourseForm = form;
   }
-  submit(userData: any, userContacts: any, userCourse: any) {
+  submit(userDataForm: any, userContactsForm: any, userCourseForm: any) {
     this.isLoading = true;
 
     // if(!form.valid) return; // TODO: (Cadastro) Validar
 
-    if(!userData || !userContacts || !userCourse) {
+    if(!userDataForm || !userContactsForm || !userCourseForm) {
       this.isLoading = false;
       return;
     }
 
-    // console.log(userData.value); // TODO: Deletar
-    // console.log(userContacts.value); // TODO: Deletar
-    // console.log(userCourse.value); // TODO: Deletar
+    console.log(userDataForm.value); // TODO: Deletar
+    console.log(userContactsForm.value); // TODO: Deletar
+    console.log(userCourseForm.value); // TODO: Deletar
 
-    const email = userData.value.userInstitutionalEmail;
-    const password = userData.value.userPassword;
-    const passwordConfirmation = userData.value.userPasswordConfirmation;
+    const name = userDataForm.value.userName;
+    const institutionalEmail = userDataForm.value.userInstitutionalEmail;
+    const telephone = userDataForm.value.userTelephone;
+    const showTelephone = userDataForm.value.userShowTelephone;
+    const isWhatsapp = userDataForm.value.userTelIsWhatsapp;
+    const password = userDataForm.value.userPassword;
+    const passwordConfirmation = userDataForm.value.userPasswordConfirmation;
+    const description = userDataForm.value.userDescription;
+    const showDescription = userDataForm.value.userShowDescription;
 
-    if(!password || password !== passwordConfirmation) {
-      this.isLoading = false;
-      return;
-    }
+    const course = userCourseForm.value.userCourse;
+    const pole = userCourseForm.value.userPole;
+    const currentSemester = userCourseForm.value.userCurrentSemester;
+    const interests = userCourseForm.value.userInterests;
+    const skills = userCourseForm.value.userSkills;
+    const subjects = userCourseForm.value.userSubjects;
 
-    this.authService.registerUser(email, password).pipe(
+    const personalEmail = userCourseForm.value.userPersonalEmail;
+    const showPersonalEmail = userCourseForm.value.userShowPersonalEmail;
+    const linkedin = userCourseForm.value.userLinkedIn;
+    const showLinkedIn = userCourseForm.value.userShowLinkedIn;
+    const facebook = userCourseForm.value.userFacebook;
+    const showFacebook = userCourseForm.value.userShowFacebook;
+    const instagram = userCourseForm.value.userInstagram;
+    const showInstagram = userCourseForm.value.userShowInstagram;
+    const discord = userCourseForm.value.userDiscord;
+    const showDiscord = userCourseForm.value.userShowDiscord;
+    const github = userCourseForm.value.userGitHub;
+    const showGitHub = userCourseForm.value.userShowGitHub;
+    const reddit = userCourseForm.value.userReddit;
+    const showReddit = userCourseForm.value.userShowReddit;
+
+    // if(!password || password !== passwordConfirmation) {
+    //   this.isLoading = false;
+    //   return;
+    // }
+
+    // Register User
+    of(true).pipe(
+      switchMap(data => this.authService.registerUser(institutionalEmail, password)),
+      switchMap(data => this.authService.loginUser(institutionalEmail, password)),
+      switchMap(data => this.profileService.createProfile(name, institutionalEmail, course, pole)),
+      // switchMap(data => this.profileService.editProfile(
+      //   name, institutionalEmail, telephone, isWhatsapp, description,
+      //   showTelephone, showDescription,
+      //   course, pole, currentSemester, interests, skills, subjects,
+      //   personalEmail, linkedin, facebook, instagram, discord, github, reddit,
+      //   showPersonalEmail, showLinkedIn, showFacebook, showInstagram, showDiscord, showGitHub, showReddit)),
       finalize(() => {
         this.isLoading = false;
+        userDataForm.reset();
+        userContactsForm.reset();
+        userCourseForm.reset();
       })
     ).subscribe({
       next: (data) => {
-        console.log("OK"); // TODO: Deletar
-        userData.reset();
-        userContacts.reset();
-        userCourse.reset();
+        console.log("Cadastro: OK"); // TODO: Deletar
         switch(true) {
           case this.authService.isUserStudent():
             this.router.navigate([ "/colegas" ]);

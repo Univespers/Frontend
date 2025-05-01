@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
-import { AuthEndpointService } from 'src/app/endpoints/auth-endpoint.service';
+import { AuthEndpointService, AuthOkResponse } from 'src/app/endpoints/auth-endpoint.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +34,8 @@ export class AuthService {
   }
 
   // Signin
-  public registerUser(email: string, password: string): Observable<Auth> {
-    return this.authEndpointService.registerUser(email, password).pipe(
-      map(data => Auth.getAuth(data)),
-      tap(data => this._loadAuth(data))
-    );
+  public registerUser(email: string, password: string): Observable<AuthOkResponse> {
+    return this.authEndpointService.registerUser(email, password);
   }
 
   // Login

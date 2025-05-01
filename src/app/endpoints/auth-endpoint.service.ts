@@ -24,6 +24,8 @@ export class AuthEndpointService {
   // Signin
   public registerUser(email: string, password: string): Observable<AuthOkResponse> {
 
+    console.log("REGISTER_USER");
+
     if(this.mock) {
       const response = JSON.parse(`{
         "token": "4bbff43d-2539-11f0-bd4c-14ebb6cd199a",
@@ -47,7 +49,9 @@ export class AuthEndpointService {
   }
 
   // Login
-  public loginUser(email: string, password: string): Observable<AuthOkResponse> {
+  public loginUser(email: string, password: string): Observable<AuthTokenResponse> {
+
+    console.log("LOGIN_USER");
 
     if(this.mock) {
       let response = JSON.parse(`{
@@ -62,12 +66,12 @@ export class AuthEndpointService {
           "validade": 3600000
         }`);
       }
-      return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
+      return EndpointUtils.endpointHandler<AuthResponseData, AuthTokenResponse, AuthErrorResponse>(
         EndpointUtils.mockEndpoint(response)
       );
     } // TODO: (Auth) Remover mock
 
-    return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
+    return EndpointUtils.endpointHandler<AuthResponseData, AuthTokenResponse, AuthErrorResponse>(
       this.http.post<AuthResponseData>(
         this.authLoginEndpoint,
         {
@@ -82,9 +86,12 @@ export class AuthEndpointService {
 
 // Backend response model
 export interface AuthOkResponse {
+  response: "OK";
+}
+export interface AuthTokenResponse {
   tipo: AuthType; // "STUDENT" | "ADMIN"
   token: string; // Token = String de números e letras aleatórios
   validade: string; // Data de validade, em milissegundos (3600000 = 1h antes do logout automático)
 }
 export interface AuthErrorResponse extends ErrorResponse {}
-export type AuthResponseData = AuthOkResponse | AuthErrorResponse;
+export type AuthResponseData = AuthOkResponse | AuthTokenResponse | AuthErrorResponse;

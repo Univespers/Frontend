@@ -1,4 +1,4 @@
-import { AuthOkResponse } from "src/app/endpoints/auth-endpoint.service";
+import { AuthTokenResponse } from "src/app/endpoints/auth-endpoint.service";
 
 export class Auth {
 
@@ -17,7 +17,7 @@ export class Auth {
   }
 
   // Converts auth
-  public static getAuth(authData: AuthOkResponse) {
+  public static getAuth(authData: AuthTokenResponse) {
     const expiresIn = +authData.validade;
     const expirationDate = new Date(new Date().getTime() + expiresIn);
     return new Auth(authData.tipo, authData.token, expirationDate);

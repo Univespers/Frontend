@@ -32,8 +32,8 @@ export class EndpointUtils {
             case "TOO_MANY_ATTEMPTS_TRY_LATER":
                 return throwError(() => new Error("Detectado atividades incomuns! Tente mais tarde!"));
             default:
-                return throwError(() => new Error("Um erro ocorreu!"));
-        } // TODO: (Endpoints) Definir erros
+                return throwError(() => new Error(`Um erro ocorreu! (${errorMessage.error.message})`));
+        }
     }
 
     public static endpointHandler<Data extends Ok | Error | {}, Ok, Error extends ErrorResponse>(action: Observable<Data>) {
@@ -61,7 +61,7 @@ export class EndpointUtils {
 
 export interface ErrorResponse {
     error: {
-      message: "EMAIL_NOT_FOUND" | "NOT_FOUND" | "INVALID_PASSWORD" | "USER_DISABLED" | "EMAIL_EXISTS" | "OPERATION_NOT_ALLOWED" | "TOO_MANY_ATTEMPTS_TRY_LATER" | "ERROR",
+      message: string,
       details?: string
     };
 }
