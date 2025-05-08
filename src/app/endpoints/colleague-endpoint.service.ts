@@ -9,13 +9,12 @@ import { EndpointUtils, ErrorResponse } from '../utils/endpoint-utils';
 })
 export class ColleagueEndpointService {
 
-  private mock = true; // TODO: (Colleagues) Remover mocks
+  private mock = false; // TODO: (Colleagues) Remover mocks
 
   private apiEndpoint = "http://localhost:3000/api"; // TODO: (Colleagues) Endpoint
-  private colleaguesEndpoint = `${this.apiEndpoint}/colleagues`;
-  private allColleaguesEndpoint = `${this.colleaguesEndpoint}/list`;
-  private colleagueDetailsEndpoint = (uuid: string) => `${this.colleaguesEndpoint}/${uuid}/details`;
+  private colleaguesEndpoint = `${this.apiEndpoint}/estudante/colegas`;
   private colleagueEndpoint = (uuid: string) => `${this.colleaguesEndpoint}/${uuid}`;
+  private colleagueDetailsEndpoint = (uuid: string) => `${this.colleaguesEndpoint}/${uuid}/detalhes`;
 
     constructor(
       private http: HttpClient
@@ -111,6 +110,7 @@ export class ColleagueEndpointService {
 
   // All Colleagues
   public searchColleagues(query: string, page: number): Observable<ColleagueListResponse> {
+    const pageQuantity = 10;
   
     if(this.mock) {
       let response = JSON.parse(`{
@@ -144,9 +144,9 @@ export class ColleagueEndpointService {
 
     return EndpointUtils.endpointHandler<ColleagueResponseData, ColleagueListResponse, ColleagueErrorResponse>(
       this.http.get<ColleagueResponseData>(
-        this.allColleaguesEndpoint,
+        this.colleaguesEndpoint,
         {
-          params: new HttpParams().set("pesquisa", query).set("pagina", 1)
+          params: new HttpParams().set("termo", query).set("pagina", page).set("quantidade", pageQuantity)
         }
       )
     );

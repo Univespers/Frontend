@@ -12,14 +12,25 @@ export class Colleague {
     public static getColleague(colleagueData: ColleagueResponse) {
         return new Colleague(colleagueData.uuid, colleagueData.nome, colleagueData.curso, colleagueData.polo);
     }
+}
+
+export class ColleagueList {
+    constructor(
+        public list: Colleague[],
+        public page: number,
+        public totalPages: number
+    ) {}
 
     // Converts list of colleagues
     public static getColleagueList(colleagueData: ColleagueListResponse) {
-        return colleagueData.lista.map(colleague => {
-            return new Colleague(colleague.uuid, colleague.nome, colleague.curso, colleague.polo);
-        });
+        return new ColleagueList(
+            colleagueData.lista.map(colleague => {
+                return new Colleague(colleague.uuid, colleague.nome, colleague.curso, colleague.polo);
+            }),
+            colleagueData.pagina,
+            colleagueData.totalPaginas
+        );
     }
-
 }
 
 export class ColleagueDetails extends Colleague {

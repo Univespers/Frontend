@@ -2,10 +2,11 @@
 
     <!-- Search bar -->
     <div id="search-container">
-        <input id="search"
+        <input id="search" #searchField
             type="text"
-            placeholder="Busque pelo nome, curso ou polo"/>
-        <i class="search-icon fa fa-search fa-lg"></i>
+            placeholder="Busque pelo nome, curso ou polo"
+            (input)="search(searchField.value)"/>
+        <i class="search-icon fa fa-search fa-lg" (click)="search(searchField.value)"></i>
     </div>
 
     <!-- Colleagues -->

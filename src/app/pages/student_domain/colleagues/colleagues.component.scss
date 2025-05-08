@@ -60,6 +60,7 @@
             height: calc($cardSize - 20px);
             border-radius: 20px;
             background-color: $color-background-highlight;
+            text-align: center;
 
             .card-title {
                 display: block;
@@ -78,7 +79,8 @@
             app-button-popup-menu {
                 align-self: flex-end;
                 margin: 10px;
-                margin-top: auto;
+                margin-top: calc($cardSize - 20px - 25px - 10px);
+                position: absolute;
 
                 .popup-menu {
                     border-radius: 10px; // Curved corners

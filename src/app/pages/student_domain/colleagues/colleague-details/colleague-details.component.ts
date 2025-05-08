@@ -33,6 +33,7 @@ export class ColleagueDetailsComponent {
   // Colleague Details
   colleagueDetails?: ColleagueDetails;
   showColleagueDetails(colleagueUUID: string) {
+    if(!colleagueUUID) return;
     console.log("ColleguesDetails"); // TODO: Deletar
     this.isLoading = true;
     this.colleagueService.getColleagueDetails(colleagueUUID).pipe(

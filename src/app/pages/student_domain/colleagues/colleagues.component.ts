@@ -28,26 +28,25 @@ export class ColleaguesComponent implements AfterContentInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.getColleagues();
+    this.search("");
   }
 
   ngAfterContentInit() {
     this.themeService.setBackgroundTheme(Theme.Light);
   }
 
-  // Colleagues
+  // Search colleagues
   colleaguesList: Colleague[] = [];
-  public getColleagues() {
-    console.log("ListAllCollegues"); // TODO: Deletar
-    this.isLoading = true;
-    this.colleagueService.searchColleagues("", 1).pipe(
+  public search(searchWord: string) {
+    let page = 1;
+    this.colleagueService.searchColleagues(searchWord, page).pipe(
       finalize(() => {
         this.isLoading = false;
       })
     ).subscribe({
       next: (data) => {
         console.log("OK"); // TODO: Deletar
-        this.colleaguesList = data;
+        this.colleaguesList = data.list;
       },
       error: (error) => {
         console.log(error); // TODO: Deletar

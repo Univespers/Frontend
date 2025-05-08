@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { ColleagueEndpointService } from 'src/app/endpoints/colleague-endpoint.service';
-import { Colleague, ColleagueDetails } from './colleague.model';
+import { Colleague, ColleagueDetails, ColleagueList } from './colleague.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +25,9 @@ export class ColleagueService {
     );
   }
 
-  searchColleagues(query: string, page: number): Observable<Colleague[]> {
+  searchColleagues(query: string, page: number): Observable<ColleagueList> {
     return this.colleagueEndpointService.searchColleagues(query, page).pipe(
-      map(data => Colleague.getColleagueList(data))
+      map(data => ColleagueList.getColleagueList(data))
     );
   }
 
