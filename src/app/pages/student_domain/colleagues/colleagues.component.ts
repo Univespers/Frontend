@@ -38,8 +38,7 @@ export class ColleaguesComponent implements AfterContentInit, OnInit {
   // Search colleagues
   colleaguesList: Colleague[] = [];
   public search(searchWord: string) {
-    let page = 1;
-    this.colleagueService.searchColleagues(searchWord, page).pipe(
+    this.colleagueService.searchColleagues(searchWord, this.currentPage).pipe(
       finalize(() => {
         this.isLoading = false;
       })
@@ -47,12 +46,25 @@ export class ColleaguesComponent implements AfterContentInit, OnInit {
       next: (data) => {
         console.log("OK"); // TODO: Deletar
         this.colleaguesList = data.list;
+        this.totalPages = data.totalPages;
       },
       error: (error) => {
         console.log(error); // TODO: Deletar
         this.error = error;
       }
     });
+  }
+
+  // Paginator
+  currentPage = 1;
+  totalPages = 0;
+  prevPage() {
+    this.currentPage--;
+    if(this.currentPage <= 1) this.currentPage = 1;
+  }
+  nextPage() {
+    this.currentPage++;
+    if(this.currentPage >= this.totalPages) this.currentPage = this.totalPages;
   }
 
   // Colleague Details

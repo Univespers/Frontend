@@ -34,7 +34,7 @@ export class ColleagueDetailsComponent {
   colleagueDetails?: ColleagueDetails;
   showColleagueDetails(colleagueUUID: string) {
     if(!colleagueUUID) return;
-    console.log("ColleguesDetails"); // TODO: Deletar
+    console.log("ColleagueDetails"); // TODO: Deletar
     this.isLoading = true;
     this.colleagueService.getColleagueDetails(colleagueUUID).pipe(
       finalize(() => {

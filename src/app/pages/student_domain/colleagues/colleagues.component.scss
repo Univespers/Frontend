@@ -38,10 +38,47 @@
     }
     #panel {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap; // Wrap content
-        justify-content: flex-start;
-        gap: 20px; // Distance between cards
+        flex-direction: column;
+
+        #card-gallery {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; // Wrap content
+            justify-content: flex-start;
+            gap: 20px; // Distance between cards
+        }
+        #paginator {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            #back, #pager, #next {
+                $buttonSize: 25px;
+                width: $buttonSize;
+                height: $buttonSize;
+                border: none;
+                border-radius: 50%;
+                background-color: $color-background-highlight;
+                color: $color-text-descriptive-light;
+                text-align: center;
+                text-decoration: none;
+                @include font-button;
+                user-select: none;
+                cursor: pointer;
+                margin: 20px;
+            }
+            #back[disabled], #pager[disabled], #next[disabled] {
+                background-color: lighten($color-background-highlight, 5%);
+                color: lighten($color-text-descriptive-light, 30%);
+                cursor: default;
+            }
+            #back:hover:not([disabled]), #pager:hover:not([disabled]), #next:hover:not([disabled]) {
+                background-color: lighten($color-background-highlight, 5%);
+            }
+            #back:active:not([disabled]), #pager:active:not([disabled]), #next:active:not([disabled]) {
+                background-color: darken($color-background-highlight, 10%);
+            }
+        }
 
         $cardSize: 180px;
 
