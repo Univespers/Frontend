@@ -16,6 +16,7 @@ export class AuthEndpointService {
   private authEndpoint = `${this.apiEndpoint}/usuario`;
   private authSigninEndpoint = `${this.authEndpoint}/novo`;
   private authLoginEndpoint = `${this.authEndpoint}/login`;
+  private authLogoutEndpoint = `${this.authEndpoint}/logout`;
 
   constructor(
     private http: HttpClient
@@ -78,6 +79,27 @@ export class AuthEndpointService {
           email: email,
           password: password
         }
+      )
+    );
+  }
+
+  // Logout
+  public logoutUser(): Observable<AuthOkResponse> {
+
+    console.log("LOGOUT_USER");
+
+    if(this.mock) {
+      const response = JSON.parse(`{
+        "response": "OK"
+      }`);
+      return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
+        EndpointUtils.mockEndpoint(response)
+      );
+    } // TODO: (Auth) Remover mock
+
+    return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
+      this.http.get<AuthResponseData>(
+        this.authLogoutEndpoint
       )
     );
   }

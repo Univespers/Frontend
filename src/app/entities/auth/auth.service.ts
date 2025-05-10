@@ -46,6 +46,13 @@ export class AuthService {
     );
   }
 
+  // Logout
+  public logoutUser(): Observable<AuthOkResponse> {
+    return this.authEndpointService.logoutUser().pipe(
+      tap(data => this.logout())
+    );
+  }
+
   // AutoLogin when page reloads
   public autoLogin(): Observable<Auth> {
     return this._getAuthLocally().pipe(

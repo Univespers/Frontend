@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AuthService } from 'src/app/entities/auth/auth.service';
 
 @Component({
@@ -20,8 +21,11 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit() {
     console.log("LOGOUT");
-    this.authService.logout();
-    window.location.reload(); // TODO: (Logout) Nada de reload! Refazer
+    this.authService.logoutUser().pipe(
+      finalize(() => {
+        window.location.reload(); // TODO: (Logout) Nada de reload! Refazer
+      })
+    ).subscribe();
   }
 
 }
