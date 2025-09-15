@@ -13,16 +13,14 @@ export class AuthService {
   public auth: Auth = new Auth(AuthType.Guest);
 
   private static _LOCAL_AUTH_DATA_NAME = "authorization";
-  private _logoutTimer: NodeJS.Timeout | null = null;
+  private _logoutTimer: any | null = null;
   private _localStorage = new BehaviorSubject<Storage | null>(null);
 
   constructor(
     private authEndpointService: AuthEndpointService,
     private router: Router
   ) {
-    afterNextRender(() => {
-      this._localStorage.next(localStorage); // "localStorage" is a browser thing. SSR doesn't have that
-    });
+    this._localStorage.next(localStorage);
   }
 
   // Auth types
