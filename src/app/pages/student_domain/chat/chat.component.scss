@@ -1,0 +1,27 @@
+:host { // Fill all space given by the parent
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: calc(100vh - 10px);
+}
+
+.chat-list {
+  width: 40%;
+  margin: 10px;
+  background: #afaeae;
+  border-radius: 16px;
+}
+
+.messages {
+  width: 60%;
+  margin: 10px;
+  border-radius: 16px;
+}
+
+.search-input {
+  margin: 24px;
+
+}
