@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ThemeService } from 'src/app/utils/theme.service';
+import { ThemeService } from 'src/app/features/theme.service';
 
 @Component({
   selector: 'app-loading',

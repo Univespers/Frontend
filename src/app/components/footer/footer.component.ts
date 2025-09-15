@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { CurrentStatus } from 'src/app/current-status';
-import { ThemeService } from 'src/app/utils/theme.service';
+import { ThemeService } from 'src/app/features/theme.service';
 
 @Component({
   selector: 'app-footer',
