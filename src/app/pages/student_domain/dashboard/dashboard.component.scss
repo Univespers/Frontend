@@ -47,6 +47,10 @@
             opacity: 0.4;
             pointer-events: none;
         }
+        .page-link.active {
+          color: #00B8B0;
+          font-weight: bold; // opcional, se quiser dar destaque extra
+        }
         .highlighted {
             color: $color-background-support;
         }

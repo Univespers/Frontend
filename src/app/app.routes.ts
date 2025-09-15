@@ -7,6 +7,7 @@ import { ColleaguesComponent } from './pages/student_domain/colleagues/colleague
 import { ProfileComponent } from './pages/student_domain/profile/profile.component';
 import { ProfileEditComponent } from './pages/student_domain/profile-edit/profile-edit.component';
 import { LogoutComponent } from './pages/student_domain/logout/logout.component';
+import { ChatComponent } from './pages/student_domain/chat/chat.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 import { routeGuard } from './pages/route.guard';
@@ -32,6 +33,7 @@ export const routes: Routes = [
     { path: "perfil", component: ProfileComponent },
     { path: "perfil/editar", component: ProfileEditComponent, canDeactivate: [ unsavedChangesGuard ] },
     { path: "logout", component: LogoutComponent },
+    { path: "chat", component: ChatComponent },
   ], canActivateChild: [ studentAccessGuard ]},
 
   // Not found page
