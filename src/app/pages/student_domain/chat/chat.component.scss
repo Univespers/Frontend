@@ -23,5 +23,25 @@
 
 .search-input {
   margin: 24px;
-
+  width: calc(100% - 48px); // 100% menos as margens laterais
 }
+
+::ng-deep .search-input .mat-mdc-form-field-infix {
+  background-color: #fff; // fundo branco
+}
+
+::ng-deep .search-input .mat-mdc-text-field-wrapper {
+  background-color: #fff !important; // deixa o container branco
+}
+
+::ng-deep .search-input .mat-mdc-form-field-infix {
+  background-color: #fff !important; // garante que o meio também seja branco
+}
+
+::ng-deep .search-input .mat-mdc-form-field {
+  width: 100%; // garante que o mat-form-field ocupe toda a largura disponível
+}
+
+
+
+

@@ -10,7 +10,9 @@
         />
       </mat-form-field>
       <mat-autocomplete #users="matAutocomplete">
-        <mat-option>Guilherme</mat-option>
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user.nome">
+          {{ user.nome }}
+        </mat-option>
       </mat-autocomplete>
     </div>
   </div>
