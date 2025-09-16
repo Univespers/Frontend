@@ -2,12 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { FirebaseApp } from '@angular/fire/app';
+import { getDatabase, ref, set } from '@angular/fire/database';
 
 import { AuthType } from 'src/app/features/auth/auth.model';
 import { EndpointUtils, ErrorResponse } from '../endpoint-utils';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FirebaseApp } from '@angular/fire/app';
-import { getDatabase, ref, set } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,7 @@ export class AuthEndpointService {
 
   private apiEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
   private authEndpoint = `${this.apiEndpoint}/usuario`;
-  private authSigninEndpoint = `${this.authEndpoint}/novo`;
+  private authCadastroEndpoint = `${this.authEndpoint}/novo`;
   private authLoginEndpoint = `${this.authEndpoint}/login`;
   private authLogoutEndpoint = `${this.authEndpoint}/logout`;
 
@@ -27,7 +26,7 @@ export class AuthEndpointService {
     private fireApp: FirebaseApp
   ) {}
 
-  // Signin
+  // Cadastro
   public registerUser(email: string, password: string): Observable<AuthOkResponse> {
 
     const auth = getAuth(this.fireApp);
@@ -61,7 +60,7 @@ export class AuthEndpointService {
 
     return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
       this.http.post<AuthResponseData>(
-        this.authSigninEndpoint,
+        this.authCadastroEndpoint,
         {
           email: email,
           password: password

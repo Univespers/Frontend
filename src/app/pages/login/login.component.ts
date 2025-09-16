@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/features/theme.service';
 import { AuthService } from 'src/app/features/auth/auth.service';
-import { finalize } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -43,29 +43,49 @@ export class LoginComponent implements AfterContentInit {
     // if(!form.valid) return; // TODO: (Login) Validar
     const email = form.value.userEmail;
     const password = form.value.userPassword;
-    this.authService.loginUser(email, password).pipe(
+
+    this.login(email, password).pipe(
       finalize(() => {
-        this.isLoading = false;
+        this.isLoading = false; // Desliga animação
       })
     ).subscribe({
       next: (data) => {
-        console.log("OK"); // TODO: Deletar
-        form.reset();
-        switch(true) {
-          case this.authService.isUserStudent():
-            this.router.navigate([ "/colegas" ]);
-            break;
-        }
+        form.reset(); // Reset form
       },
       error: (error) => {
-        console.log(error); // TODO: Deletar
-        this.error = error;
+        this.error = error; // Informa erro
       }
     });
   }
 
-  newAccount() {
+  // Login
+  login(email: string, password: string): Observable<boolean> {
+    return new Observable(subscriber => {
+      this.authService.login(email, password).subscribe({
+        next: (data) => {
+          console.log("OK"); // TODO: Deletar
+          switch(true) {
+            case this.authService.isUserEstudante():
+              this.redirectToColegas()
+              break;
+          }
+          subscriber.next(true);
+          subscriber.complete();
+        },
+        error: (error) => {
+          console.log(error); // TODO: Deletar
+          subscriber.error(error);
+        }
+      });
+    });
+  }
+
+  // Redirect
+  redirectToCadastro() {
     this.router.navigate([ "/cadastro" ]);
+  }
+  redirectToColegas() {
+    this.router.navigate([ "/colegas" ]);
   }
 
 }

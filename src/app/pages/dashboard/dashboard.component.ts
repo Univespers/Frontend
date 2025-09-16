@@ -18,7 +18,7 @@ export class DashboardComponent {
     this.router.navigate([ "/logout" ]);
   }
 
-  toColleagues() {
+  redirectToColegas() {
     // this.router.navigate([ "/colegas" ]);
     window.location.reload(); // Reload = Looks more responsive
     // TODO: (Dashboard) Trocar reload por re-route quando houver mais do que a página de Colegas

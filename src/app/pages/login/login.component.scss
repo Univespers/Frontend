@@ -93,13 +93,13 @@
         button#forgot:active {
             color: rgba($color-text-descriptive-dark, 0.8);
         }
-        button#signin {
+        button#cadastro {
             background-color: $color-button-secondary;
         }
-        button#signin:hover {
+        button#cadastro:hover {
             background-color: $color-button-hover-secondary;
         }
-        button#signin:active {
+        button#cadastro:active {
             background-color: $color-button-active-secondary;
         }
     }

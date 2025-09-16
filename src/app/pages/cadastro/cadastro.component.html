@@ -1,0 +1,29 @@
+<div id="main">
+
+    @if(isLoading) {
+        <app-loading [cover]="true"/>
+    } @else {
+        <!-- Logo -->
+        <img id="side-logo" src="side-logo.png"/>
+
+        <div id="parent-container">
+            <!-- Cadastro -->
+            <form #cadastro="ngForm" (ngSubmit)="submit(userDataForm, userContactsForm, userCourseForm)">
+            <div id="cadastro-container">
+                <div class="header">
+                    Criar uma nova conta
+                </div>
+                    <app-stepper [(currentStep)]="currentStep">
+                        <app-user-data-form (form)="getUserDataForm($event)"/>
+                        <app-user-contacts-form (form)="getUserContactsForm($event)"/>
+                        <app-user-course-form (form)="getUserCourseForm($event)"/>
+                    </app-stepper>
+                </div>
+            </form>
+
+            <!-- Cadastro button -->
+            <button id="cadastro" (click)="nextStep()">{{ isLastStep()? "Cadastre-se" : "Avançar" }}</button>
+        </div>
+    }
+
+</div>

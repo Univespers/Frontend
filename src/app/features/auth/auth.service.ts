@@ -1,4 +1,4 @@
-import { afterNextRender, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { AuthEndpointService, AuthOkResponse } from 'src/app/features/auth/auth-
 })
 export class AuthService {
 
-  public auth: Auth = new Auth(AuthType.Guest);
+  public auth: Auth = new Auth(AuthType.Visitante);
 
   private static _LOCAL_AUTH_DATA_NAME = "authorization";
   private _logoutTimer: any | null = null;
@@ -24,20 +24,20 @@ export class AuthService {
   }
 
   // Auth types
-  public isUserStudent() {
-    return (this.auth?.type == AuthType.Student);
+  public isUserEstudante() {
+    return (this.auth?.type == AuthType.Estudante);
   }
-  public isUserGuest() {
-    return (this.auth?.type == AuthType.Guest || !this.auth?.type);
+  public isUserVisitante() {
+    return (this.auth?.type == AuthType.Visitante || !this.auth?.type);
   }
 
-  // Signin
-  public registerUser(email: string, password: string): Observable<AuthOkResponse> {
+  // Cadastro
+  public cadastro(email: string, password: string): Observable<AuthOkResponse> {
     return this.authEndpointService.registerUser(email, password);
   }
 
   // Login
-  public loginUser(email: string, password: string): Observable<Auth> {
+  public login(email: string, password: string): Observable<Auth> {
     return this.authEndpointService.loginUser(email, password).pipe(
       map(data => Auth.getAuth(data)),
       tap(data => this._loadAuth(data))
@@ -45,9 +45,9 @@ export class AuthService {
   }
 
   // Logout
-  public logoutUser(): Observable<AuthOkResponse> {
+  public logout(): Observable<AuthOkResponse> {
     return this.authEndpointService.logoutUser().pipe(
-      tap(data => this.logout())
+      tap(data => this.logoutLocal())
     );
   }
 
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   // Logout
-  public logout() {
+  public logoutLocal() {
     this._removeAuthLocally();
     this._resetAutoLogout();
     this.router.navigate([ "/logout" ]);
@@ -90,7 +90,7 @@ export class AuthService {
     return this._localStorage.pipe(
       map(localStorage => {
         const authData = localStorage?.getItem(AuthService._LOCAL_AUTH_DATA_NAME);
-        if(!authData) return new Auth(AuthType.Guest, "", new Date());
+        if(!authData) return new Auth(AuthType.Visitante, "", new Date());
         const protoAuth = JSON.parse(authData); // It does not contain functions!
         return new Auth(protoAuth.type, protoAuth._token, new Date(protoAuth.tokenExpiration));
       })
@@ -105,11 +105,11 @@ export class AuthService {
   // AutoLogout when token expires
   private _setAutoLogout(expiration: number) {
     if(expiration <= 0) {
-      this.logout();
+      this.logoutLocal();
     } else {
       this._resetAutoLogout();
       this._logoutTimer = setTimeout(() => {
-        this.logout();
+        this.logoutLocal();
       }, expiration)
     }
   }

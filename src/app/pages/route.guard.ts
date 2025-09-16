@@ -8,11 +8,11 @@ export const routeGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
 
   switch(true) {
-    case auth.isUserGuest():
+    case auth.isUserVisitante():
       router.navigate([ "/login" ]);
       return true;
 
-    case auth.isUserStudent():
+    case auth.isUserEstudante():
       router.navigate([ "/colegas" ]);
       return true;
 

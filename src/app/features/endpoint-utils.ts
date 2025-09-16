@@ -51,8 +51,8 @@ export class EndpointUtils {
     public static mockEndpoint<Data>(response: Data) {
         return new Observable<Data>((subscriber) => {
             setTimeout(() => {
-            subscriber.next(response);
-            subscriber.complete();
+                subscriber.next(response);
+                subscriber.complete();
             }, EndpointUtils.MOCK_RESPONSE_DELAY);
         });
     }

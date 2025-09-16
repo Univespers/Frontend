@@ -1,0 +1,49 @@
+@import "src/styles.scss";
+
+:host {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+#main {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    margin: 0px;
+    background-color: rgba($color-background-secondary-dark, 0.75);
+
+    #colega-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        padding-inline: 25px;
+
+        #colega-name {
+            @include font-title;
+            color: $color-text-body-dark;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #colega-description {
+            margin: 0px;
+            @include font-text-body;
+            color: $color-text-body-dark;
+        }
+        div {
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+        span {
+            @include font-text-body;
+            color: $color-text-body-dark;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .item-icon {
+            color: $color-text-body-dark;
+            width: 20px;
+        }
+    }
+
+}
