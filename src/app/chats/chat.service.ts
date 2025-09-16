@@ -4,6 +4,8 @@ import { ChatConversation, ChatMessage } from './chat.model';
 import { chatMock } from './chat-mock';
 
 // import { Firestore, collection, addDoc, doc, setDoc } from '@angular/fire/firestore'; // 👈 futuro Firebase
+// import { collectionData } from '@angular/fire/firestore'; // 👈 quando for buscar dados em tempo real
+// import { serverTimestamp } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +21,15 @@ export class ChatService {
   /** Lista conversas de um usuário */
   getConversations(userId: string): Observable<ChatConversation[]> {
     if (this.useMock) {
+      // Retorna todas as conversas do mock
       return of(chatMock.conversations);
     }
-    return of(null as any);
-    // Firebase (quando for implementar):
+
+    // 🔹 Firebase (exemplo futuro)
     // const conversationsRef = collection(this.firestore, 'conversations');
     // return collectionData(conversationsRef, { idField: 'id' }) as Observable<ChatConversation[]>;
+
+    return of([]); // fallback vazio
   }
 
   /** Obtém mensagens de uma conversa */
@@ -33,10 +38,12 @@ export class ChatService {
       const conv = chatMock.conversations.find(c => c.id === conversationId);
       return of(conv ? conv.messages : []);
     }
-    return of(null as any);
-    // Firebase:
+
+    // 🔹 Firebase
     // const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
     // return collectionData(messagesRef, { idField: 'id' }) as Observable<ChatMessage[]>;
+
+    return of([]); // fallback vazio
   }
 
   /** Envia mensagem */
@@ -48,10 +55,12 @@ export class ChatService {
       }
       return of(message);
     }
-    return of(null as any);
-    // Firebase:
+
+    // 🔹 Firebase
     // const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
     // return from(addDoc(messagesRef, { ...message, timestamp: serverTimestamp() }));
+
+    return of(message);
   }
 
   /** Cria nova conversa */
@@ -66,9 +75,11 @@ export class ChatService {
       chatMock.conversations.push(newConv);
       return of(newConv);
     }
-    return of(null as any);
-    // Firebase:
+
+    // 🔹 Firebase
     // const convRef = doc(collection(this.firestore, 'conversations'));
     // await setDoc(convRef, { members, createdAt: serverTimestamp() });
+
+    return of({} as ChatConversation);
   }
 }
