@@ -31,13 +31,10 @@
       (click)="openConversation(conv)"
       class="conversation-item"
     >
-      <p>
-        <b>{{ conv.members[0].nome }}</b> e <b>{{ conv.members[1].nome }}</b>
-      </p>
-      <small *ngIf="conv.messages.length > 0">
-        Última: {{ conv.messages[conv.messages.length - 1].text }}
-      </small>
+      <p><b>{{ getConversationTitle(conv) }}</b></p>
+      <small>Última: {{ getLastMessage(conv) }}</small>
     </div>
+
   </div>
 
   <!-- Área de mensagens -->

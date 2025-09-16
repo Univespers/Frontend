@@ -5,8 +5,8 @@ export const chatMock: { conversations: ChatConversation[] } = {
     {
       id: 'conv1',
       members: [
-        { id: 'uuid123', nome: 'Aluno1' },
-        { id: 'uuid456', nome: 'Aluno2' }
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+        { id: 'uuid456', nome: 'Aluno2', polo: 'Polo2' }
       ],
       createdAt: new Date(),
       messages: [
@@ -29,8 +29,8 @@ export const chatMock: { conversations: ChatConversation[] } = {
     {
       id: 'conv2',
       members: [
-        { id: 'uuid123', nome: 'Aluno1' },
-        { id: 'uuid789', nome: 'Aluno3' }
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+        { id: 'uuid789', nome: 'Aluno3', polo: 'Polo2' }
       ],
       createdAt: new Date(),
       messages: [
@@ -46,11 +46,12 @@ export const chatMock: { conversations: ChatConversation[] } = {
     {
       id: 'conv3',
       members: [
-        { id: 'uuid123', nome: 'Aluno1' },
-        { id: 'uuid456', nome: 'Aluno2' },
-        { id: 'uuid789', nome: 'Aluno3' }
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+        { id: 'uuid456', nome: 'Aluno2', polo: 'Polo2' },
+        { id: 'uuid789', nome: 'Aluno3', polo: 'Polo2' }
       ],
       createdAt: new Date(),
+      title: 'Grupo de Estudos',
       messages: [
         {
           id: 'msg4',

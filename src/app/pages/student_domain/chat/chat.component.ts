@@ -138,4 +138,30 @@ export class ChatComponent implements OnInit {
       { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
     ]);
   }
+
+  getConversationTitle(conv: ChatConversation): string {
+    if (conv.members.length === 2) {
+      // conversa privada → pega o outro usuário
+      const other = conv.members.find(m => m.id !== 'uuid123');
+      return other ? `[${other.polo || 'Sem polo'}] - ${other.nome}` : 'Conversa';
+    } else {
+      // grupo
+      const names = conv.members
+        .filter(m => m.id !== 'uuid123')
+        .map(m => m.nome.split(' ')[0]); // só primeiro nome
+
+      if (conv.title) {
+        return `[${conv.title}] - ${names.join(', ')}`;
+      }
+
+      return 'Grupo: ' + names.join(', ');
+    }
+  }
+
+  getLastMessage(conv: ChatConversation): string {
+    if (conv.messages.length === 0) return 'Sem mensagens ainda';
+    const last = conv.messages[conv.messages.length - 1];
+    return last.text;
+  }
+
 }

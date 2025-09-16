@@ -1,8 +1,9 @@
 export interface ChatConversation {
   id: string;
-  members: { id: string; nome: string }[];
+  members: { id: string; nome: string; polo?: string }[];
   createdAt: any; // Date | Firebase Timestamp
   messages: ChatMessage[];
+  title?: string;
 }
 
 export interface ChatMessage {
