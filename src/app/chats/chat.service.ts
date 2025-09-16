@@ -82,4 +82,24 @@ export class ChatService {
 
     return of({} as ChatConversation);
   }
+
+  markMessageAsRead(conversationId: string, messageId: string): Observable<void> {
+    if (this.useMock) {
+      const conv = chatMock.conversations.find(c => c.id === conversationId);
+      if (conv) {
+        const msg = conv.messages.find(m => m.id === messageId);
+        if (msg) msg.read = true;
+      }
+      return of();
+    }
+
+    // 🔹 Firebase futuro
+    // const msgRef = doc(this.firestore, `conversations/${conversationId}/messages/${messageId}`);
+    // return from(updateDoc(msgRef, { read: true }));
+
+    return of();
+  }
+
 }
+
+

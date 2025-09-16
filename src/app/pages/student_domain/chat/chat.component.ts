@@ -8,6 +8,7 @@ import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, co
 import { map } from 'rxjs/operators';
 import { ColleagueEndpointService, ColleagueResponse } from '../../../endpoints/colleague-endpoint.service';
 import { ChatService } from '../../../chats/chat.service';
+import { chatMock } from '../../../chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
 
 @Component({
@@ -89,7 +90,24 @@ export class ChatComponent implements OnInit {
 
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
+
+    // 🔹 Marca mensagens não lidas como lidas
+    conv.messages.forEach(msg => {
+      if (msg.senderId !== 'uuid123' && !msg.read) {
+        msg.read = true; // marca como lida
+        // Se fosse Firebase, aqui você faria update do campo 'read' no banco
+        // this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
+      }
+    });
+
+    // Atualiza as mensagens exibidas
     this.messages$ = this.chatService.getMessages(conv.id);
+
+    // Para que o filtro "Não lidos" se atualize, emitimos novamente as conversas
+    if (this.conversations$) {
+      // Forçamos a atualização do filteredConversations$
+      this.conversations$ = of(chatMock.conversations); // mock
+    }
   }
 
   sendMessage(text: string) {
