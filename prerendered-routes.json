@@ -1,0 +1,13 @@
+{
+  "routes": [
+    "/",
+    "/cadastro",
+    "/chat",
+    "/colegas",
+    "/login",
+    "/logout",
+    "/perfil",
+    "/perfil/editar",
+    "/redirect"
+  ]
+}
