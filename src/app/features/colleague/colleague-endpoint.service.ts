@@ -9,7 +9,7 @@ import { EndpointUtils, ErrorResponse } from '../endpoint-utils';
 })
 export class ColleagueEndpointService {
 
-  private mock = false; // TODO: (Colleagues) Remover mocks
+  private mock = true; // TODO: (Colleagues) Remover mocks
 
   private apiEndpoint = "http://localhost:3000/api"; // TODO: (Colleagues) Endpoint
   private colleaguesEndpoint = `${this.apiEndpoint}/estudante/colegas`;

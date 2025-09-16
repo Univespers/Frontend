@@ -1,16 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 import { AuthType } from 'src/app/features/auth/auth.model';
 import { EndpointUtils, ErrorResponse } from '../endpoint-utils';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { FirebaseApp } from '@angular/fire/app';
+import { getDatabase, ref, set } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthEndpointService {
 
-  private mock = false; // TODO: (Auth) Remover mocks
+  private mock = true; // TODO: (Auth) Remover mocks
 
   private apiEndpoint = "http://localhost:3000/api"; // TODO: (Auth) Endpoint
   private authEndpoint = `${this.apiEndpoint}/usuario`;
@@ -19,11 +23,28 @@ export class AuthEndpointService {
   private authLogoutEndpoint = `${this.authEndpoint}/logout`;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private fireApp: FirebaseApp
   ) {}
 
   // Signin
   public registerUser(email: string, password: string): Observable<AuthOkResponse> {
+
+    const auth = getAuth(this.fireApp);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(error);
+      });
+
+
+
 
     console.log("REGISTER_USER");
 
@@ -51,6 +72,26 @@ export class AuthEndpointService {
 
   // Login
   public loginUser(email: string, password: string): Observable<AuthTokenResponse> {
+
+    const auth = getAuth(this.fireApp);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        console.log(user);
+
+        set(ref(getDatabase(this.fireApp), `estudante/${user.uid}/teste`), "A");
+        
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(error);
+      });
+    
+      
+
+
 
     console.log("LOGIN_USER");
 
