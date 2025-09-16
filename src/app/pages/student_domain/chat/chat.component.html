@@ -1,6 +1,7 @@
 <div class="container">
   <!-- Lista de conversas -->
   <div class="chat-list mat-elevation-z5">
+    <!-- Input de busca -->
     <div class="search-input">
       <mat-form-field>
         <input
@@ -18,9 +19,16 @@
       </mat-autocomplete>
     </div>
 
+    <!-- Filtros -->
+    <div class="chat-filters">
+      <button mat-button color="primary" (click)="setFilter('all')" [disabled]="currentFilter==='all'">Todos</button>
+      <button mat-button color="accent" (click)="setFilter('unread')" [disabled]="currentFilter==='unread'">Não lidos</button>
+      <button mat-button color="warn" (click)="setFilter('group')" [disabled]="currentFilter==='group'">Grupos</button>
+    </div>
+
     <h3>Conversas</h3>
     <div
-      *ngFor="let conv of conversations$ | async"
+      *ngFor="let conv of filteredConversations$ | async"
       (click)="openConversation(conv)"
       class="conversation-item"
     >

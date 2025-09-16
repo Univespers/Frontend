@@ -4,8 +4,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
-import { debounceTime, map, Observable, startWith, switchMap, of } from 'rxjs';
-import { ColleagueEndpointService, ColleagueListResponse, ColleagueResponse } from '../../../endpoints/colleague-endpoint.service';
+import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ColleagueEndpointService, ColleagueResponse } from '../../../endpoints/colleague-endpoint.service';
 import { ChatService } from '../../../chats/chat.service';
 import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
 
@@ -20,14 +21,20 @@ import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
     CommonModule
   ],
   templateUrl: './chat.component.html',
-  styleUrl: './chat.component.scss'
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
   searchControl = new FormControl('');
   filteredUsers$: Observable<ColleagueResponse[]> | undefined;
+
   conversations$: Observable<ChatConversation[]> | undefined;
+  filteredConversations$: Observable<ChatConversation[]> | undefined; // NOVO: conversas filtradas
+
   selectedConversation: ChatConversation | null = null;
   messages$: Observable<ChatMessage[]> | undefined;
+
+  currentFilter: 'all' | 'unread' | 'group' = 'all';
+  private filterSubject = new BehaviorSubject<'all' | 'unread' | 'group'>('all');
 
   constructor(
     private colleagueService: ColleagueEndpointService,
@@ -35,27 +42,49 @@ export class ChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    /** 🔹 Busca usuários (mock ou API real futuramente) */
+    // 🔹 Busca de usuários
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(
       debounceTime(300),
       startWith(''),
       switchMap(value => this.searchUsers(value || ''))
     );
 
-    /** 🔹 Conversas mockadas */
+    // 🔹 Conversas mockadas
     this.conversations$ = this.chatService.getConversations('uuid123');
+
+    // 🔹 Combina busca e filtro
+    this.filteredConversations$ = combineLatest([
+      this.conversations$,
+      this.searchControl.valueChanges.pipe(startWith('')),
+      this.filterSubject.asObservable()
+    ]).pipe(
+      map(([convs, searchTerm, filter]) => {
+        let filtered = convs;
+
+        // Busca por nome do membro
+        if (searchTerm) {
+          filtered = filtered.filter(conv =>
+            conv.members.some(m => m.nome.toLowerCase().includes(searchTerm.toLowerCase()))
+          );
+        }
+
+        // Filtro por tipo
+        if (filter === 'unread') {
+          filtered = filtered.filter(conv =>
+            conv.messages.some(msg => msg.senderId !== 'uuid123' && !msg.read)
+          );
+        } else if (filter === 'group') {
+          filtered = filtered.filter(conv => conv.members.length > 2);
+        }
+
+        return filtered;
+      })
+    );
   }
 
-  searchUsers(term: string): Observable<ColleagueResponse[]> {
-    // return this.colleagueService.searchColleagues(term, 1).pipe(
-    //   map((res: ColleagueListResponse) => res.lista)
-    // );
-
-    /** 🔹 MOCK */
-    return of([
-      { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-      { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-    ]);
+  setFilter(filter: 'all' | 'unread' | 'group') {
+    this.currentFilter = filter;
+    this.filterSubject.next(filter);
   }
 
   openConversation(conv: ChatConversation) {
@@ -69,10 +98,10 @@ export class ChatComponent implements OnInit {
       id: `msg_${Date.now()}`,
       senderId: 'uuid123',
       text,
-      timestamp: new Date()
+      timestamp: new Date(),
+      read: true // a própria pessoa que envia já leu
     };
     this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
-      // Atualiza a lista de mensagens após enviar
       this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
     });
   }
@@ -81,5 +110,13 @@ export class ChatComponent implements OnInit {
     if (!this.selectedConversation) return 'Desconhecido';
     const member = this.selectedConversation.members.find(m => m.id === senderId);
     return member ? member.nome : 'Desconhecido';
+  }
+
+  searchUsers(term: string): Observable<ColleagueResponse[]> {
+    // MOCK
+    return of([
+      { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+      { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+    ]);
   }
 }

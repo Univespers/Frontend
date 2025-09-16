@@ -80,5 +80,8 @@
   border: 1px solid #ccc;
 }
 
-
-
+.chat-filters {
+  display: flex;
+  gap: 8px;
+  margin: 0 24px 16px 24px;
+}
