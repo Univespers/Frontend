@@ -26,7 +26,6 @@
       <button mat-button color="warn" (click)="setFilter('group')" [disabled]="currentFilter==='group'">Grupos</button>
     </div>
 
-    <h3>Conversas</h3>
     <div
       *ngFor="let conv of filteredConversations$ | async"
       (click)="openConversation(conv)"

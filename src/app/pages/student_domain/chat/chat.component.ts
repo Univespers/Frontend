@@ -117,6 +117,7 @@ export class ChatComponent implements OnInit {
     return of([
       { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
       { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+      { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
     ]);
   }
 }
