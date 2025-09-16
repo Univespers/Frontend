@@ -5,9 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:gh": "ng build -c production --base-href /Frontend/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy --base-href=/Frontend/",
+    "deploy": "npm run build:gh && node -e \"require('fs').copyFileSync('dist/univespers/browser/index.html','dist/univespers/browser/404.html')\" && npx angular-cli-ghpages --dir=dist/univespers/browser",
     "serve:ssr:Univespers": "node dist/univespers/server/server.mjs"
   },
   "private": true,
