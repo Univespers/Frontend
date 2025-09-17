@@ -28,10 +28,19 @@
     </div>
 
     <!-- Filtros -->
+    <!-- Filtros -->
     <div class="chat-filters">
-      <button mat-button color="primary" (click)="setFilter('all')" [disabled]="currentFilter==='all'">Todos</button>
-      <button mat-button color="accent" (click)="setFilter('unread')" [disabled]="currentFilter==='unread'">Não lidos</button>
-      <button mat-button color="warn" (click)="setFilter('group')" [disabled]="currentFilter==='group'">Grupos</button>
+      <button class="filter-btn"
+              [class.active]="currentFilter==='all'"
+              (click)="setFilter('all')">Todos</button>
+
+      <button class="filter-btn"
+              [class.active]="currentFilter==='unread'"
+              (click)="setFilter('unread')">Não lidos</button>
+
+      <button class="filter-btn"
+              [class.active]="currentFilter==='group'"
+              (click)="setFilter('group')">Grupos</button>
     </div>
 
     <div
