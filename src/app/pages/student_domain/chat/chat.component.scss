@@ -15,12 +15,6 @@
   border-radius: 16px;
 }
 
-.messages {
-  width: 60%;
-  margin: 10px;
-  border-radius: 16px;
-}
-
 .search-input {
   margin: 16px 24px 8px 24px;
   width: calc(100% - 48px); // 100% menos as margens laterais
@@ -89,34 +83,6 @@
   color: #fff;
 }
 
-.messages {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 12px;
-}
-
-.message {
-  margin: 6px 0;
-  padding: 8px 12px;
-  border-radius: 12px;
-  background: #e0e0e0;
-  max-width: 70%;
-}
-
-.message-input {
-  display: flex;
-  margin-top: auto;
-  gap: 8px;
-}
-
-.message-input input {
-  flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
 .chat-filters {
   display: flex;
   gap: 8px;
@@ -146,25 +112,6 @@
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Mensagens alinhadas // NOVO */
-.message {
-  margin: 6px 0;
-  padding: 8px 12px;
-  border-radius: 12px;
-  max-width: 70%;
-}
-
-.message.mine {
-  align-self: flex-end;
-  background: rgba(122, 18, 19, 0.8);
-  color: #fff;
-}
-
-.message.their {
-  align-self: flex-start;
-  background: #e0e0e0;
-}
-
 /* Container do botão */
 .new-group-container {
   display: flex;
@@ -181,7 +128,6 @@
   width: auto;            // ocupa só o necessário
   min-width: unset;       // garante que não expanda
 }
-
 
 /* Botão nativo reutilizável no estilo dark */
 .dark-button {
@@ -217,6 +163,55 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
+.messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  width: 60%;
+  margin: 10px;
+  border-radius: 16px;
+}
+
+.message {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #e0e0e0;
+  max-width: 70%;
+  span {
+    white-space: pre-line; // ✅ MOSTRA QUEBRAS DE LINHA
+    word-break: break-word;
+    line-height: 1.4;
+  }
+}
+
+.message-input {
+  display: flex;
+  margin-top: auto;
+  gap: 8px;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Mensagens alinhadas */
+.message.mine {
+  align-self: flex-end;
+  background: rgba(122, 18, 19, 0.8);
+  color: #fff;
+}
+
+.message.their {
+  align-self: flex-start;
+  background: #e0e0e0;
+  color: #000;
+}
+
 /* Estilos para o textarea */
 .message-textarea {
   flex: 1;
@@ -228,6 +223,7 @@
   max-height: 120px;
   font-family: inherit;
   line-height: 1.4;
+  white-space: pre-wrap; // ✅ Mantém quebras no textarea também
 
   &:focus {
     outline: none;
