@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Novo Grupo</h2>
+
+<mat-dialog-content>
+  <mat-form-field class="full-width">
+    <mat-label>Título do grupo</mat-label>
+    <input matInput [(ngModel)]="groupTitle" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Adicionar integrantes</mat-label>
+    <input
+      type="text"
+      matInput
+      [formControl]="groupSearchControl"
+      [matAutocomplete]="auto"
+      placeholder="Buscar colegas..."
+    />
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addUser($event.option.value)">
+      <mat-option *ngFor="let user of data.users$" [value]="user">
+        {{ user.nome }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-chip-listbox>
+    <mat-chip *ngFor="let u of selectedUsers" (removed)="removeUser(u)">
+      {{ u.nome }}
+      <button matChipRemove>x</button>
+    </mat-chip>
+  </mat-chip-listbox>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="create()">Criar</button>
+</mat-dialog-actions>

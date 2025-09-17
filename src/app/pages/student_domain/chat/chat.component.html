@@ -20,6 +20,11 @@
 
     </div>
 
+    <!-- Botão para abrir popup de grupo -->
+    <button mat-raised-button color="primary" (click)="openGroupPopup()">
+      + Novo Grupo
+    </button>
+
     <!-- Filtros -->
     <div class="chat-filters">
       <button mat-button color="primary" (click)="setFilter('all')" [disabled]="currentFilter==='all'">Todos</button>

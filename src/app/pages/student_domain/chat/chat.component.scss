@@ -122,3 +122,23 @@
   gap: 8px;
   margin: 0 24px 16px 24px;
 }
+
+/* Mensagens alinhadas // NOVO */
+.message {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 70%;
+}
+
+.message.mine {
+  align-self: flex-end;
+  background: rgba(122, 18, 19, 0.8);
+  color: #fff;
+}
+
+.message.their {
+  align-self: flex-start;
+  background: #e0e0e0;
+}
+

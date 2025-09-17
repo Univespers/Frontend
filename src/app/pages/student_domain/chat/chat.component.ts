@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,15 +14,21 @@ import { ColleagueEndpointService, ColleagueResponse } from '../../../endpoints/
 import { ChatService } from '../../../chats/chat.service';
 import { chatMock } from '../../../chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
+import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatChipsModule,
+    PopupDialogMatComponent,
     CommonModule
   ],
   templateUrl: './chat.component.html',
@@ -37,20 +47,35 @@ export class ChatComponent implements OnInit {
   currentFilter: 'all' | 'unread' | 'group' = 'all';
   private filterSubject = new BehaviorSubject<'all' | 'unread' | 'group'>('all');
 
+  // NOVO: popup de grupo
+  showGroupPopup = false;
+  groupTitle = '';
+  groupSearchControl = new FormControl('');
+  filteredGroupUsers$: Observable<ColleagueResponse[]> = of([]);
+  selectedUsers: ColleagueResponse[] = [];
+
   constructor(
     private colleagueService: ColleagueEndpointService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    // 🔹 Busca de usuários
+    // 🔹 Busca de usuários na API Node.js
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(
       debounceTime(300),
       startWith(''),
       switchMap(value => this.searchUsers(value || ''))
     );
 
-    // 🔹 Conversas mockadas (agora usando BehaviorSubject do serviço) // ALTERADO
+       // 🔹 Autocomplete para popup de grupo
+       this.filteredGroupUsers$ = this.groupSearchControl.valueChanges.pipe(
+        debounceTime(300),
+        startWith(''),
+        switchMap(value => this.searchUsers(value || ''))
+      );
+
+    // 🔹 Conversas mockadas (agora usando BehaviorSubject do serviço)
     this.conversations$ = this.chatService.getConversations('uuid123');
 
     // 🔹 Combina busca e filtro
@@ -175,4 +200,59 @@ export class ChatComponent implements OnInit {
     const last = conv.messages[conv.messages.length - 1];
     return last.text;
   }
+
+  // abre popup
+  openGroupPopup() {
+    this.dialog.open(PopupDialogMatComponent, {
+      width: '600px',
+      data: {
+        users$: [
+          { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+          { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+          { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
+        ]
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        const members = [
+          { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+          ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
+        ];
+        this.chatService.createConversation(members).subscribe(conv => {
+          conv.title = result.title;
+          this.openConversation(conv);
+        });
+      }
+    });
+  }
+
+  // adiciona usuário ao grupo
+  addUserToGroup(user: ColleagueResponse) {
+    if (!this.selectedUsers.find(u => u.uuid === user.uuid)) {
+      this.selectedUsers.push(user);
+    }
+    this.groupSearchControl.setValue(''); // limpa input
+  }
+
+  // remove integrante
+  removeUserFromGroup(user: ColleagueResponse) {
+    this.selectedUsers = this.selectedUsers.filter(u => u.uuid !== user.uuid);
+  }
+
+  // cria grupo
+  createGroup() {
+    if (!this.groupTitle || this.selectedUsers.length === 0) return;
+
+    const members = [
+      { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' }, // logado
+      ...this.selectedUsers.map(u => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
+    ];
+
+    this.chatService.createConversation(members).subscribe(conv => {
+      conv.title = this.groupTitle;
+      this.openConversation(conv);
+      this.showGroupPopup = false;
+    });
+  }
+
 }
