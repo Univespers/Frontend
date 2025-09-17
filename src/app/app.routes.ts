@@ -13,6 +13,7 @@ import { routeGuard } from './pages/route.guard';
 import { estudanteAccessGuard } from './pages/estudante-access.guard';
 import { visitanteAccessGuard } from './pages/visitante-access.guard';
 import { unsavedChangesGuard } from './pages/unsaved-changes.guard';
+import { authResolver } from './features/auth/auth.resolver';
 
 export const routes: Routes = [
 
@@ -24,7 +25,7 @@ export const routes: Routes = [
   { path: "", children: [
     { path: "login", component: LoginComponent },
     { path: "cadastro", component: CadastroComponent, canDeactivate: [ unsavedChangesGuard ] },
-  ], canActivateChild: [ visitanteAccessGuard ]},
+  ], resolve:{ authData: authResolver}, canActivateChild: [ visitanteAccessGuard ]},
 
   // Student only
   { path: "", component: DashboardComponent, children: [
@@ -32,7 +33,7 @@ export const routes: Routes = [
     { path: "perfil", component: PerfilComponent },
     { path: "perfil/editar", component: PerfilEditComponent, canDeactivate: [ unsavedChangesGuard ] },
     { path: "logout", component: LogoutComponent },
-  ], canActivateChild: [ estudanteAccessGuard ]},
+  ], resolve:{ authData: authResolver}, canActivateChild: [ estudanteAccessGuard ]},
 
   // Not found page
   { path: "**", component: NotFoundComponent }

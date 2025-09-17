@@ -1,2 +1,8 @@
-<router-outlet />
+<div id="main">
+    @if(isLoading) {
+        <app-loading [cover]="true"/>
+    } @else {
+        <router-outlet />
+    }
+</div>
 <app-footer></app-footer>
