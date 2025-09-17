@@ -6,7 +6,7 @@ export const chatMock: { conversations: ChatConversation[] } = {
       id: 'conv1',
       members: [
         { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
-        { id: 'uuid456', nome: 'Aluno2', polo: 'Polo2' }
+        { id: 'uuid456', nome: 'Aluno2', polo: 'Polo2' },
       ],
       createdAt: new Date(),
       messages: [

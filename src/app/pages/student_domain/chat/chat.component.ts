@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit {
   filteredUsers$: Observable<ColleagueResponse[]> | undefined;
 
   conversations$: Observable<ChatConversation[]> | undefined;
-  filteredConversations$: Observable<ChatConversation[]> | undefined; // NOVO: conversas filtradas
+  filteredConversations$: Observable<ChatConversation[]> | undefined;
 
   selectedConversation: ChatConversation | null = null;
   messages$: Observable<ChatMessage[]> | undefined;
@@ -50,7 +50,7 @@ export class ChatComponent implements OnInit {
       switchMap(value => this.searchUsers(value || ''))
     );
 
-    // 🔹 Conversas mockadas
+    // 🔹 Conversas mockadas (agora usando BehaviorSubject do serviço) // ALTERADO
     this.conversations$ = this.chatService.getConversations('uuid123');
 
     // 🔹 Combina busca e filtro
@@ -91,23 +91,14 @@ export class ChatComponent implements OnInit {
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
 
-    // 🔹 Marca mensagens não lidas como lidas
     conv.messages.forEach(msg => {
       if (msg.senderId !== 'uuid123' && !msg.read) {
-        msg.read = true; // marca como lida
-        // Se fosse Firebase, aqui você faria update do campo 'read' no banco
+        msg.read = true;
         // this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
       }
     });
 
-    // Atualiza as mensagens exibidas
     this.messages$ = this.chatService.getMessages(conv.id);
-
-    // Para que o filtro "Não lidos" se atualize, emitimos novamente as conversas
-    if (this.conversations$) {
-      // Forçamos a atualização do filteredConversations$
-      this.conversations$ = of(chatMock.conversations); // mock
-    }
   }
 
   sendMessage(text: string) {
@@ -117,7 +108,7 @@ export class ChatComponent implements OnInit {
       senderId: 'uuid123',
       text,
       timestamp: new Date(),
-      read: true // a própria pessoa que envia já leu
+      read: true
     };
     this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
       this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
@@ -136,19 +127,40 @@ export class ChatComponent implements OnInit {
       { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
       { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
       { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
+      { uuid: 'uuid999', nome: 'Aluno4', curso: 'Curso3', polo: 'Polo1' }
     ]);
+  }
+
+  /** NOVO: Cria ou abre conversa ao selecionar usuário */
+  onUserSelected(user: ColleagueResponse) {
+    const existingConv = chatMock.conversations.find(c =>
+      c.members.length === 2 &&
+      c.members.some(m => m.id === 'uuid123') &&
+      c.members.some(m => m.id === user.uuid)
+    );
+
+    if (existingConv) {
+      this.openConversation(existingConv);
+    } else {
+      this.chatService.createConversation([
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' }, // usuário logado
+        { id: user.uuid, nome: user.nome, polo: user.polo }  // ⚡ inclui polo para corrigir título
+      ]).subscribe(conv => {
+        this.selectedConversation = conv;
+        this.messages$ = of(conv.messages);
+        // ⚡ BehaviorSubject já atualiza conversas, não precisa sobrescrever
+      });
+    }
   }
 
   getConversationTitle(conv: ChatConversation): string {
     if (conv.members.length === 2) {
-      // conversa privada → pega o outro usuário
       const other = conv.members.find(m => m.id !== 'uuid123');
       return other ? `[${other.polo || 'Sem polo'}] - ${other.nome}` : 'Conversa';
     } else {
-      // grupo
       const names = conv.members
         .filter(m => m.id !== 'uuid123')
-        .map(m => m.nome.split(' ')[0]); // só primeiro nome
+        .map(m => m.nome.split(' ')[0]);
 
       if (conv.title) {
         return `[${conv.title}] - ${names.join(', ')}`;
@@ -163,5 +175,4 @@ export class ChatComponent implements OnInit {
     const last = conv.messages[conv.messages.length - 1];
     return last.text;
   }
-
 }

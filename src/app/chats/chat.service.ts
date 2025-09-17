@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject  } from 'rxjs';
 import { ChatConversation, ChatMessage } from './chat.model';
 import { chatMock } from './chat-mock';
 
@@ -14,6 +14,10 @@ export class ChatService {
 
   private useMock = true; // TODO: trocar para false quando conectar no Firebase
 
+  // NOVO: BehaviorSubject para atualizar lista de conversas
+  private conversationsSubject = new BehaviorSubject<ChatConversation[]>(chatMock.conversations);
+  conversations$ = this.conversationsSubject.asObservable();
+
   constructor(
     // private firestore: Firestore // 👈 futuro Firebase
   ) {}
@@ -21,8 +25,7 @@ export class ChatService {
   /** Lista conversas de um usuário */
   getConversations(userId: string): Observable<ChatConversation[]> {
     if (this.useMock) {
-      // Retorna todas as conversas do mock
-      return of(chatMock.conversations);
+      return this.conversations$; // ALTERADO: retorna BehaviorSubject para manter updates
     }
 
     // 🔹 Firebase (exemplo futuro)
@@ -63,8 +66,8 @@ export class ChatService {
     return of(message);
   }
 
-  /** Cria nova conversa */
-  createConversation(members: { id: string; nome: string }[]): Observable<ChatConversation> {
+   /** Cria nova conversa */
+   createConversation(members: { id: string; nome: string; polo?: string }[]): Observable<ChatConversation> {
     if (this.useMock) {
       const newConv: ChatConversation = {
         id: `conv_${Date.now()}`,
@@ -73,6 +76,7 @@ export class ChatService {
         messages: []
       };
       chatMock.conversations.push(newConv);
+      this.conversationsSubject.next(chatMock.conversations); // NOVO: atualiza BehaviorSubject
       return of(newConv);
     }
 
