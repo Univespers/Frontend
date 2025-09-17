@@ -30,6 +30,7 @@
       *ngFor="let conv of filteredConversations$ | async"
       (click)="openConversation(conv)"
       class="conversation-item"
+      [class.selected]="selectedConversation?.id === conv.id"
     >
       <p><b>{{ getConversationTitle(conv) }}</b></p>
       <small>Última: {{ getLastMessage(conv) }}</small>
