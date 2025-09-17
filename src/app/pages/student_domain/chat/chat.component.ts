@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -61,6 +61,30 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   private shouldScrollToBottom = false;
 
   placeholderText = 'Digite sua mensagem... (Alt+Enter para quebrar linha)';
+
+  // NOVAS PROPRIEDADES:
+  showEmojiPicker = false;
+  activeCategory = 'smileys';
+  emojiCategories = [
+    { name: 'smileys', icon: '😀' },
+    { name: 'people', icon: '👋' },
+    { name: 'nature', icon: '🐻' },
+    { name: 'food', icon: '🍎' },
+    { name: 'travel', icon: '🚗' },
+    { name: 'objects', icon: '💡' },
+    { name: 'symbols', icon: '❤️' }
+  ];
+
+  // EMOJIS POR CATEGORIA (lista reduzida para exemplo)
+  emojis = {
+    smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳'],
+    people: ['👋', '🤚', '🖐', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏'],
+    nature: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🦄', '🐴', '🦓', '🐘', '🦒', '🐑', '🐫', '🐿️', '🦔', '🐍', '🐢'],
+    food: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🌽', '🥕', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯'],
+    travel: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🚚', '🚛', '🚜', '🛴', '🚲', '🛵', '🏍️', '🚨', '🚔', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚀'],
+    objects: ['💡', '🔦', '🏮', '🪔', '📔', '📕', '📖', '📗', '📘', '📙', '📚', '📓', '📒', '📃', '📜', '📄', '📰', '🗞️', '📑', '🔖', '🏷️', '💰', '🪙', '💴', '💵', '💶', '💷', '💸', '💳', '🧾'],
+    symbols: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️']
+  };
 
   constructor(
     private colleagueService: ColleagueEndpointService,
@@ -403,6 +427,49 @@ getLastMessageTime(conv: ChatConversation): string {
       }
     } catch (err) {
       console.error('Erro ao fazer scroll:', err);
+    }
+  }
+
+  // NOVOS MÉTODOS:
+  toggleEmojiPicker() {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  setActiveCategory(category: any) {
+    this.activeCategory = category.name;
+  }
+
+  getCategoryEmojis(): string[] {
+    return this.emojis[this.activeCategory as keyof typeof this.emojis] || [];
+  }
+
+  addEmoji(emoji: string, textarea: HTMLTextAreaElement) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    // Insere o emoji na posição do cursor
+    textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+
+    // Reposiciona o cursor após o emoji
+    textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+
+    // Foca no textarea novamente
+    textarea.focus();
+
+    // Opcional: fecha o picker após seleção
+    // this.showEmojiPicker = false;
+  }
+
+  // NOVO: Fechar picker ao clicar fora
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const emojiPicker = document.querySelector('.emoji-picker');
+    const emojiButton = document.querySelector('.emoji-button');
+
+    if (this.showEmojiPicker &&
+        !emojiPicker?.contains(event.target as Node) &&
+        !emojiButton?.contains(event.target as Node)) {
+      this.showEmojiPicker = false;
     }
   }
 }

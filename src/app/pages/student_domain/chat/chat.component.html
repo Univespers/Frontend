@@ -101,6 +101,9 @@
     </div>
 
     <div *ngIf="selectedConversation" class="message-input">
+      <!-- NOVO: Botão de emoji -->
+      <button class="emoji-button" (click)="toggleEmojiPicker()">😊</button>
+
       <textarea
         #newMsg
         [placeholder]="placeholderText"
@@ -108,7 +111,27 @@
         rows="1"
         class="message-textarea"
       ></textarea>
+
       <button (click)="sendMessageFromTextarea(newMsg)">Enviar</button>
+
+      <!-- NOVO: Picker de emojis -->
+      <div *ngIf="showEmojiPicker" class="emoji-picker">
+        <div class="emoji-categories">
+          <button *ngFor="let category of emojiCategories"
+                  (click)="setActiveCategory(category)"
+                  [class.active]="activeCategory === category.name">
+            {{ category.icon }}
+          </button>
+        </div>
+
+        <div class="emoji-grid">
+          <span *ngFor="let emoji of getCategoryEmojis()"
+                (click)="addEmoji(emoji, newMsg)"
+                class="emoji-item">
+            {{ emoji }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
