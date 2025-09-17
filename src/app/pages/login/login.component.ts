@@ -2,11 +2,11 @@ import { Component, AfterContentInit, Inject, PLATFORM_ID } from '@angular/core'
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize, Observable } from 'rxjs';
 
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/features/theme.service';
 import { AuthService } from 'src/app/features/auth/auth.service';
-import { finalize, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +33,7 @@ export class LoginComponent implements AfterContentInit {
     this.themeService.setBackgroundTheme(Theme.Light);
   }
 
-  // Form
+  // Submit
   submit(form: any) {
     this.isLoading = true;
 
@@ -44,18 +44,20 @@ export class LoginComponent implements AfterContentInit {
     const email = form.value.userEmail;
     const password = form.value.userPassword;
 
-    this.login(email, password).pipe(
-      finalize(() => {
-        this.isLoading = false; // Desliga animação
-      })
-    ).subscribe({
-      next: (data) => {
-        form.reset(); // Reset form
-      },
-      error: (error) => {
-        this.error = error; // Informa erro
-      }
-    });
+    this.login(email, password)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false; // Desliga animação
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          form.reset(); // Reset form
+        },
+        error: (error) => {
+          this.error = error; // Informa erro
+        }
+      });
   }
 
   // Login
@@ -80,7 +82,7 @@ export class LoginComponent implements AfterContentInit {
     });
   }
 
-  // Redirect
+  // Redirects
   redirectToCadastro() {
     this.router.navigate([ "/cadastro" ]);
   }

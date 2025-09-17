@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import { ColegaEndpointService } from 'src/app/features/colegas/colegas-endpoint.service';
+import { ColegasEndpointService } from 'src/app/features/colegas/colegas-endpoint.service';
 import { Colega, ColegaDetails, ColegaList } from './colegas.model';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { Colega, ColegaDetails, ColegaList } from './colegas.model';
 export class ColegaService {
 
   constructor(
-    private colegaEndpointService: ColegaEndpointService
+    private colegaEndpointService: ColegasEndpointService
   ) {}
 
   getColega(uuid: string): Observable<Colega> {

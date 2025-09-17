@@ -22,7 +22,7 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit() {
     console.log("LOGOUT");
-    this.authService.logoutUser().pipe(
+    this.authService.logout().pipe(
       finalize(() => {
         window.location.reload(); // TODO: (Logout) Nada de reload! Refazer
       })
