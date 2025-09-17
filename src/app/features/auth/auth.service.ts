@@ -4,6 +4,7 @@ import { catchError, concat, concatMap, map, mergeMap, Observable, switchMap, ta
 
 import { Auth, AuthType } from './auth.model';
 import { AuthEndpointService, AuthOkResponse } from 'src/app/features/auth/auth-endpoint.service';
+import { CurrentStatus } from 'src/app/current-status';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +32,11 @@ export class AuthService {
 
   // Login
   public login(email: string, password: string): Observable<boolean> {
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Login");
     return this.authEndpointService.login(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
         tap(authType => {
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Update Auth");
           this.auth = Auth.getAuth(<AuthType>authType); // Carrega Auth com o AuthType
         }),
         map(authType => true) // Se sucesso

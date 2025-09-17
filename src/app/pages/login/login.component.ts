@@ -7,6 +7,7 @@ import { finalize, Observable } from 'rxjs';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/features/theme.service';
 import { AuthService } from 'src/app/features/auth/auth.service';
+import { CurrentStatus } from 'src/app/current-status';
 
 @Component({
   selector: 'app-login',
@@ -30,17 +31,21 @@ export class LoginComponent implements AfterContentInit {
   }
 
   ngAfterContentInit() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Update theme");
     this.themeService.setBackgroundTheme(Theme.Light);
   }
 
   // Submit
   submit(form: any) {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Submit: DOING");
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Form");
+    if(CurrentStatus.DEBUG_MODE) console.log(form.value);
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] isFormValid: " + form.valid);
+
     this.isLoading = true;
 
-    console.log(form.valid); // TODO: Deletar
-    console.log(form.value); // TODO: Deletar
+    if(!form.valid) return;
 
-    // if(!form.valid) return; // TODO: (Login) Validar
     const email = form.value.userEmail;
     const password = form.value.userPassword;
 
@@ -53,29 +58,34 @@ export class LoginComponent implements AfterContentInit {
       .subscribe({
         next: (data) => {
           form.reset(); // Reset form
+          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Submit: DONE");
         },
         error: (error) => {
           this.error = error; // Informa erro
+          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Submit: ERROR");
+          if(CurrentStatus.DEBUG_MODE) console.log(error);
         }
       });
   }
 
   // Login
   login(email: string, password: string): Observable<boolean> {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DOING");
     return new Observable(subscriber => {
       this.authService.login(email, password).subscribe({
         next: (data) => {
-          console.log("OK"); // TODO: Deletar
           switch(true) {
             case this.authService.isUserEstudante():
               this.redirectToColegas()
               break;
           }
+          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DONE");
           subscriber.next(true);
           subscriber.complete();
         },
         error: (error) => {
-          console.log(error); // TODO: Deletar
+          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: ERROR");
+          if(CurrentStatus.DEBUG_MODE) console.log(error);
           subscriber.error(error);
         }
       });
@@ -84,9 +94,11 @@ export class LoginComponent implements AfterContentInit {
 
   // Redirects
   redirectToCadastro() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Redirect to Cadastro");
     this.router.navigate([ "/cadastro" ]);
   }
   redirectToColegas() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Redirect to Colegas");
     this.router.navigate([ "/colegas" ]);
   }
 

@@ -1,5 +1,7 @@
+import { CurrentStatus } from "./current-status";
+
 export const environment = {
-    production: false,
+    production: CurrentStatus.PRODUCTION,
     firebaseConfig: {
         apiKey: "AIzaSyCbSx6aBrGmI0GhXVEEYGinOKDbpFhaskc",
         authDomain: "univespers-3fe2f.firebaseapp.com",

@@ -5,6 +5,14 @@ export class CurrentStatus {
   public static CURRENT_YEAR = new Date().getFullYear();
   public static CURRENT_VERSION = "2.0.0-alpha";
 
-  constructor() {}
+  public static PRODUCTION = false;
+
+  public static DEBUG_MODE = true;
+  public static MOCK = {
+    AUTH: true,
+    PERFIL: true,
+    COLEGAS: true,
+    CHAT: true
+  };
 
 }
