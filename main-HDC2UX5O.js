@@ -84,21 +84,6 @@ import{$ as p,$a as H,$b as Ke,A as Ka,Aa as vi,Ab as Sn,B as Se,Ba as Qa,Bb as 
             "instagram": "aluno3@instagram",
             "reddit": "aluno3@reddit"
           }
-        }`:e=="abc123_4"?`{
-          "uuid": "abc123_4",
-          "nome": "Aluno4",
-          "curso": "Curso4",
-          "polo": "Polo4",
-          "emailInstitucional": "aluno4@estudante.com",
-          "telefone": "(00) 90000-0000",
-          "temWhatsapp": false,
-          "descricao": "Alooo!",
-          "contatos": {
-            "email": "aluno4@email.com",
-            "facebook": "aluno4@facebook",
-            "instagram": "aluno4@instagram",
-            "reddit": "aluno4@reddit"
-          }
         }`:`{
           "uuid": "abc123",
           "nome": "Aluno",
