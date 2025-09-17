@@ -89,6 +89,22 @@ export class ColleagueEndpointService {
             "reddit": "aluno3@reddit"
           }
         }`
+        : (uuid == "abc123_4") ? `{
+          "uuid": "abc123_4",
+          "nome": "Aluno4",
+          "curso": "Curso4",
+          "polo": "Polo4",
+          "emailInstitucional": "aluno4@estudante.com",
+          "telefone": "(00) 90000-0000",
+          "temWhatsapp": false,
+          "descricao": "Alooo!",
+          "contatos": {
+            "email": "aluno4@email.com",
+            "facebook": "aluno4@facebook",
+            "instagram": "aluno4@instagram",
+            "reddit": "aluno4@reddit"
+          }
+        }`
         : `{
           "uuid": "abc123",
           "nome": "Aluno",
@@ -111,7 +127,7 @@ export class ColleagueEndpointService {
   // All Colleagues
   public searchColleagues(query: string, page: number): Observable<ColleagueListResponse> {
     const pageQuantity = 10;
-  
+
     if(this.mock) {
       let response = JSON.parse(`{
         "lista": [
