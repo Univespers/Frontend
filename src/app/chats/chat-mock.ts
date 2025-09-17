@@ -74,7 +74,7 @@ export const chatMock: { conversations: ChatConversation[] } = {
         {
           id: 'msg1',
           senderId: 'uuid998',
-          text: 'Vez a quantidade possível de caracteres no Épore - Crise e limitação e se exceder',
+          text: 'Oi tudo bem?',
           timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 dias atrás
           read: true
         },
@@ -88,14 +88,14 @@ export const chatMock: { conversations: ChatConversation[] } = {
         {
           id: 'msg3',
           senderId: 'uuid123',
-          text: 'Boa Noite! Muito obrigada! Agradeço muito a disponibilidade para tirar essa dúvida.',
+          text: 'Oi Camila. Tudo bem sim! E com você? Sim tem como estacionar lá sim. Normalmente a coordenadora envia um e-mail com um formulário para preenchermos a placa do carro 🚙',
           timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 dia atrás
           read: true
         },
         {
           id: 'msg4',
           senderId: 'uuid998',
-          text: 'Oi Camila. Tudo bem sim! Sem problemas, posso ajudar!',
+          text: 'Muito obrigada pela informação! 🙏',
           timestamp: new Date(), // Hoje
           read: false
         }
