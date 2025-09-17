@@ -47,23 +47,32 @@
   padding: 10px 14px;
   background-color: #e3e3e3; // padrão
   border-radius: 10px;
+  border-left: 4px solid transparent; // espaço reservado para borda de seleção
   border-bottom: 1px solid #ccc;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; // NOVO
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); // NOVO: sombra leve padrão
+  transition: background-color 0.2s ease,
+              color 0.2s ease,
+              box-shadow 0.2s ease,
+              transform 0.15s ease,
+              border-left-color 0.2s ease,
+              background 0.3s ease; // NOVO: transição para gradiente
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); // sombra leve padrão
 }
 
 .conversation-item:hover {
-  background-color: #9999cc; // hover
+  background-color: #9999cc; // hover sólido
   color: #fff;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); // NOVO: sombra mais visível no hover
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); // sombra mais visível no hover
+  transform: scale(1.02); // zoom suave no hover
 }
 
 .conversation-item.selected { // estado selecionado
-  background-color: #666699;
+  background: linear-gradient(135deg, #666699, #8888cc); // NOVO: gradiente suave
   color: #fff;
   font-weight: bold;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // NOVO: sombra mais marcada no selecionado
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // sombra mais marcada
+  transform: scale(1.01); // leve destaque
+  border-left-color: #3399ff; // borda azul de seleção
 }
 
 .conversation-item p {
@@ -72,7 +81,7 @@
 
 .conversation-item small {
   color: #555;
-  transition: color 0.2s ease; // NOVO: transição suave no texto secundário
+  transition: color 0.2s ease;
 }
 
 .conversation-item:hover small,
