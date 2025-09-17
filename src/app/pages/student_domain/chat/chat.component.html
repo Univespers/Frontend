@@ -61,8 +61,14 @@
       class="message"
       [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
     >
-      <strong>{{ getSenderName(msg.senderId) }}:</strong>
-      <span>{{ msg.text }}</span>
+      <!-- NOVO: Header com nome e timestamp -->
+      <div class="message-header">
+        <strong>{{ getSenderPoloAndName(msg.senderId) }}</strong>
+        <small class="message-time">{{ msg.timestamp | date:'HH:mm' }}</small>
+      </div>
+      <div class="message-content">
+        <span>{{ msg.text }}</span>
+      </div>
     </div>
 
     <div *ngIf="selectedConversation" class="message-input">

@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ColleagueEndpointService, ColleagueResponse } from '../../../endpoints/colleague-endpoint.service';
@@ -29,7 +29,8 @@ import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/po
     MatSelectModule,
     MatChipsModule,
     PopupDialogMatComponent,
-    CommonModule
+    CommonModule,
+    DatePipe // ✅ NOVO: Import do DatePipe para timestamp
   ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
@@ -47,7 +48,6 @@ export class ChatComponent implements OnInit {
   currentFilter: 'all' | 'unread' | 'group' = 'all';
   private filterSubject = new BehaviorSubject<'all' | 'unread' | 'group'>('all');
 
-  // NOVO: placeholder dinâmico
   placeholderText = 'Digite sua mensagem... (Alt+Enter para quebrar linha)';
 
   constructor(
@@ -57,17 +57,14 @@ export class ChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 🔹 Busca de usuários na API Node.js
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(
       debounceTime(300),
       startWith(''),
       switchMap(value => this.searchUsers(value || ''))
     );
 
-    // 🔹 Conversas mockadas
     this.conversations$ = this.chatService.getConversations('uuid123');
 
-    // 🔹 Combina busca e filtro
     this.filteredConversations$ = combineLatest([
       this.conversations$,
       this.searchControl.valueChanges.pipe(startWith(''), debounceTime(100)),
@@ -75,12 +72,10 @@ export class ChatComponent implements OnInit {
     ]).pipe(
       map(([convs, searchTerm, filter]) => {
         return convs.filter(conv => {
-          // 1. VERIFICA BUSCA (se houver termo)
           const hasSearchTerm = searchTerm && searchTerm.trim().length > 0;
           const passesSearch = !hasSearchTerm ||
             conv.members.some(m => m.nome.toLowerCase().includes(searchTerm.toLowerCase()));
 
-          // 2. VERIFICA FILTRO (se não for 'all')
           const hasFilter = filter !== 'all';
           let passesFilter = true;
 
@@ -98,7 +93,6 @@ export class ChatComponent implements OnInit {
     );
   }
 
-  // NOVO: Função para mostrar apenas o nome no input
   displayFn(user: ColleagueResponse): string {
     return user ? user.nome : '';
   }
@@ -120,21 +114,31 @@ export class ChatComponent implements OnInit {
     this.messages$ = this.chatService.getMessages(conv.id);
   }
 
-  // NOVO: Manipulação de teclas no textarea
+  // NOVO: Método para obter polo e nome formatado
+  getSenderPoloAndName(senderId: string): string {
+    if (senderId === 'uuid123') {
+      return 'Você';
+    }
+
+    if (!this.selectedConversation) return 'Desconhecido';
+
+    const member = this.selectedConversation.members.find(m => m.id === senderId);
+    if (!member) return 'Desconhecido';
+
+    return `[${member.polo || 'Sem polo'}] - ${member.nome}`;
+  }
+
   onMessageKeydown(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
-    // Alt+Enter: Quebra linha
     if (event.altKey && event.key === 'Enter') {
       event.preventDefault();
       this.insertLineBreak(textarea);
     }
-    // Enter sem Alt: Envia mensagem
     else if (event.key === 'Enter' && !event.shiftKey && !event.altKey) {
       event.preventDefault();
       this.sendMessageFromTextarea(textarea);
     }
   }
 
-  // NOVO: Insere quebra de linha no cursor
   private insertLineBreak(textarea: HTMLTextAreaElement) {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -144,7 +148,6 @@ export class ChatComponent implements OnInit {
     this.adjustTextareaHeight(textarea);
   }
 
-  // NOVO: Ajusta altura automaticamente
   adjustTextareaHeight(textarea: HTMLTextAreaElement) {
     textarea.style.height = 'auto';
     const maxHeight = 120;
@@ -153,7 +156,6 @@ export class ChatComponent implements OnInit {
     textarea.style.overflowY = newHeight >= maxHeight ? 'auto' : 'hidden';
   }
 
-  // NOVO: Envia mensagem a partir do textarea
   sendMessageFromTextarea(textarea: HTMLTextAreaElement) {
     const text = textarea.value.trim();
     if (!this.selectedConversation || !text) return;
@@ -173,7 +175,6 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  // Método original mantido para compatibilidade
   sendMessage(text: string) {
     if (!this.selectedConversation || !text.trim()) return;
 

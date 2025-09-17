@@ -1,4 +1,4 @@
-:host { // Fill all space given by the parent
+:host {
   width: 100%;
   height: 100%;
 }
@@ -15,33 +15,43 @@
   border-radius: 16px;
 }
 
+.messages {
+  width: 60%;
+  margin: 10px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+
 .search-input {
   margin: 16px 24px 8px 24px;
-  width: calc(100% - 48px); // 100% menos as margens laterais
+  width: calc(100% - 48px);
 }
 
 ::ng-deep .search-input .mat-mdc-form-field-infix {
-  background-color: #fff; // fundo branco
+  background-color: #fff;
 }
 
 ::ng-deep .search-input .mat-mdc-text-field-wrapper {
-  background-color: #fff !important; // deixa o container branco
+  background-color: #fff !important;
 }
 
 ::ng-deep .search-input .mat-mdc-form-field-infix {
-  background-color: #fff !important; // garante que o meio também seja branco
+  background-color: #fff !important;
 }
 
 ::ng-deep .search-input .mat-mdc-form-field {
-  width: 100%; // garante que o mat-form-field ocupe toda a largura disponível
+  width: 100%;
 }
 
 .conversation-item {
-  margin: 4px 12px; // espaço lateral e vertical
+  margin: 4px 12px;
   padding: 10px 14px;
-  background-color: #e3e3e3; // padrão
+  background-color: #e3e3e3;
   border-radius: 10px;
-  border-left: 4px solid transparent; // espaço reservado para borda de seleção
+  border-left: 4px solid transparent;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
   transition: background-color 0.2s ease,
@@ -49,24 +59,24 @@
               box-shadow 0.2s ease,
               transform 0.15s ease,
               border-left-color 0.2s ease,
-              background 0.3s ease; // NOVO: transição para gradiente
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); // sombra leve padrão
+              background 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .conversation-item:hover {
-  background-color: #9999cc; // hover sólido
+  background-color: #9999cc;
   color: #fff;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); // sombra mais visível no hover
-  transform: scale(1.02); // zoom suave no hover
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
 }
 
-.conversation-item.selected { // estado selecionado
-  background: linear-gradient(135deg, #666699, #8888cc); // NOVO: gradiente suave
+.conversation-item.selected {
+  background: linear-gradient(135deg, #666699, #8888cc);
   color: #fff;
   font-weight: bold;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // sombra mais marcada
-  transform: scale(1.01); // leve destaque
-  border-left-color: #3399ff; // borda azul de seleção
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.01);
+  border-left-color: #3399ff;
 }
 
 .conversation-item p {
@@ -93,7 +103,7 @@
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  background: #e3e3e3; // padrão claro
+  background: #e3e3e3;
   color: #333;
   font-weight: 600;
   cursor: pointer;
@@ -112,36 +122,31 @@
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Container do botão */
 .new-group-container {
   display: flex;
-  justify-content: flex-end; // joga o botão pro canto direito
-  margin: 0 24px 8px 24px;   // mesmo alinhamento do input
+  justify-content: flex-end;
+  margin: 0 24px 8px 24px;
 }
 
-/* Botão dark compacto */
 .new-group-btn.dark-button {
-  padding: 6px 14px;      // menor
-  font-size: 0.85rem;     // texto proporcional
-  border-radius: 8px;     // menos arredondado
-  text-transform: none;   // mantém “Novo Grupo” mais próximo do texto
-  width: auto;            // ocupa só o necessário
-  min-width: unset;       // garante que não expanda
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  text-transform: none;
+  width: auto;
+  min-width: unset;
 }
 
-/* Botão nativo reutilizável no estilo dark */
 .dark-button {
   background: linear-gradient(135deg, #333333, #444444);
   color: #fff;
   border: none;
   cursor: pointer;
-
   border-radius: 10px;
   font-weight: bold;
   text-transform: uppercase;
   padding: 12px;
   width: 100%;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: all 0.25s ease;
   display: flex;
@@ -149,40 +154,82 @@
   justify-content: center;
 }
 
-/* Hover */
 .dark-button:hover {
   background: linear-gradient(135deg, #444444, #555555);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
   transform: translateY(-2px);
 }
 
-/* Active */
 .dark-button:active {
   background: linear-gradient(135deg, #222222, #333333);
   transform: translateY(0);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
-.messages {
+/* NOVO: Estilos das mensagens com timestamp */
+.message {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  max-width: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 12px;
-  width: 60%;
-  margin: 10px;
-  border-radius: 16px;
+  gap: 6px;
 }
 
-.message {
-  margin: 6px 0;
-  padding: 8px 12px;
-  border-radius: 12px;
-  background: #e0e0e0;
-  max-width: 70%;
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+
+  strong {
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  .message-time {
+    font-size: 0.75em;
+    opacity: 0.7;
+  }
+}
+
+.message-content {
   span {
-    white-space: pre-line; // ✅ MOSTRA QUEBRAS DE LINHA
+    white-space: pre-line;
     word-break: break-word;
     line-height: 1.4;
+    font-size: 1em;
+  }
+}
+
+.message.mine {
+  align-self: flex-end;
+  background: rgba(122, 18, 19, 0.9);
+  color: #fff;
+
+  .message-header {
+    strong {
+      color: rgba(255, 255, 255, 0.95);
+    }
+    .message-time {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.message.their {
+  align-self: flex-start;
+  background: #e0e0e0;
+  color: #000;
+
+  .message-header {
+    strong {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    .message-time {
+      color: rgba(0, 0, 0, 0.6);
+    }
   }
 }
 
@@ -190,29 +237,9 @@
   display: flex;
   margin-top: auto;
   gap: 8px;
+  align-items: flex-end;
 }
 
-.message-input input {
-  flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-/* Mensagens alinhadas */
-.message.mine {
-  align-self: flex-end;
-  background: rgba(122, 18, 19, 0.8);
-  color: #fff;
-}
-
-.message.their {
-  align-self: flex-start;
-  background: #e0e0e0;
-  color: #000;
-}
-
-/* Estilos para o textarea */
 .message-textarea {
   flex: 1;
   padding: 8px;
@@ -223,7 +250,7 @@
   max-height: 120px;
   font-family: inherit;
   line-height: 1.4;
-  white-space: pre-wrap; // ✅ Mantém quebras no textarea também
+  white-space: pre-wrap;
 
   &:focus {
     outline: none;
@@ -231,13 +258,3 @@
     box-shadow: 0 0 0 2px rgba(102, 102, 153, 0.2);
   }
 }
-
-/* Ajuste no container do input */
-.message-input {
-  display: flex;
-  margin-top: auto;
-  gap: 8px;
-  align-items: flex-end; // Alinha botão na base
-}
-
-
