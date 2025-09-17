@@ -47,12 +47,8 @@ export class ChatComponent implements OnInit {
   currentFilter: 'all' | 'unread' | 'group' = 'all';
   private filterSubject = new BehaviorSubject<'all' | 'unread' | 'group'>('all');
 
-  // NOVO: popup de grupo
-  showGroupPopup = false;
-  groupTitle = '';
-  groupSearchControl = new FormControl('');
-  filteredGroupUsers$: Observable<ColleagueResponse[]> = of([]);
-  selectedUsers: ColleagueResponse[] = [];
+  // NOVO: placeholder dinâmico
+  placeholderText = 'Digite sua mensagem... (Alt+Enter para quebrar linha)';
 
   constructor(
     private colleagueService: ColleagueEndpointService,
@@ -60,8 +56,6 @@ export class ChatComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-  // chat.component.ts - ngOnInit CORRIGIDO
-  // chat.component.ts - ngOnInit CORRIGIDO (VERSÃO FINAL)
   ngOnInit(): void {
     // 🔹 Busca de usuários na API Node.js
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(
@@ -70,26 +64,16 @@ export class ChatComponent implements OnInit {
       switchMap(value => this.searchUsers(value || ''))
     );
 
-    // 🔹 Autocomplete para popup de grupo
-    this.filteredGroupUsers$ = this.groupSearchControl.valueChanges.pipe(
-      debounceTime(300),
-      startWith(''),
-      switchMap(value => this.searchUsers(value || ''))
-    );
-
     // 🔹 Conversas mockadas
     this.conversations$ = this.chatService.getConversations('uuid123');
 
-    // 🔹 Combina busca e filtro - LÓGICA AND CORRIGIDA
+    // 🔹 Combina busca e filtro
     this.filteredConversations$ = combineLatest([
       this.conversations$,
       this.searchControl.valueChanges.pipe(startWith(''), debounceTime(100)),
       this.filterSubject.asObservable().pipe(startWith(this.currentFilter))
     ]).pipe(
       map(([convs, searchTerm, filter]) => {
-        // DEBUG: Mostra o que está sendo filtrado
-        console.log('Filtrando:', { searchTerm, filter, totalConvs: convs.length });
-
         return convs.filter(conv => {
           // 1. VERIFICA BUSCA (se houver termo)
           const hasSearchTerm = searchTerm && searchTerm.trim().length > 0;
@@ -108,11 +92,6 @@ export class ChatComponent implements OnInit {
             }
           }
 
-          // 3. RETORNA TRUE APENAS SE:
-          // - Não há busca E não há filtro → mostra tudo
-          // - Há busca E passa na busca (filtro é opcional)
-          // - Há filtro E passa no filtro (busca é opcional)
-          // - Há ambos E passa em ambos
           return passesSearch && passesFilter;
         });
       })
@@ -124,19 +103,10 @@ export class ChatComponent implements OnInit {
     return user ? user.nome : '';
   }
 
-  // chat.component.ts - MELHORIA (opcional)
   setFilter(filter: 'all' | 'unread' | 'group') {
     this.currentFilter = filter;
     this.filterSubject.next(filter);
   }
-
-  //onSearchInput() {
-    // Quando o usuário digita na busca, reseta o filtro para 'all'
-    // para evitar combinações confusas como "Aluno4 + Não lidos"
-    //if (this.currentFilter !== 'all') {
-      //this.setFilter('all');
-    //}
-  //}
 
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
@@ -144,22 +114,77 @@ export class ChatComponent implements OnInit {
     conv.messages.forEach(msg => {
       if (msg.senderId !== 'uuid123' && !msg.read) {
         msg.read = true;
-        // this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
       }
     });
 
     this.messages$ = this.chatService.getMessages(conv.id);
   }
 
-  sendMessage(text: string) {
-    if (!this.selectedConversation) return;
+  // NOVO: Manipulação de teclas no textarea
+  onMessageKeydown(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
+    // Alt+Enter: Quebra linha
+    if (event.altKey && event.key === 'Enter') {
+      event.preventDefault();
+      this.insertLineBreak(textarea);
+    }
+    // Enter sem Alt: Envia mensagem
+    else if (event.key === 'Enter' && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      this.sendMessageFromTextarea(textarea);
+    }
+  }
+
+  // NOVO: Insere quebra de linha no cursor
+  private insertLineBreak(textarea: HTMLTextAreaElement) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    textarea.value = textarea.value.substring(0, start) + '\n' + textarea.value.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start + 1;
+    this.adjustTextareaHeight(textarea);
+  }
+
+  // NOVO: Ajusta altura automaticamente
+  adjustTextareaHeight(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
+    const maxHeight = 120;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = newHeight + 'px';
+    textarea.style.overflowY = newHeight >= maxHeight ? 'auto' : 'hidden';
+  }
+
+  // NOVO: Envia mensagem a partir do textarea
+  sendMessageFromTextarea(textarea: HTMLTextAreaElement) {
+    const text = textarea.value.trim();
+    if (!this.selectedConversation || !text) return;
+
     const msg: ChatMessage = {
       id: `msg_${Date.now()}`,
       senderId: 'uuid123',
-      text,
+      text: text,
       timestamp: new Date(),
       read: true
     };
+
+    this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
+      this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
+      textarea.value = '';
+      this.adjustTextareaHeight(textarea);
+    });
+  }
+
+  // Método original mantido para compatibilidade
+  sendMessage(text: string) {
+    if (!this.selectedConversation || !text.trim()) return;
+
+    const msg: ChatMessage = {
+      id: `msg_${Date.now()}`,
+      senderId: 'uuid123',
+      text: text.trim(),
+      timestamp: new Date(),
+      read: true
+    };
+
     this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
       this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
     });
@@ -172,7 +197,6 @@ export class ChatComponent implements OnInit {
   }
 
   searchUsers(term: string): Observable<ColleagueResponse[]> {
-    // MOCK
     return of([
       { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
       { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
@@ -181,7 +205,6 @@ export class ChatComponent implements OnInit {
     ]);
   }
 
-  /** NOVO: Cria ou abre conversa ao selecionar usuário */
   onUserSelected(user: ColleagueResponse) {
     const existingConv = chatMock.conversations.find(c =>
       c.members.length === 2 &&
@@ -193,12 +216,11 @@ export class ChatComponent implements OnInit {
       this.openConversation(existingConv);
     } else {
       this.chatService.createConversation([
-        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' }, // usuário logado
-        { id: user.uuid, nome: user.nome, polo: user.polo }  // ⚡ inclui polo para corrigir título
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+        { id: user.uuid, nome: user.nome, polo: user.polo }
       ]).subscribe(conv => {
         this.selectedConversation = conv;
         this.messages$ = of(conv.messages);
-        // ⚡ BehaviorSubject já atualiza conversas, não precisa sobrescrever
       });
     }
   }
@@ -226,61 +248,29 @@ export class ChatComponent implements OnInit {
     return last.text;
   }
 
-  // abre popup
-  // chat.component.ts - ALTERADO (apenas o método openGroupPopup)
-openGroupPopup() {
-  this.dialog.open(PopupDialogMatComponent, {
-    width: '600px',
-    panelClass: 'custom-dark-dialog', // ✅ Já está correto
-    backdropClass: 'custom-dark-backdrop', // NOVO: opcional para backdrop escuro
-    data: {
-      users$: [
-        { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-        { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-        { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
-      ]
-    }
-  }).afterClosed().subscribe(result => {
-    if (result) {
-      const members = [
-        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
-        ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
-      ];
-      this.chatService.createConversation(members).subscribe(conv => {
-        conv.title = result.title;
-        this.openConversation(conv);
-      });
-    }
-  });
-}
-
-  // adiciona usuário ao grupo
-  addUserToGroup(user: ColleagueResponse) {
-    if (!this.selectedUsers.find(u => u.uuid === user.uuid)) {
-      this.selectedUsers.push(user);
-    }
-    this.groupSearchControl.setValue(''); // limpa input
-  }
-
-  // remove integrante
-  removeUserFromGroup(user: ColleagueResponse) {
-    this.selectedUsers = this.selectedUsers.filter(u => u.uuid !== user.uuid);
-  }
-
-  // cria grupo
-  createGroup() {
-    if (!this.groupTitle || this.selectedUsers.length === 0) return;
-
-    const members = [
-      { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' }, // logado
-      ...this.selectedUsers.map(u => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
-    ];
-
-    this.chatService.createConversation(members).subscribe(conv => {
-      conv.title = this.groupTitle;
-      this.openConversation(conv);
-      this.showGroupPopup = false;
+  openGroupPopup() {
+    this.dialog.open(PopupDialogMatComponent, {
+      width: '600px',
+      panelClass: 'custom-dark-dialog',
+      backdropClass: 'custom-dark-backdrop',
+      data: {
+        users$: [
+          { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+          { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+          { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
+        ]
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        const members = [
+          { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+          ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
+        ];
+        this.chatService.createConversation(members).subscribe(conv => {
+          conv.title = result.title;
+          this.openConversation(conv);
+        });
+      }
     });
   }
-
 }

@@ -16,12 +16,11 @@
         #users="matAutocomplete"
         [displayWith]="displayFn"
         (optionSelected)="onUserSelected($event.option.value)"
-       >
+      >
         <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
           {{ user.nome }}
         </mat-option>
       </mat-autocomplete>
-
     </div>
 
     <!-- Botão para abrir popup de grupo -->
@@ -32,16 +31,13 @@
     </div>
 
     <!-- Filtros -->
-    <!-- Filtros -->
     <div class="chat-filters">
       <button class="filter-btn"
               [class.active]="currentFilter==='all'"
               (click)="setFilter('all')">Todos</button>
-
       <button class="filter-btn"
               [class.active]="currentFilter==='unread'"
               (click)="setFilter('unread')">Não lidos</button>
-
       <button class="filter-btn"
               [class.active]="currentFilter==='group'"
               (click)="setFilter('group')">Grupos</button>
@@ -56,23 +52,28 @@
       <p><b>{{ getConversationTitle(conv) }}</b></p>
       <small>Última: {{ getLastMessage(conv) }}</small>
     </div>
-
   </div>
 
   <!-- Área de mensagens -->
   <div class="messages mat-elevation-z5">
     <div
-    *ngFor="let msg of messages$ | async"
-    class="message"
-    [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
+      *ngFor="let msg of messages$ | async"
+      class="message"
+      [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
     >
       <strong>{{ getSenderName(msg.senderId) }}:</strong>
       <span>{{ msg.text }}</span>
     </div>
 
     <div *ngIf="selectedConversation" class="message-input">
-      <input #newMsg placeholder="Digite sua mensagem..." />
-      <button (click)="sendMessage(newMsg.value); newMsg.value=''">Enviar</button>
+      <textarea
+        #newMsg
+        [placeholder]="placeholderText"
+        (keydown)="onMessageKeydown($event, newMsg)"
+        rows="1"
+        class="message-textarea"
+      ></textarea>
+      <button (click)="sendMessageFromTextarea(newMsg)">Enviar</button>
     </div>
   </div>
 </div>
