@@ -49,17 +49,26 @@
       class="conversation-item"
       [class.selected]="selectedConversation?.id === conv.id"
     >
-      <div class="conversation-header">
-        <p><b>{{ getConversationTitle(conv) }}</b></p>
-        <!-- NOVO: Badge de mensagens não lidas -->
-        <span
-          *ngIf="getUnreadCount(conv) > 0"
-          [class]="getBadgeClass(getUnreadCount(conv))"
-        >
-          {{ getUnreadCount(conv) > 99 ? '99+' : getUnreadCount(conv) }}
-        </span>
+      <div class="conversation-content">
+        <!-- Conteúdo principal à esquerda -->
+        <div class="conversation-info">
+          <p><b>{{ getConversationTitle(conv) }}</b></p>
+          <small class="last-message-text">Última: {{ getLastMessage(conv) }}</small>
+        </div>
+
+        <!-- Coluna à direita com badge e horário -->
+        <div class="conversation-meta">
+          <!-- Badge no topo direito -->
+          <span
+            *ngIf="getUnreadCount(conv) > 0"
+            [class]="getBadgeClass(getUnreadCount(conv))"
+          >
+            {{ getUnreadCount(conv) > 99 ? '99+' : getUnreadCount(conv) }}
+          </span>
+          <!-- Horário abaixo do badge -->
+          <small class="last-message-time">{{ getLastMessageTime(conv) }}</small>
+        </div>
       </div>
-      <small>Última: {{ getLastMessage(conv) }}</small>
     </div>
   </div>
 

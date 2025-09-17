@@ -298,6 +298,36 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     return count > 9 ? 'unread-badge many' : 'unread-badge';
   }
 
+  // NOVO: Método para obter horário da última mensagem
+getLastMessageTime(conv: ChatConversation): string {
+  if (!conv.messages || conv.messages.length === 0) return '';
+
+  const lastMessage = conv.messages[conv.messages.length - 1];
+  const messageDate = lastMessage.timestamp.toDate ? lastMessage.timestamp.toDate() : new Date(lastMessage.timestamp);
+  const now = new Date();
+
+  // Se for hoje, mostra apenas hora
+  if (messageDate.toDateString() === now.toDateString()) {
+    return messageDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Se for ontem, mostra "Ontem"
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (messageDate.toDateString() === yesterday.toDateString()) {
+    return 'Ontem';
+  }
+
+  // Se for até 7 dias atrás, mostra dia da semana
+  const diffDays = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60 * 60 * 24));
+  if (diffDays <= 7) {
+    return messageDate.toLocaleDateString('pt-BR', { weekday: 'short' });
+  }
+
+  // Mais de 7 dias: mostra data completa
+  return messageDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
   openGroupPopup() {
     this.dialog.open(PopupDialogMatComponent, {
       width: '600px',
