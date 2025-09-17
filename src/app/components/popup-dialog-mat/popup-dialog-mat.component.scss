@@ -1,0 +1,24 @@
+@import "src/styles.scss";
+
+// popup-dialog-mat.component.scss - ALTERADO
+:host {
+  display: block;
+}
+
+// REMOVIDO: Todo o conteúdo anterior - agora está no styles.scss
+// O dialog usa estilos globais através do panelClass
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+// NOVO: Estilos locais apenas para ajustes específicos
+mat-chip-listbox {
+  min-height: 40px;
+  margin-top: 8px;
+}
+
+mat-dialog-actions {
+  padding: 16px 0 0 0 !important;
+}

@@ -88,3 +88,145 @@ $color-text-link: #7d6ff0; // "text/cor10": Links
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// NOVO: Estilos globais para o dialog escuro
+// NOVO: Estilos completos para o dialog escuro - CORRIGIDO
+.custom-dark-dialog {
+  --mdc-dialog-container-color: #1e1e1e !important;
+  --mdc-dialog-subhead-color: #ffffff !important;
+  --mdc-dialog-supporting-text-color: rgba(255, 255, 255, 0.7) !important;
+
+  .mat-mdc-dialog-surface {
+    background: #1e1e1e !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-dialog-title {
+    color: white !important;
+    padding: 20px 24px 10px 24px !important;
+  }
+
+  .mat-mdc-dialog-content {
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 0 24px 20px 24px !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 0 24px 20px 24px !important;
+    justify-content: flex-end !important;
+  }
+
+  // NOVO: Estilos específicos para form fields
+  .mat-mdc-form-field {
+    width: 100%;
+
+    .mdc-text-field {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+      border-radius: 4px !important;
+
+      .mdc-floating-label {
+        color: rgba(255, 255, 255, 0.6) !important;
+      }
+
+      .mdc-text-field__input {
+        color: white !important;
+        caret-color: white !important;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.4) !important;
+        }
+      }
+
+      .mdc-line-ripple::before,
+      .mdc-line-ripple::after {
+        border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+      }
+
+      &.mdc-text-field--focused {
+        .mdc-line-ripple::after {
+          border-bottom-color: #7d6ff0 !important;
+        }
+
+        .mdc-floating-label {
+          color: #7d6ff0 !important;
+        }
+      }
+    }
+  }
+
+  // NOVO: Estilos para autocomplete - ESSENCIAIS
+  .mat-mdc-autocomplete-panel {
+    background: #2d2d2d !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    margin-top: 4px !important;
+
+    .mat-mdc-option {
+      color: rgba(255, 255, 255, 0.87) !important;
+      min-height: 48px !important;
+
+      &:hover:not(.mdc-list-item--disabled),
+      &.mat-mdc-option-active,
+      &.mdc-list-item--selected:not(.mat-mdc-option-multiple):not(.mdc-list-item--disabled) {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .mdc-list-item__primary-text {
+        color: inherit !important;
+      }
+    }
+  }
+
+  // NOVO: Estilos para chips
+  .mat-mdc-chip-set {
+    margin-top: 12px !important;
+
+    .mat-mdc-chip {
+      background-color: rgba(125, 111, 240, 0.2) !important;
+      color: white !important; // ✅ ESTA LINHA RESOLVE O PROBLEMA
+      border-radius: 16px !important;
+      padding: 4px 12px !important;
+      margin: 4px !important;
+
+      .mdc-evolution-chip__text-label {
+        color: white !important; // ✅ GARANTE que o texto fique branco
+        font-weight: 500 !important;
+      }
+
+      .mat-mdc-chip-remove {
+        color: rgba(255, 255, 255, 0.6) !important;
+        opacity: 1 !important;
+
+        &:hover {
+          color: white !important;
+        }
+      }
+    }
+  }
+
+  // NOVO: Estilos para botões
+  .mat-mdc-button {
+    color: rgba(255, 255, 255, 0.7) !important;
+
+    &:hover {
+      color: white !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+
+  .mat-mdc-raised-button {
+    background-color: #7d6ff0 !important;
+    color: white !important;
+
+    &:hover {
+      background-color: #6b5cd8 !important;
+    }
+
+    &:disabled {
+      background-color: rgba(125, 111, 240, 0.4) !important;
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+  }
+}

@@ -202,29 +202,32 @@ export class ChatComponent implements OnInit {
   }
 
   // abre popup
-  openGroupPopup() {
-    this.dialog.open(PopupDialogMatComponent, {
-      width: '600px',
-      data: {
-        users$: [
-          { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-          { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-          { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
-        ]
-      }
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        const members = [
-          { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
-          ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
-        ];
-        this.chatService.createConversation(members).subscribe(conv => {
-          conv.title = result.title;
-          this.openConversation(conv);
-        });
-      }
-    });
-  }
+  // chat.component.ts - ALTERADO (apenas o método openGroupPopup)
+openGroupPopup() {
+  this.dialog.open(PopupDialogMatComponent, {
+    width: '600px',
+    panelClass: 'custom-dark-dialog', // ✅ Já está correto
+    backdropClass: 'custom-dark-backdrop', // NOVO: opcional para backdrop escuro
+    data: {
+      users$: [
+        { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+        { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+        { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
+      ]
+    }
+  }).afterClosed().subscribe(result => {
+    if (result) {
+      const members = [
+        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
+        ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
+      ];
+      this.chatService.createConversation(members).subscribe(conv => {
+        conv.title = result.title;
+        this.openConversation(conv);
+      });
+    }
+  });
+}
 
   // adiciona usuário ao grupo
   addUserToGroup(user: ColleagueResponse) {

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewEncapsulation  } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +24,8 @@ import { ColleagueResponse } from '../../endpoints/colleague-endpoint.service';
     MatButtonModule
   ],
   templateUrl: './popup-dialog-mat.component.html',
-  styleUrls: ['./popup-dialog-mat.component.scss']
+  styleUrls: ['./popup-dialog-mat.component.scss'],
+  encapsulation: ViewEncapsulation.None // NOVO: remove encapsulamento
 })
 export class PopupDialogMatComponent {
   groupTitle = '';
@@ -35,6 +36,11 @@ export class PopupDialogMatComponent {
     private dialogRef: MatDialogRef<PopupDialogMatComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { users$: ColleagueResponse[] }
   ) {}
+
+  // NOVO: Função para exibir apenas o nome no input
+  displayFn(user: ColleagueResponse): string {
+    return user ? user.nome : '';
+  }
 
   addUser(user: ColleagueResponse) {
     if (!this.selectedUsers.find(u => u.uuid === user.uuid)) {

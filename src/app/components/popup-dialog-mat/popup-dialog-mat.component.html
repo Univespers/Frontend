@@ -1,3 +1,4 @@
+<!-- popup-dialog-mat.component.html - VERSÃO CORRIGIDA -->
 <h2 mat-dialog-title>Novo Grupo</h2>
 
 <mat-dialog-content>
@@ -15,7 +16,7 @@
       [matAutocomplete]="auto"
       placeholder="Buscar colegas..."
     />
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addUser($event.option.value)">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="addUser($event.option.value)">
       <mat-option *ngFor="let user of data.users$" [value]="user">
         {{ user.nome }}
       </mat-option>
