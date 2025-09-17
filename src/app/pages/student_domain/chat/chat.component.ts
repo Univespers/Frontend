@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +16,11 @@ import { chatMock } from '../../../chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
 import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
 
+interface MessageGroup {
+  date: string;
+  messages: ChatMessage[];
+}
+
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -30,12 +35,15 @@ import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/po
     MatChipsModule,
     PopupDialogMatComponent,
     CommonModule,
-    DatePipe // ✅ NOVO: Import do DatePipe para timestamp
+    DatePipe
   ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+
   searchControl = new FormControl('');
   filteredUsers$: Observable<ColleagueResponse[]> | undefined;
 
@@ -45,8 +53,12 @@ export class ChatComponent implements OnInit {
   selectedConversation: ChatConversation | null = null;
   messages$: Observable<ChatMessage[]> | undefined;
 
+  groupedMessages$!: Observable<MessageGroup[]>;
+
   currentFilter: 'all' | 'unread' | 'group' = 'all';
   private filterSubject = new BehaviorSubject<'all' | 'unread' | 'group'>('all');
+
+  private shouldScrollToBottom = false;
 
   placeholderText = 'Digite sua mensagem... (Alt+Enter para quebrar linha)';
 
@@ -63,6 +75,7 @@ export class ChatComponent implements OnInit {
       switchMap(value => this.searchUsers(value || ''))
     );
 
+    // ✅ CORRETO: Observable do service
     this.conversations$ = this.chatService.getConversations('uuid123');
 
     this.filteredConversations$ = combineLatest([
@@ -93,6 +106,13 @@ export class ChatComponent implements OnInit {
     );
   }
 
+  ngAfterViewChecked() {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
   displayFn(user: ColleagueResponse): string {
     return user ? user.nome : '';
   }
@@ -105,16 +125,22 @@ export class ChatComponent implements OnInit {
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
 
+    // Marcar mensagens como lidas
     conv.messages.forEach(msg => {
       if (msg.senderId !== 'uuid123' && !msg.read) {
-        msg.read = true;
+        this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
       }
     });
 
     this.messages$ = this.chatService.getMessages(conv.id);
+
+    this.groupedMessages$ = this.messages$.pipe(
+      map(messages => this.groupMessagesByDate(messages))
+    );
+
+    this.shouldScrollToBottom = true;
   }
 
-  // NOVO: Método para obter polo e nome formatado
   getSenderPoloAndName(senderId: string): string {
     if (senderId === 'uuid123') {
       return 'Você';
@@ -156,6 +182,7 @@ export class ChatComponent implements OnInit {
     textarea.style.overflowY = newHeight >= maxHeight ? 'auto' : 'hidden';
   }
 
+  // ✅ SOLUÇÃO ALTERNATIVA: Recarregar a conversa para atualizar
   sendMessageFromTextarea(textarea: HTMLTextAreaElement) {
     const text = textarea.value.trim();
     if (!this.selectedConversation || !text) return;
@@ -169,7 +196,8 @@ export class ChatComponent implements OnInit {
     };
 
     this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
-      this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
+      // ✅ FORÇA recarregamento da conversa atual
+      this.openConversation(this.selectedConversation!);
       textarea.value = '';
       this.adjustTextareaHeight(textarea);
     });
@@ -187,7 +215,8 @@ export class ChatComponent implements OnInit {
     };
 
     this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
-      this.messages$ = this.chatService.getMessages(this.selectedConversation!.id);
+      // ✅ Também recarrega para o método antigo
+      this.openConversation(this.selectedConversation!);
     });
   }
 
@@ -222,6 +251,10 @@ export class ChatComponent implements OnInit {
       ]).subscribe(conv => {
         this.selectedConversation = conv;
         this.messages$ = of(conv.messages);
+        this.groupedMessages$ = this.messages$.pipe(
+          map(messages => this.groupMessagesByDate(messages))
+        );
+        this.shouldScrollToBottom = true;
       });
     }
   }
@@ -273,5 +306,57 @@ export class ChatComponent implements OnInit {
         });
       }
     });
+  }
+
+  private groupMessagesByDate(messages: ChatMessage[]): MessageGroup[] {
+    const groups: { [key: string]: ChatMessage[] } = {};
+
+    messages.forEach(msg => {
+      const date = this.formatMessageDate(msg.timestamp);
+
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+
+      groups[date].push(msg);
+    });
+
+    return Object.keys(groups).map(date => ({
+      date,
+      messages: groups[date]
+    }));
+  }
+
+  private formatMessageDate(timestamp: any): string {
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return 'Hoje';
+    }
+
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Ontem';
+    }
+
+    const diffDays = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 3) {
+      return date.toLocaleDateString('pt-BR', { weekday: 'long' });
+    }
+
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      if (this.messagesContainer && this.messagesContainer.nativeElement) {
+        this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Erro ao fazer scroll:', err);
+    }
   }
 }
