@@ -12,7 +12,11 @@
         />
       </mat-form-field>
 
-      <mat-autocomplete #users="matAutocomplete" (optionSelected)="onUserSelected($event.option.value)">
+      <mat-autocomplete
+        #users="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onUserSelected($event.option.value)"
+       >
         <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
           {{ user.nome }}
         </mat-option>

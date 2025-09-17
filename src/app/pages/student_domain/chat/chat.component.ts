@@ -60,6 +60,8 @@ export class ChatComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  // chat.component.ts - ngOnInit CORRIGIDO
+  // chat.component.ts - ngOnInit CORRIGIDO (VERSÃO FINAL)
   ngOnInit(): void {
     // 🔹 Busca de usuários na API Node.js
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(
@@ -68,50 +70,73 @@ export class ChatComponent implements OnInit {
       switchMap(value => this.searchUsers(value || ''))
     );
 
-       // 🔹 Autocomplete para popup de grupo
-       this.filteredGroupUsers$ = this.groupSearchControl.valueChanges.pipe(
-        debounceTime(300),
-        startWith(''),
-        switchMap(value => this.searchUsers(value || ''))
-      );
+    // 🔹 Autocomplete para popup de grupo
+    this.filteredGroupUsers$ = this.groupSearchControl.valueChanges.pipe(
+      debounceTime(300),
+      startWith(''),
+      switchMap(value => this.searchUsers(value || ''))
+    );
 
-    // 🔹 Conversas mockadas (agora usando BehaviorSubject do serviço)
+    // 🔹 Conversas mockadas
     this.conversations$ = this.chatService.getConversations('uuid123');
 
-    // 🔹 Combina busca e filtro
+    // 🔹 Combina busca e filtro - LÓGICA AND CORRIGIDA
     this.filteredConversations$ = combineLatest([
       this.conversations$,
-      this.searchControl.valueChanges.pipe(startWith('')),
-      this.filterSubject.asObservable()
+      this.searchControl.valueChanges.pipe(startWith(''), debounceTime(100)),
+      this.filterSubject.asObservable().pipe(startWith(this.currentFilter))
     ]).pipe(
       map(([convs, searchTerm, filter]) => {
-        let filtered = convs;
+        // DEBUG: Mostra o que está sendo filtrado
+        console.log('Filtrando:', { searchTerm, filter, totalConvs: convs.length });
 
-        // Busca por nome do membro
-        if (searchTerm) {
-          filtered = filtered.filter(conv =>
-            conv.members.some(m => m.nome.toLowerCase().includes(searchTerm.toLowerCase()))
-          );
-        }
+        return convs.filter(conv => {
+          // 1. VERIFICA BUSCA (se houver termo)
+          const hasSearchTerm = searchTerm && searchTerm.trim().length > 0;
+          const passesSearch = !hasSearchTerm ||
+            conv.members.some(m => m.nome.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        // Filtro por tipo
-        if (filter === 'unread') {
-          filtered = filtered.filter(conv =>
-            conv.messages.some(msg => msg.senderId !== 'uuid123' && !msg.read)
-          );
-        } else if (filter === 'group') {
-          filtered = filtered.filter(conv => conv.members.length > 2);
-        }
+          // 2. VERIFICA FILTRO (se não for 'all')
+          const hasFilter = filter !== 'all';
+          let passesFilter = true;
 
-        return filtered;
+          if (hasFilter) {
+            if (filter === 'unread') {
+              passesFilter = conv.messages.some(msg => msg.senderId !== 'uuid123' && !msg.read);
+            } else if (filter === 'group') {
+              passesFilter = conv.members.length > 2;
+            }
+          }
+
+          // 3. RETORNA TRUE APENAS SE:
+          // - Não há busca E não há filtro → mostra tudo
+          // - Há busca E passa na busca (filtro é opcional)
+          // - Há filtro E passa no filtro (busca é opcional)
+          // - Há ambos E passa em ambos
+          return passesSearch && passesFilter;
+        });
       })
     );
   }
 
+  // NOVO: Função para mostrar apenas o nome no input
+  displayFn(user: ColleagueResponse): string {
+    return user ? user.nome : '';
+  }
+
+  // chat.component.ts - MELHORIA (opcional)
   setFilter(filter: 'all' | 'unread' | 'group') {
     this.currentFilter = filter;
     this.filterSubject.next(filter);
   }
+
+  //onSearchInput() {
+    // Quando o usuário digita na busca, reseta o filtro para 'all'
+    // para evitar combinações confusas como "Aluno4 + Não lidos"
+    //if (this.currentFilter !== 'all') {
+      //this.setFilter('all');
+    //}
+  //}
 
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
