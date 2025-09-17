@@ -22,7 +22,7 @@
 }
 
 .search-input {
-  margin: 24px;
+  margin: 16px 24px 8px 24px;
   width: calc(100% - 48px); // 100% menos as margens laterais
 }
 
@@ -141,4 +141,58 @@
   align-self: flex-start;
   background: #e0e0e0;
 }
+
+/* Container do botão */
+.new-group-container {
+  display: flex;
+  justify-content: flex-end; // joga o botão pro canto direito
+  margin: 0 24px 8px 24px;   // mesmo alinhamento do input
+}
+
+/* Botão dark compacto */
+.new-group-btn.dark-button {
+  padding: 6px 14px;      // menor
+  font-size: 0.85rem;     // texto proporcional
+  border-radius: 8px;     // menos arredondado
+  text-transform: none;   // mantém “Novo Grupo” mais próximo do texto
+  width: auto;            // ocupa só o necessário
+  min-width: unset;       // garante que não expanda
+}
+
+
+/* Botão nativo reutilizável no estilo dark */
+.dark-button {
+  background: linear-gradient(135deg, #333333, #444444);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+
+  border-radius: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 12px;
+  width: 100%;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover */
+.dark-button:hover {
+  background: linear-gradient(135deg, #444444, #555555);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Active */
+.dark-button:active {
+  background: linear-gradient(135deg, #222222, #333333);
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+
 
