@@ -9,7 +9,7 @@ export class CurrentStatus {
 
   public static DEBUG_MODE = true;
   public static MOCK = {
-    AUTH: true,
+    AUTH: false,
     PERFIL: true,
     COLEGAS: true,
     CHAT: true

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concat, concatMap, map, mergeMap, Observable, switchMap, tap } from 'rxjs';
+import { catchError, concat, concatMap, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
 import { AuthEndpointService, AuthOkResponse } from 'src/app/features/auth/auth-endpoint.service';
@@ -16,6 +16,12 @@ export class AuthService {
   constructor(
     private authEndpointService: AuthEndpointService
   ) {}
+
+  private updateAuthType(authType: AuthType) {
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Update Auth");
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] User auth type: " + authType);
+    this.auth = Auth.getAuth(<AuthType>authType); // Carrega Auth com o AuthType
+  }
 
   // Auth types
   public isUserEstudante() {
@@ -35,12 +41,26 @@ export class AuthService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Login");
     return this.authEndpointService.login(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
-        tap(authType => {
-          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Update Auth");
-          this.auth = Auth.getAuth(<AuthType>authType); // Carrega Auth com o AuthType
-        }),
-        map(authType => true) // Se sucesso
-      ))
+        tap(authType => this.updateAuthType(<AuthType>authType))
+      )),
+      map(authType => true) // Se sucesso
+    );
+  }
+
+  // Login Manager
+  public loginManager(): Observable<boolean> {
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call LoginManager");
+    return this.authEndpointService.loginManager().pipe(
+      switchMap(userUID => {
+        if(!userUID || userUID === true) {
+          this.updateAuthType(AuthType.Visitante);
+          return of("");
+        }
+        return this.authEndpointService.getAuthType(userUID).pipe(
+          tap(authType => this.updateAuthType(<AuthType>authType))
+        )
+      }),
+      map(authType => true) // Se sucesso
     );
   }
 

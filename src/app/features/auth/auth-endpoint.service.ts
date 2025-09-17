@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { get, getDatabase, ref } from '@angular/fire/database';
 
@@ -70,11 +70,12 @@ export class AuthEndpointService {
   }
 
   // Login
-  public login(email: string, password: string): Observable<string> {
+  public login(email: string, password: string): Observable<string> { // Retorna user UID
     if(CurrentStatus.MOCK.AUTH) {
       if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] MOCK Login");
-      return of("");
+      return of("randomUserUID");
     }
+
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] Login: DOING");
     return from(
       // Firebase login
@@ -92,6 +93,30 @@ export class AuthEndpointService {
     ).pipe(
       map(data => (!data ? "" : data)) // Retorna sempre string
     );
+  }
+
+  // Login Manager
+  public loginManager(): Observable<string | boolean> { // Retorna user UID ou false
+    if(CurrentStatus.MOCK.AUTH) {
+      if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] MOCK LoginManager");
+      return of(false); // Tudo deve começar na página de Login
+    }
+
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] LoginManager: DOING");
+    return new Observable((subscriber) => {
+      onAuthStateChanged(getAuth(this.fireApp), (user) => {
+        if(user && user.uid) {
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] LoginManager: DONE");
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] User UID: " + user.uid);
+          subscriber.next(user.uid);
+          subscriber.complete();
+        } else {
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] LoginManager: NOT DONE");
+          subscriber.next(false);
+          subscriber.complete();
+        }
+      });
+    });
   }
 
   // Logout
