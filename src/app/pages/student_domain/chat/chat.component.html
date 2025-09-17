@@ -49,7 +49,16 @@
       class="conversation-item"
       [class.selected]="selectedConversation?.id === conv.id"
     >
-      <p><b>{{ getConversationTitle(conv) }}</b></p>
+      <div class="conversation-header">
+        <p><b>{{ getConversationTitle(conv) }}</b></p>
+        <!-- NOVO: Badge de mensagens não lidas -->
+        <span
+          *ngIf="getUnreadCount(conv) > 0"
+          [class]="getBadgeClass(getUnreadCount(conv))"
+        >
+          {{ getUnreadCount(conv) > 99 ? '99+' : getUnreadCount(conv) }}
+        </span>
+      </div>
       <small>Última: {{ getLastMessage(conv) }}</small>
     </div>
   </div>

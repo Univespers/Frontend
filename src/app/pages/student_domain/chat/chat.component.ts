@@ -125,11 +125,14 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   openConversation(conv: ChatConversation) {
     this.selectedConversation = conv;
 
+    // NOVO: Marcar como lidas e atualizar contagem
+    const unreadMessages = conv.messages.filter(msg =>
+      msg.senderId !== 'uuid123' && !msg.read
+    );
+
     // Marcar mensagens como lidas
-    conv.messages.forEach(msg => {
-      if (msg.senderId !== 'uuid123' && !msg.read) {
-        this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
-      }
+    unreadMessages.forEach(msg => {
+      this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
     });
 
     this.messages$ = this.chatService.getMessages(conv.id);
@@ -280,6 +283,19 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     if (conv.messages.length === 0) return 'Sem mensagens ainda';
     const last = conv.messages[conv.messages.length - 1];
     return last.text;
+  }
+
+  // NOVO: Método para contar mensagens não lidas
+  getUnreadCount(conv: ChatConversation): number {
+    if (!conv.messages) return 0;
+    return conv.messages.filter(msg =>
+      msg.senderId !== 'uuid123' && !msg.read
+    ).length;
+  }
+
+  // NOVO: Método para classe CSS condicional
+  getBadgeClass(count: number): string {
+    return count > 9 ? 'unread-badge many' : 'unread-badge';
   }
 
   openGroupPopup() {
