@@ -46,7 +46,11 @@
 
   <!-- Área de mensagens -->
   <div class="messages mat-elevation-z5">
-    <div *ngFor="let msg of messages$ | async" class="message">
+    <div
+    *ngFor="let msg of messages$ | async"
+    class="message"
+    [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
+    >
       <strong>{{ getSenderName(msg.senderId) }}:</strong>
       <span>{{ msg.text }}</span>
     </div>
