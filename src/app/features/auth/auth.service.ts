@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { catchError, concat, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { first, map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
-import { AuthEndpointService, AuthOkResponse } from 'src/app/features/auth/auth-endpoint.service';
+import { AuthEndpointService } from 'src/app/features/auth/auth-endpoint.service';
 import { CurrentStatus } from 'src/app/current-status';
 
 @Injectable({
@@ -32,8 +31,14 @@ export class AuthService {
   }
 
   // Cadastro
-  public cadastro(email: string, password: string): Observable<AuthOkResponse> {
-    return this.authEndpointService.cadastro(email, password);
+  public cadastro(email: string, password: string): Observable<boolean> {
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Cadastro");
+    return this.authEndpointService.cadastro(email, password).pipe(
+      switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
+        tap(authType => this.updateAuthType(<AuthType>authType))
+      )),
+      map(authType => true) // Se sucesso
+    );
   }
 
   // Login

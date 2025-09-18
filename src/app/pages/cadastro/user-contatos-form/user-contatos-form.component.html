@@ -1,0 +1,103 @@
+<form #userContatosForm="ngForm" (ngSubmit)="submit(userContatosForm)">
+    <p class="step-title">
+        <b>Redes sociais e contato</b>
+    </p>
+    <div class="text-field-container">
+        <input id="email" class="text-field"
+            type="email"
+            placeholder="Email pessoal"
+            name="emailPessoal"
+            #emailPessoal="ngModel"
+            ngModel/>
+        <input id="showEmailPessoal"
+            type="checkbox"
+            name="userShowEmailPessoal"
+            #userShowEmailPessoal="ngModel"
+            ngModel/>
+        <label for="showEmailPessoal"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="linkedin" class="text-field"
+            type="text"
+            placeholder="LinkedIn"
+            name="linkedin"
+            #linkedin="ngModel"
+            ngModel/>
+        <input id="showLinkedIn"
+            type="checkbox"
+            name="showLinkedIn"
+            #showLinkedIn="ngModel"
+            ngModel/>
+        <label for="showLinkedIn"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="facebook" class="text-field"
+            type="text"
+            placeholder="Facebook"
+            name="facebook"
+            #facebook="ngModel"
+            ngModel/>
+        <input id="showFacebook"
+            type="checkbox"
+            name="showFacebook"
+            #showFacebook="ngModel"
+            ngModel/>
+        <label for="showFacebook"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="instagram" class="text-field"
+            type="text"
+            placeholder="Instagram"
+            name="instagram"
+            #instagram="ngModel"
+            ngModel/>
+        <input id="showInstagram"
+            type="checkbox"
+            name="showInstagram"
+            #showInstagram="ngModel"
+            ngModel/>
+        <label for="showInstagram"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="discord" class="text-field"
+            type="text"
+            placeholder="Discord"
+            name="discord"
+            #discord="ngModel"
+            ngModel/>
+        <input id="showDiscord"
+            type="checkbox"
+            name="showDiscord"
+            #showDiscord="ngModel"
+            ngModel/>
+        <label for="showDiscord"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="github" class="text-field"
+            type="text"
+            placeholder="GitHub"
+            name="github"
+            #github="ngModel"
+            ngModel/>
+        <input id="showGitHub"
+            type="checkbox"
+            name="showGitHub"
+            #showGitHub="ngModel"
+            ngModel/>
+        <label for="showGitHub"> Exibir para os colegas</label>
+    </div>
+    <div class="text-field-container">
+        <input id="reddit" class="text-field"
+            type="text"
+            placeholder="Reddit"
+            name="reddit"
+            #reddit="ngModel"
+            ngModel/>
+        <input id="showReddit"
+            type="checkbox"
+            name="showReddit"
+            #showReddit="ngModel"
+            ngModel/>
+        <label for="showReddit"> Exibir para os colegas</label>
+    </div>
+</form>

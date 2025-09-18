@@ -64,7 +64,7 @@
         app-stepper {
             width: 80%; // 20% smaller
         }
-        app-user-data-form, app-user-contacts-form, app-user-course-form {
+        app-user-dados-form, app-user-contatos-form, app-user-curso-form {
             width: 120%; // Larger than "stepper"= 20% bigger
             margin-left: -10%; // Centered = (20 / 2)% to the left
         }

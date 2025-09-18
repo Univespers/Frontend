@@ -1,88 +1,88 @@
-<form #userDataForm="ngForm" (ngSubmit)="submit(userDataForm)">
+<form #userDadosForm="ngForm" (ngSubmit)="submit(userDadosForm)">
     <p class="step-title">
         <b>Dados pessoais</b>
     </p>
     <div class="text-field-container">
-        <input id="name" class="text-field"
+        <input id="nome" class="text-field"
             type="text"
             placeholder="Nome"
             required
             minlength="6"
             maxlength="100"
-            name="userName"
-            #userName="ngModel"
+            name="nome"
+            #nome="ngModel"
             ngModel/>
     </div>
     <div class="text-field-container">
-        <input id="institutionalEmail" class="text-field"
+        <input id="emailInstitucional" class="text-field"
             type="email"
             placeholder="Email institucional"
             required
             minlength="6"
             maxlength="100"
-            name="userInstitutionalEmail"
-            #userInstitutionalEmail="ngModel"
+            name="emailInstitucional"
+            #emailInstitucional="ngModel"
             ngModel/>
     </div>
     <div class="text-field-container">
-        <input id="telephone" class="text-field"
+        <input id="telefone" class="text-field"
             type="tel"
             placeholder="Telefone"
-            name="userTelephone"
-            #userTelephone="ngModel"
+            name="telefone"
+            #telefone="ngModel"
             ngModel/>
         <div>
             <div>
-                <input id="showTelephone"
+                <input id="showTelefone"
                     type="checkbox"
-                    name="userShowTelephone"
-                    #userShowTelephone="ngModel"
+                    name="showTelefone"
+                    #showTelefone="ngModel"
                     ngModel/>
-                <label for="userShowTelephone"> Exibir para os colegas</label>
+                <label for="showTelefone"> Exibir para os colegas</label>
             </div>
             <div>
-                <input id="isWhatsapp"
+                <input id="telIsWhatsapp"
                     type="checkbox"
-                    name="userTelIsWhatsapp"
-                    #userTelIsWhatsapp="ngModel"
+                    name="telIsWhatsapp"
+                    #telIsWhatsapp="ngModel"
                     ngModel/>
-                <label for="userTelIsWhatsapp"> WhatsApp</label>
+                <label for="telIsWhatsapp"> WhatsApp</label>
             </div>
         </div>
     </div>
     <div class="text-field-container">
-        <input id="password" class="text-field"
+        <input id="senha" class="text-field"
             type="password"
             placeholder="Senha"
             required
             minlength="6"
             maxlength="100"
-            name="userPassword"
-            #userPassword="ngModel"
+            name="senha"
+            #senha="ngModel"
             ngModel/>
     </div>
     <div class="text-field-container">
-        <input id="passwordConfirmation" class="text-field"
+        <input id="senhaConfirmation" class="text-field"
             type="password"
             placeholder="Confirmar senha"
             required
             minlength="6"
             maxlength="100"
-            name="userPasswordConfirmation"
-            #userPasswordConfirmation="ngModel"
+            name="senhaConfirmation"
+            #senhaConfirmation="ngModel"
             ngModel/>
     </div>
     <div class="text-field-container">
-        <textarea id="description"
+        <textarea id="descricao"
             placeholder="Sobre mim"
-            name="userDescription"
-            #userDescription="ngModel"
+            name="descricao"
+            #descricao="ngModel"
             ngModel></textarea>
         <input id="showDescription"
             type="checkbox"
-            name="userShowDescription"
-            #userShowDescription="ngModel"
+            name="showDescricao"
+            #showDescricao="ngModel"
             ngModel/>
-        <label for="userShowDescription"> Exibir para os colegas</label>
+        <label for="showDescricao"> Exibir para os colegas</label>
     </div>
 </form>

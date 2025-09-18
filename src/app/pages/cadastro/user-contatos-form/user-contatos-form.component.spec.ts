@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserContactsFormComponent } from './user-contacts-form.component';
+import { UserContactsFormComponent } from './user-contatos-form.component';
 
 describe('UserContactsFormComponent', () => {
   let component: UserContactsFormComponent;

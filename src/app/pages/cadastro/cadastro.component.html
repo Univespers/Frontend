@@ -8,15 +8,15 @@
 
         <div id="parent-container">
             <!-- Cadastro -->
-            <form #cadastro="ngForm" (ngSubmit)="submit(userDataForm, userContactsForm, userCourseForm)">
+            <form #cadastroForm="ngForm" (ngSubmit)="submit(userDadosForm, userContatosForm, userCursoForm)">
             <div id="cadastro-container">
                 <div class="header">
                     Criar uma nova conta
                 </div>
                     <app-stepper [(currentStep)]="currentStep">
-                        <app-user-data-form (form)="getUserDataForm($event)"/>
-                        <app-user-contacts-form (form)="getUserContactsForm($event)"/>
-                        <app-user-course-form (form)="getUserCourseForm($event)"/>
+                        <app-user-dados-form (form)="getUserDadosForm($event)"/>
+                        <app-user-contatos-form (form)="getUserContatosForm($event)"/>
+                        <app-user-curso-form (form)="getUserCursoForm($event)"/>
                     </app-stepper>
                 </div>
             </form>

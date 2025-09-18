@@ -2,20 +2,20 @@ import { AfterContentInit, Component, EventEmitter, Output, ViewChild } from '@a
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-user-data-form',
+  selector: 'app-user-contatos-form',
   standalone: true,
   imports: [ FormsModule ],
-  templateUrl: './user-data-form.component.html',
-  styleUrl: './user-data-form.component.scss'
+  templateUrl: './user-contatos-form.component.html',
+  styleUrl: './user-contatos-form.component.scss'
 })
-export class UserDataFormComponent implements AfterContentInit {
+export class UserContatosFormComponent implements AfterContentInit {
 
   // Form
-  @ViewChild("userDataForm", { static: true }) userDataForm?: NgForm;
+  @ViewChild("userContatosForm", { static: true }) userContatosForm?: NgForm;
   @Output("form") formEmitter = new EventEmitter<NgForm>();
 
   ngAfterContentInit() {
-    this.formEmitter.emit(this.userDataForm);
+    this.formEmitter.emit(this.userContatosForm);
   }
 
   submit(form: NgForm) {
