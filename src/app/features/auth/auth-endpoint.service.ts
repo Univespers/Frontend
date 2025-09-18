@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { get, getDatabase, ref } from '@angular/fire/database';
 
@@ -31,6 +31,7 @@ export class AuthEndpointService {
   // Cadastro
   public cadastro(email: string, password: string): Observable<AuthOkResponse> {
 
+    // Firebase create user
     createUserWithEmailAndPassword(getAuth(this.fireApp), email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -105,6 +106,7 @@ export class AuthEndpointService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] LoginManager: DOING");
     return new Observable((subscriber) => {
       onAuthStateChanged(getAuth(this.fireApp), (user) => {
+        if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] User auth got an update");
         if(user && user.uid) {
           if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] LoginManager: DONE");
           if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] User UID: " + user.uid);
@@ -120,23 +122,26 @@ export class AuthEndpointService {
   }
 
   // Logout
-  public logout(): Observable<AuthOkResponse> {
+  public logout(): Observable<boolean> {
+    if(CurrentStatus.MOCK.AUTH) {
+      if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] MOCK Logout");
+      return of(true);
+    }
 
-    console.log("LOGOUT_USER");
-
-    if(this.mock) {
-      const response = JSON.parse(`{
-        "response": "OK"
-      }`);
-      return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
-        EndpointUtils.mockEndpoint(response)
-      );
-    } // TODO: (Auth) Remover mock
-
-    return EndpointUtils.endpointHandler<AuthResponseData, AuthOkResponse, AuthErrorResponse>(
-      this.http.get<AuthResponseData>(
-        this.authLogoutEndpoint
-      )
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] Logout: DOING");
+    return from(
+      // Firebase logout
+      signOut(getAuth(this.fireApp))
+        .then(() => {
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] Logout: DONE");
+          return true;
+        })
+        .catch((error) => {
+          if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] Logout: ERROR");
+          if(CurrentStatus.DEBUG_MODE) console.log(error);
+        })
+    ).pipe(
+      map(data => true) // Retorna sempre boolean
     );
   }
 

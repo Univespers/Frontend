@@ -38,7 +38,7 @@ export class LoginComponent implements AfterContentInit {
   // Submit
   submit(form: any) {
     if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Submit: DOING");
-    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Form");
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Form:");
     if(CurrentStatus.DEBUG_MODE) console.log(form.value);
     if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] isFormValid: " + form.valid);
 

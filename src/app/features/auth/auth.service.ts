@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concat, concatMap, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, concat, concatMap, first, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 
 import { Auth, AuthType } from './auth.model';
 import { AuthEndpointService, AuthOkResponse } from 'src/app/features/auth/auth-endpoint.service';
@@ -51,6 +51,7 @@ export class AuthService {
   public loginManager(): Observable<boolean> {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call LoginManager");
     return this.authEndpointService.loginManager().pipe(
+      first(),
       switchMap(userUID => {
         if(!userUID || userUID === true) {
           this.updateAuthType(AuthType.Visitante);
@@ -65,8 +66,12 @@ export class AuthService {
   }
 
   // Logout
-  public logout(): Observable<AuthOkResponse> {
-    return this.authEndpointService.logout();
+  public logout(): Observable<boolean> {
+    return this.authEndpointService.logout().pipe(
+      tap(() => {
+        this.updateAuthType(AuthType.Visitante)
+      })
+    );
   }
 
 }

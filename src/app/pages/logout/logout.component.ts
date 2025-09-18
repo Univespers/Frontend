@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
 
 import { AuthService } from 'src/app/features/auth/auth.service';
+import { CurrentStatus } from 'src/app/current-status';
 
 @Component({
   selector: 'app-logout',
@@ -16,17 +16,21 @@ export class LogoutComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
-    console.log("LOGOUT");
-    this.authService.logout().pipe(
-      finalize(() => {
-        window.location.reload(); // TODO: (Logout) Nada de reload! Refazer
-      })
-    ).subscribe();
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGOUT_PAGE] Call Logout");
+    this.authService.logout().subscribe({
+      next: () => {
+        this.redirectToLogin();
+      }
+    });
+  }
+
+  // Redirects
+  redirectToLogin() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGOUT_PAGE] Redirect to Login");
+    this.router.navigate([ "/login" ]);
   }
 
 }
