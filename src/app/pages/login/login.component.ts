@@ -2,7 +2,7 @@ import { Component, AfterContentInit, Inject, PLATFORM_ID } from '@angular/core'
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { finalize, Observable } from 'rxjs';
+import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { ThemeService, Theme } from 'src/app/features/theme.service';
@@ -71,25 +71,21 @@ export class LoginComponent implements AfterContentInit {
   // Login
   login(email: string, password: string): Observable<boolean> {
     if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DOING");
-    return new Observable(subscriber => {
-      this.authService.login(email, password).subscribe({
-        next: (data) => {
-          switch(true) {
-            case this.authService.isUserEstudante():
-              this.redirectToColegas()
-              break;
-          }
-          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DONE");
-          subscriber.next(true);
-          subscriber.complete();
-        },
-        error: (error) => {
-          if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: ERROR");
-          if(CurrentStatus.DEBUG_MODE) console.log(error);
-          subscriber.error(error);
+    return this.authService.login(email, password).pipe(
+      tap(() => {
+        switch(true) {
+          case this.authService.isUserEstudante():
+            this.redirectToColegas()
+            break;
         }
-      });
-    });
+        if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DONE");
+      }),
+      catchError((error) => {
+        if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: ERROR");
+        if(CurrentStatus.DEBUG_MODE) console.log(error);
+        return throwError(() => error);
+      })
+    )
   }
 
   // Redirects
