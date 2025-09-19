@@ -2,11 +2,11 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 
 import { routes } from './app.routes';
 import { environment } from './environment';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase())
+    provideFirestore(() => getFirestore())
   ]
 };
 

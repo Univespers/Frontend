@@ -1,21 +1,33 @@
 import { Injectable } from '@angular/core';
-import { from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { from, map, Observable, of, tap } from 'rxjs';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { get, getDatabase, ref, set } from '@angular/fire/database';
+import { addDoc, collection, doc, Firestore, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
 
 import { CurrentStatus } from 'src/app/current-status';
+import { AuthType } from './auth.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthEndpointService {
 
-  private static AUTH_ENDPOINT = ((userUID: string) => `auth/${userUID}/tipo`);
-  private static DEFAULT_USER_AUTH_TYPE = "ESTUDANTE";
+  private AuthDataModel = {
+    authDoc: {
+      collection: "auths",
+      getContent: ((authType: AuthType) => {
+        return <AuthDoc>{
+          tipo: authType
+        };
+      })
+    }
+  }
+
+  private static DEFAULT_USER_AUTH_TYPE = AuthType.Estudante;
 
   constructor(
-    private fireApp: FirebaseApp
+    private fireApp: FirebaseApp,
+    private fireStore: Firestore
   ) {}
 
   // Cadastro
@@ -43,7 +55,8 @@ export class AuthEndpointService {
       map(data => (!data ? "" : data)), // Retorna sempre string
       tap(userUID => {
         if(!userUID) return "";
-        return set(ref(getDatabase(this.fireApp), AuthEndpointService.AUTH_ENDPOINT(userUID)), AuthEndpointService.DEFAULT_USER_AUTH_TYPE)
+        setDoc(doc(this.fireStore, this.AuthDataModel.authDoc.collection, userUID), 
+          this.AuthDataModel.authDoc.getContent(AuthEndpointService.DEFAULT_USER_AUTH_TYPE))
           .then(() => {
             if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: DONE");
           })
@@ -51,6 +64,7 @@ export class AuthEndpointService {
             if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: ERROR");
             if(CurrentStatus.DEBUG_MODE) console.log(error);
           });
+        return;
       })
     );
   }
@@ -131,27 +145,34 @@ export class AuthEndpointService {
   }
 
   // AuthType
-  public getAuthType(userUID: string): Observable<string> {
+  public getAuthType(userUID: string): Observable<AuthType> {
     if(CurrentStatus.MOCK.AUTH) {
       if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] MOCK GetAuthType");
-      return of("ESTUDANTE");
+      return of(AuthType.Estudante);
     }
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] GetAuthType: DOING");
-    return new Observable<string>((subscriber) => {
-      get(ref(getDatabase(this.fireApp), AuthEndpointService.AUTH_ENDPOINT(userUID)))
+
+    return from(
+      getDoc(doc(this.fireStore, this.AuthDataModel.authDoc.collection, userUID))
         .then((data) => {
-          const authType = data.val();
+          if(!data.exists) return AuthType.Visitante;
+          const authType = (<AuthDoc>data.data()).tipo;
+          if(!authType) return AuthType.Visitante;
           if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] GetAuthType: DONE");
           if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] User auth type: " + authType);
-          subscriber.next(authType);
-          subscriber.complete();
+          return authType;
         })
         .catch((error) => {
           if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] GetAuthType: ERROR");
           if(CurrentStatus.DEBUG_MODE) console.log(error);
-          subscriber.error(error);
-        });
-    });
+        })
+    ).pipe(
+      map((data) => (data ? data : AuthType.Visitante)) // Sempre retorna um AuthType
+    );
   }
 
+}
+
+interface AuthDoc {
+  tipo: AuthType
 }

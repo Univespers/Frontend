@@ -19,7 +19,7 @@ export class AuthService {
   private updateAuthType(authType: AuthType) {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Update Auth");
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] User auth type: " + authType);
-    this.auth = Auth.getAuth(<AuthType>authType); // Carrega Auth com o AuthType
+    this.auth = Auth.getAuth(authType); // Carrega Auth com o AuthType
   }
 
   // Auth types
@@ -35,7 +35,7 @@ export class AuthService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Cadastro");
     return this.authEndpointService.cadastro(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
-        tap(authType => this.updateAuthType(<AuthType>authType))
+        tap(authType => this.updateAuthType(authType))
       )),
       map(authType => true) // Se sucesso
     );
@@ -46,7 +46,7 @@ export class AuthService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Login");
     return this.authEndpointService.login(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
-        tap(authType => this.updateAuthType(<AuthType>authType))
+        tap(authType => this.updateAuthType(authType))
       )),
       map(authType => true) // Se sucesso
     );
