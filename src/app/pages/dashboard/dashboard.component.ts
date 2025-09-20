@@ -15,6 +15,10 @@ export class DashboardComponent {
     private router: Router
   ) {}
 
+  isActive(path: string): boolean {
+    return this.router.url === path;
+  }
+
   // Redirects
   redirectToPerfil() {
     if(CurrentStatus.DEBUG_MODE) console.log("[DASHBOARD_PAGE] Redirect to Perfil");

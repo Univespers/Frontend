@@ -1,0 +1,137 @@
+<div class="container">
+  <!-- Lista de conversas -->
+  <div class="chat-list mat-elevation-z5">
+    <!-- Input de busca -->
+    <div class="search-input">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Procurar usuário"
+          [formControl]="searchControl"
+          [matAutocomplete]="users"
+        />
+      </mat-form-field>
+
+      <mat-autocomplete
+        #users="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onUserSelected($event.option.value)"
+      >
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+          {{ user.nome }}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+
+    <!-- Botão para abrir popup de grupo -->
+    <div class="new-group-container">
+      <button class="new-group-btn dark-button" (click)="openGroupPopup()">
+        + Novo Grupo
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="chat-filters">
+      <button class="filter-btn"
+              [class.active]="currentFilter==='all'"
+              (click)="setFilter('all')">Todos</button>
+      <button class="filter-btn"
+              [class.active]="currentFilter==='unread'"
+              (click)="setFilter('unread')">Não lidos</button>
+      <button class="filter-btn"
+              [class.active]="currentFilter==='group'"
+              (click)="setFilter('group')">Grupos</button>
+    </div>
+
+    <div
+      *ngFor="let conv of filteredConversations$ | async"
+      (click)="openConversation(conv)"
+      class="conversation-item"
+      [class.selected]="selectedConversation?.id === conv.id"
+    >
+      <div class="conversation-content">
+        <!-- Conteúdo principal à esquerda -->
+        <div class="conversation-info">
+          <p><b>{{ getConversationTitle(conv) }}</b></p>
+          <small class="last-message-text">Última: {{ getLastMessage(conv) }}</small>
+        </div>
+
+        <!-- Coluna à direita com badge e horário -->
+        <div class="conversation-meta">
+          <!-- Badge no topo direito -->
+          <span
+            *ngIf="getUnreadCount(conv) > 0"
+            [class]="getBadgeClass(getUnreadCount(conv))"
+          >
+            {{ getUnreadCount(conv) > 99 ? '99+' : getUnreadCount(conv) }}
+          </span>
+          <!-- Horário abaixo do badge -->
+          <small class="last-message-time">{{ getLastMessageTime(conv) }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Área de mensagens -->
+  <div class="messages mat-elevation-z5">
+    <!-- NOVO: Container com scroll -->
+    <div class="messages-container" #messagesContainer>
+      <!-- NOVO: Agrupamento de mensagens por data -->
+      <ng-container *ngFor="let group of groupedMessages$ | async">
+        <!-- NOVO: Separador de data -->
+        <div class="date-separator">
+          <span>{{ group.date }}</span>
+        </div>
+
+        <!-- Mensagens do grupo -->
+        <div
+          *ngFor="let msg of group.messages"
+          class="message"
+          [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
+        >
+          <div class="message-header">
+            <strong>{{ getSenderPoloAndName(msg.senderId) }}</strong>
+            <small class="message-time">{{ msg.timestamp | date:'HH:mm' }}</small>
+          </div>
+          <div class="message-content">
+            <span>{{ msg.text }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div *ngIf="selectedConversation" class="message-input">
+      <!-- NOVO: Botão de emoji -->
+      <button class="emoji-button" (click)="toggleEmojiPicker()">😊</button>
+
+      <textarea
+        #newMsg
+        [placeholder]="placeholderText"
+        (keydown)="onMessageKeydown($event, newMsg)"
+        rows="1"
+        class="message-textarea"
+      ></textarea>
+
+      <button (click)="sendMessageFromTextarea(newMsg)">Enviar</button>
+
+      <!-- NOVO: Picker de emojis -->
+      <div *ngIf="showEmojiPicker" class="emoji-picker">
+        <div class="emoji-categories">
+          <button *ngFor="let category of emojiCategories"
+                  (click)="setActiveCategory(category)"
+                  [class.active]="activeCategory === category.name">
+            {{ category.icon }}
+          </button>
+        </div>
+
+        <div class="emoji-grid">
+          <span *ngFor="let emoji of getCategoryEmojis()"
+                (click)="addEmoji(emoji, newMsg)"
+                class="emoji-item">
+            {{ emoji }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

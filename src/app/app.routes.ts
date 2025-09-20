@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LoginComponent } from './pages/login/login.component';
 import { CadastroComponent } from './pages/cadastro/cadastro.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ColegasComponent } from './pages/dashboard/colegas/colegas.component';
 import { PerfilComponent } from './pages/dashboard/perfil/perfil.component';
 import { PerfilEditComponent } from './pages/dashboard/perfil-edit/perfil-edit.component';
+import { ChatComponent } from './pages/student_domain/chat/chat.component';
 import { LogoutComponent } from './pages/logout/logout.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
@@ -29,9 +30,10 @@ export const routes: Routes = [
 
   // Student only
   { path: "", component: DashboardComponent, children: [
-    { path: "colegas", component: ColegasComponent },
     { path: "perfil", component: PerfilComponent },
     { path: "perfil/editar", component: PerfilEditComponent, canDeactivate: [ unsavedChangesGuard ] },
+    { path: "colegas", component: ColegasComponent },
+    { path: "chat", component: ChatComponent },
     { path: "logout", component: LogoutComponent },
   ], resolve:{ authData: authResolver}, canActivateChild: [ estudanteAccessGuard ]},
 
