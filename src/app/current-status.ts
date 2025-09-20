@@ -11,7 +11,7 @@ export class CurrentStatus {
   public static MOCK = {
     AUTH: false,
     PERFIL: true,
-    COLEGAS: true,
+    COLEGAS: false,
     CHAT: true
   };
 

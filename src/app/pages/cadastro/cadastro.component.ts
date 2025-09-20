@@ -178,13 +178,13 @@ export class CadastroComponent implements AfterContentInit, RequiresSave {
     return of(true).pipe(
       switchMap(data => this.authService.cadastro(dados.emailInstitucional, dados.senha)),
       //switchMap(data => this.authService.login(institutionalEmail, password)), // Já é feito em cadastro
-      switchMap(data => this.perfilService.createPerfil(dados.nome, dados.emailInstitucional, dados.curso, dados.polo)),
-      switchMap(data => this.perfilService.editPerfil(
-        dados.nome, dados.emailInstitucional, dados.telefone, dados.telIsWhatsapp, dados.descricao,
-        dados.showTelefone, dados.showDescricao,
-        dados.curso, dados.polo, dados.semesterAtual, dados.interesses, dados.habilidades, dados.materiasCursando,
-        dados.emailPessoal, dados.linkedin, dados.facebook, dados.instagram, dados.discord, dados.github, dados.reddit,
-        dados.showEmailPessoal, dados.showLinkedIn, dados.showFacebook, dados.showInstagram, dados.showDiscord, dados.showGitHub, dados.showReddit)),
+      // switchMap(data => this.perfilService.createPerfil(dados.nome, dados.emailInstitucional, dados.curso, dados.polo)),
+      // switchMap(data => this.perfilService.editPerfil(
+      //   dados.nome, dados.emailInstitucional, dados.telefone, dados.telIsWhatsapp, dados.descricao,
+      //   dados.showTelefone, dados.showDescricao,
+      //   dados.curso, dados.polo, dados.semesterAtual, dados.interesses, dados.habilidades, dados.materiasCursando,
+      //   dados.emailPessoal, dados.linkedin, dados.facebook, dados.instagram, dados.discord, dados.github, dados.reddit,
+      //   dados.showEmailPessoal, dados.showLinkedIn, dados.showFacebook, dados.showInstagram, dados.showDiscord, dados.showGitHub, dados.showReddit)),
       tap(() => {
         switch(true) {
           case this.authService.isUserEstudante():

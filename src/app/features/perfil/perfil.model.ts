@@ -3,7 +3,7 @@ import { PerfilResponse } from "src/app/features/perfil/perfil-endpoint.service"
 export class Perfil {
 
     constructor(
-        public uuid: string,
+        public uid: string,
         public name: string,
         public course: string,
         public pole: string,
@@ -29,7 +29,7 @@ export class Perfil {
     // Converts perfil
     public static getPerfil(perfilData: PerfilResponse) {
         return new Perfil(
-            perfilData.uuid,
+            perfilData.uid,
             perfilData.nome,
             perfilData.emailInstitucional,
             perfilData.curso,

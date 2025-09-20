@@ -1,8 +1,8 @@
-import { ColegaDetailsResponse, ColegaListResponse, ColegaResponse } from "./colegas-endpoint.service";
+import { ColegaContatoResponse, ColegaDetailsResponse, ColegaListResponse, ColegaResponse } from "./colegas-endpoint.service";
 
 export class Colega {
     constructor(
-        public uuid: string,
+        public uid: string,
         public name: string,
         public course: string,
         public pole: string,
@@ -10,32 +10,43 @@ export class Colega {
 
     // Converts colega
     public static getColega(colegaData: ColegaResponse) {
-        return new Colega(colegaData.uuid, colegaData.nome, colegaData.curso, colegaData.polo);
+        return new Colega(colegaData.uid, colegaData.nome, colegaData.curso, colegaData.polo);
     }
 }
 
 export class ColegaList {
     constructor(
         public list: Colega[],
-        public page: number,
-        public totalPages: number
+        public indexUID: string,
+        public totalPages: number,
+        public isLastPage: boolean
     ) {}
 
     // Converts list of colegas
     public static getColegaList(colegaData: ColegaListResponse) {
         return new ColegaList(
-            colegaData.lista.map(colega => {
-                return new Colega(colega.uuid, colega.nome, colega.curso, colega.polo);
-            }),
-            colegaData.pagina,
-            colegaData.totalPaginas
+            colegaData.colegasList.map(colega => Colega.getColega(colega)),
+            colegaData.indexUID,
+            colegaData.totalPages,
+            colegaData.isLastPage
         );
     }
 }
 
+export class ColegaContato {
+    constructor(
+        public name: string,
+        public url: string
+    ) {}
+
+    // Converts contato
+    public static getContato(colegaData: ColegaContatoResponse) {
+        return new ColegaContato(colegaData.nome, colegaData.url);
+    }
+}
 export class ColegaDetails extends Colega {
     constructor(
-        uuid: string,
+        uid: string,
         name: string,
         public studentEmail: string,
         course: string,
@@ -43,31 +54,23 @@ export class ColegaDetails extends Colega {
         public telephone?: string,
         public isWhatsapp?: boolean,
         public description?: string,
-        public contacts?: {
-            email?: string,
-            linkedin?: string,
-            facebook?: string,
-            instagram?: string,
-            discord?: string,
-            github?: string,
-            reddit?: string
-        }
+        public contacts?: ColegaContato[]
     ) {
-        super(uuid, name, course, pole);
+        super(uid, name, course, pole);
     }
 
     // Converts colega details
     public static getColegaDetails(colegaDetailsData: ColegaDetailsResponse) {
         return new ColegaDetails(
-            colegaDetailsData.uuid,
+            colegaDetailsData.uid,
             colegaDetailsData.nome,
             colegaDetailsData.emailInstitucional,
-            colegaDetailsData.curso,
-            colegaDetailsData.polo,
+            colegaDetailsData.cursoUID,
+            colegaDetailsData.poloUID,
             colegaDetailsData.telefone,
             colegaDetailsData.temWhatsapp,
             colegaDetailsData.descricao,
-            colegaDetailsData.contatos
+            colegaDetailsData.contatos?.map(contato => ColegaContato.getContato(contato))
         );
     }
 }

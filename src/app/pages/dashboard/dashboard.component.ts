@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { CurrentStatus } from 'src/app/current-status';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,14 +15,24 @@ export class DashboardComponent {
     private router: Router
   ) {}
 
-  toLogout() {
-    this.router.navigate([ "/logout" ]);
+  // Redirects
+  redirectToPerfil() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[DASHBOARD_PAGE] Redirect to Perfil");
+    this.router.navigate([ "/perfil" ]);
   }
-
   redirectToColegas() {
-    // this.router.navigate([ "/colegas" ]);
-    window.location.reload(); // Reload = Looks more responsive
+    if(CurrentStatus.DEBUG_MODE) console.log("[DASHBOARD_PAGE] Redirect to Colegas");
+    this.router.navigate([ "/colegas" ]);
+    //window.location.reload(); // Reload = Looks more responsive
     // TODO: (Dashboard) Trocar reload por re-route quando houver mais do que a página de Colegas
+  }
+  redirectToChat() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[DASHBOARD_PAGE] Redirect to Chat");
+    this.router.navigate([ "/chat" ]);
+  }
+  redirectToLogout() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[DASHBOARD_PAGE] Redirect to Logout");
+    this.router.navigate([ "/logout" ]);
   }
 
 }

@@ -3,7 +3,7 @@
         <div id="logo-container" (click)="redirectToColegas()">
             <img id="logo" src="logo.png" alt="UNIVESPERS"/>
         </div>
-        <div class="page-link" disabled>
+        <div class="page-link" (click)="redirectToPerfil()" disabled>
             <i class="item-icon fas fa-user fa-lg"></i>Perfil
         </div>
         <div class="page-link highlighted">
@@ -12,10 +12,10 @@
         <div class="page-link" disabled>
             <i class="item-icon fas fa-users-cog fa-flip-horizontal fa-lg"></i>Grupo
         </div>
-        <div class="page-link" disabled>
-            <i class="item-icon fas fa-comment-alt fa-lg"></i>Conversas
+        <div class="page-link" (click)="redirectToChat()" disabled>
+            <i class="item-icon fas fa-comment-alt fa-lg"></i>Chat
         </div>
-        <div class="page-link logout" (click)="toLogout()">
+        <div class="page-link logout" (click)="redirectToLogout()">
             <i class="item-icon fas fa-sign-out-alt fa-lg"></i>Logout
         </div>
     </div>

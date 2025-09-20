@@ -19,33 +19,33 @@
                 <i class="item-icon fas fa-lg" [ngClass]="{'fab fa-whatsapp': colegaDetails?.isWhatsapp, 'fas fa-phone': !colegaDetails?.isWhatsapp}"></i>
                 <span>{{ colegaDetails?.telephone }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.email">
+            <div [hidden]="!getContato('email')">
                 <i class="item-icon fas fa-at fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.email }}</span>
+                <span>{{ getContato('email')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.linkedin">
+            <div [hidden]="!getContato('linkedin')">
                 <i class="item-icon fab fa-linkedin fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.linkedin }}</span>
+                <span>{{ getContato('linkedin')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.facebook">
+            <div [hidden]="!getContato('facebook')">
                 <i class="item-icon fab fa-facebook fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.facebook }}</span>
+                <span>{{ getContato('facebook')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.instagram">
+            <div [hidden]="!getContato('instagram')">
                 <i class="item-icon fab fa-instagram fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.instagram }}</span>
+                <span>{{ getContato('instagram')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.discord">
+            <div [hidden]="!getContato('discord')">
                 <i class="item-icon fab fa-discord fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.discord }}</span>
+                <span>{{ getContato('discord')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.github">
+            <div [hidden]="!getContato('github')">
                 <i class="item-icon fab fa-github fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.github }}</span>
+                <span>{{ getContato('github')?.name }}</span>
             </div>
-            <div [hidden]="!colegaDetails?.contacts?.reddit">
+            <div [hidden]="!getContato('reddit')">
                 <i class="item-icon fab fa-reddit fa-lg"></i>
-                <span>{{ colegaDetails?.contacts?.reddit }}</span>
+                <span>{{ getContato('reddit')?.name }}</span>
             </div>
         </div>
     }

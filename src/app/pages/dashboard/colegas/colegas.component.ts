@@ -9,6 +9,7 @@ import { ColegaDetailsComponent } from './colega-details/colega-details.componen
 import { ButtonPopupMenuComponent } from 'src/app/components/button-popup-menu/button-popup-menu.component';
 import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { PopupDialogComponent } from 'src/app/components/popup-dialog/popup-dialog.component';
+import { CurrentStatus } from 'src/app/current-status';
 
 @Component({
   selector: 'app-colegas',
@@ -19,6 +20,8 @@ import { PopupDialogComponent } from 'src/app/components/popup-dialog/popup-dial
 })
 export class ColegasComponent implements AfterContentInit, OnInit {
 
+  static PAGE_SIZE = 10;
+
   isLoading = false;
   error = "";
 
@@ -28,50 +31,82 @@ export class ColegasComponent implements AfterContentInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.search("");
+    this.search(""); // Inicialmente lista todos
   }
 
   ngAfterContentInit() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Update theme");
     this.themeService.setBackgroundTheme(Theme.Light);
   }
 
   // Search colegas
   colegasList: Colega[] = [];
-  public search(searchWord: string) {
-    this.colegaService.searchColegas(searchWord, this.currentPage).pipe(
+  public search(query: string) {
+    if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Search: DOING");
+    let searchRequest;
+    if(this.pageDirection) {
+      searchRequest = this.colegaService.searchColegas(query, ColegasComponent.PAGE_SIZE, this.currentPageIndexUID, this.pageDirection);
+    } else {
+      searchRequest = this.colegaService.searchColegas(query, ColegasComponent.PAGE_SIZE);
+    }
+    searchRequest.pipe(
       finalize(() => {
         this.isLoading = false;
+        this.pageDirection = "";
       })
     ).subscribe({
       next: (data) => {
-        console.log("OK"); // TODO: Deletar
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Search: DONE");
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] List: ");
+        if(CurrentStatus.DEBUG_MODE) console.log(data.list);
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Page size: " + data.list.length);
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Total pages: " + data.totalPages);
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Index UID: " + data.indexUID);
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] IsLastPage: " + data.isLastPage);
         this.colegasList = data.list;
         this.totalPages = data.totalPages;
+        this.currentPageIndexUID = data.indexUID;
+        this.isLastPage = data.isLastPage;
       },
       error: (error) => {
-        console.log(error); // TODO: Deletar
+        if(CurrentStatus.DEBUG_MODE) console.log("[COLEGAS_PAGE] Search: ERROR");
+        if(CurrentStatus.DEBUG_MODE) console.log(error);
         this.error = error;
       }
     });
   }
+  public research(query: string) {
+    this.resetSearch();
+    this.search(query);
+  }
+  public resetSearch() {
+    this.currentPageIndexUID = "";
+    this.pageDirection = "";
+    this.pageOffset = 0;
+    this.totalPages = 0;
+    this.isLastPage = false;
+  }
 
-  // Paginator
-  currentPage = 1;
+  // Paginador
+  currentPageIndexUID = "";
+  pageDirection: "prev"|""|"next" = "";
+  pageOffset = 0;
   totalPages = 0;
+  isLastPage = false;
   prevPage() {
-    this.currentPage--;
-    if(this.currentPage <= 1) this.currentPage = 1;
+    this.pageOffset--;
+    this.pageDirection = "prev";
   }
   nextPage() {
-    this.currentPage++;
-    if(this.currentPage >= this.totalPages) this.currentPage = this.totalPages;
+    this.pageOffset++;
+    this.pageDirection = "next";
   }
 
   // Colega Details
-  colegaDetailsUUID = "";
+  colegaDetailsUID = "";
   showDialog = false;
-  showColegaDetails(colegaUUID: string) {
-    this.colegaDetailsUUID = colegaUUID;
+  showColegaDetails(colegaUID: string) {
+    this.colegaDetailsUID = colegaUID;
     this.showDialog = true;
   }
 

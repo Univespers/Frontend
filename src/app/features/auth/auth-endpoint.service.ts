@@ -2,26 +2,16 @@ import { Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { addDoc, collection, doc, Firestore, getDoc, getFirestore, setDoc } from '@angular/fire/firestore';
+import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 
 import { CurrentStatus } from 'src/app/current-status';
 import { AuthType } from './auth.model';
+import { AuthDataModel, AuthDoc } from '../endpoint.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthEndpointService {
-
-  private AuthDataModel = {
-    authDoc: {
-      collection: "auths",
-      getContent: ((authType: AuthType) => {
-        return <AuthDoc>{
-          tipo: authType
-        };
-      })
-    }
-  }
 
   private static DEFAULT_USER_AUTH_TYPE = AuthType.Estudante;
 
@@ -53,19 +43,7 @@ export class AuthEndpointService {
         })
     ).pipe(
       map(data => (!data ? "" : data)), // Retorna sempre string
-      tap(userUID => {
-        if(!userUID) return "";
-        setDoc(doc(this.fireStore, this.AuthDataModel.authDoc.collection, userUID), 
-          this.AuthDataModel.authDoc.getContent(AuthEndpointService.DEFAULT_USER_AUTH_TYPE))
-          .then(() => {
-            if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: DONE");
-          })
-          .catch((error) => {
-            if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: ERROR");
-            if(CurrentStatus.DEBUG_MODE) console.log(error);
-          });
-        return;
-      })
+      tap(userUID => this.setAuthType(userUID, AuthEndpointService.DEFAULT_USER_AUTH_TYPE))
     );
   }
 
@@ -145,15 +123,29 @@ export class AuthEndpointService {
   }
 
   // AuthType
+  public setAuthType(userUID: string, type: AuthType) {
+    if(!userUID) return;
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: DOING");
+    setDoc(doc(this.fireStore, AuthDataModel.authDoc.collection, userUID), 
+      AuthDataModel.authDoc.getContent(type))
+      .then(() => {
+        if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: DONE");
+      })
+      .catch((error) => {
+        if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] SetAuthType: ERROR");
+        if(CurrentStatus.DEBUG_MODE) console.log(error);
+      });
+    return;
+  }
   public getAuthType(userUID: string): Observable<AuthType> {
     if(CurrentStatus.MOCK.AUTH) {
       if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] MOCK GetAuthType");
       return of(AuthType.Estudante);
     }
-    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] GetAuthType: DOING");
 
+    if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_ENDPOINT] GetAuthType: DOING");
     return from(
-      getDoc(doc(this.fireStore, this.AuthDataModel.authDoc.collection, userUID))
+      getDoc(doc(this.fireStore, AuthDataModel.authDoc.collection, userUID))
         .then((data) => {
           if(!data.exists) return AuthType.Visitante;
           const authType = (<AuthDoc>data.data()).tipo;
@@ -171,8 +163,4 @@ export class AuthEndpointService {
     );
   }
 
-}
-
-interface AuthDoc {
-  tipo: AuthType
 }

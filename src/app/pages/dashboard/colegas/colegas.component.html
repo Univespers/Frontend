@@ -5,7 +5,7 @@
         <input id="search" #searchField
             type="text"
             placeholder="Busque pelo nome, curso ou polo"
-            (input)="search(searchField.value)"/>
+            (input)="research(searchField.value)"/>
         <i class="search-icon fa fa-search fa-lg" (click)="search(searchField.value)"></i>
     </div>
 
@@ -18,12 +18,12 @@
                 <!-- Colega -->
                 <div id="card-gallery">
                     <div class="card" *ngFor="let colega of colegasList">
-                        <span class="card-title" (click)="showColegaDetails(colega.uuid)">{{ colega.name }}</span>
+                        <span class="card-title" (click)="showColegaDetails(colega.uid)">{{ colega.name }}</span>
                         <span class="card-body">{{ colega.course }}</span>
                         <span class="card-body">{{ colega.pole }}</span>
                         <app-button-popup-menu class="card-details" [text]="'...'">
                             <div class="popup-menu">
-                                <div class="popup-item" (click)="showColegaDetails(colega.uuid)">Detalhes</div>
+                                <div class="popup-item" (click)="showColegaDetails(colega.uid)">Detalhes</div>
                                 <div class="popup-item" disabled>Começar uma conversa</div>
                                 <div class="popup-item" disabled>Adicionar ao grupo</div>
                             </div>
@@ -31,13 +31,13 @@
                     </div>
                 </div>
                 <div id="paginator">
-                    <button id="back" [disabled]="currentPage == 1" (click)="prevPage();search(searchField.value)">
+                    <button id="back" [disabled]="pageOffset == 0" (click)="prevPage();search(searchField.value)">
                         <i class="fas fa-chevron-left fa-lg"></i>
                     </button>
-                    <button id="pager" [disabled]="currentPage == 1 && totalPages == 1">
+                    <button id="pager" [disabled]="totalPages == 1">
                         ...
                     </button>
-                    <button id="next" [disabled]="currentPage == totalPages" (click)="nextPage();search(searchField.value)">
+                    <button id="next" [disabled]="isLastPage" (click)="nextPage();search(searchField.value)">
                         <i class="fas fa-chevron-right fa-lg"></i>
                     </button>
                 </div>
@@ -47,7 +47,7 @@
 
     <app-popup-dialog [(show)]="showDialog">
         <!-- Colega-Details -->
-        <app-colega-details [uuid]="colegaDetailsUUID"/>
+        <app-colega-details [uid]="colegaDetailsUID"/>
     </app-popup-dialog>
 
 </div>
