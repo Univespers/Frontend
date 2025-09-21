@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule, DatePipe } from '@angular/common';
 import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ColleagueEndpointService, ColleagueResponse } from '../../../endpoints/colleague-endpoint.service';
+import { ColegasEndpointService, ColegaResponse } from '../../../features/colegas/colegas-endpoint.service';
 import { ChatService } from '../../../chats/chat.service';
 import { chatMock } from '../../../chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   searchControl = new FormControl('');
-  filteredUsers$: Observable<ColleagueResponse[]> | undefined;
+  filteredUsers$: Observable<ColegaResponse[]> | undefined;
 
   conversations$: Observable<ChatConversation[]> | undefined;
   filteredConversations$: Observable<ChatConversation[]> | undefined;
@@ -87,7 +87,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   };
 
   constructor(
-    private colleagueService: ColleagueEndpointService,
+    private colegasService: ColegasEndpointService,
     private chatService: ChatService,
     private dialog: MatDialog
   ) {}
@@ -100,7 +100,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     );
 
     // ✅ CORRETO: Observable do service
-    this.conversations$ = this.chatService.getConversations('uuid123');
+    this.conversations$ = this.chatService.getConversations('uid123');
 
     this.filteredConversations$ = combineLatest([
       this.conversations$,
@@ -118,7 +118,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
           if (hasFilter) {
             if (filter === 'unread') {
-              passesFilter = conv.messages.some(msg => msg.senderId !== 'uuid123' && !msg.read);
+              passesFilter = conv.messages.some(msg => msg.senderId !== 'uid123' && !msg.read);
             } else if (filter === 'group') {
               passesFilter = conv.members.length > 2;
             }
@@ -137,7 +137,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  displayFn(user: ColleagueResponse): string {
+  displayFn(user: ColegaResponse): string {
     return user ? user.nome : '';
   }
 
@@ -151,7 +151,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     // NOVO: Marcar como lidas e atualizar contagem
     const unreadMessages = conv.messages.filter(msg =>
-      msg.senderId !== 'uuid123' && !msg.read
+      msg.senderId !== 'uid123' && !msg.read
     );
 
     // Marcar mensagens como lidas
@@ -169,7 +169,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   getSenderPoloAndName(senderId: string): string {
-    if (senderId === 'uuid123') {
+    if (senderId === 'uid123') {
       return 'Você';
     }
 
@@ -216,7 +216,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     const msg: ChatMessage = {
       id: `msg_${Date.now()}`,
-      senderId: 'uuid123',
+      senderId: 'uid123',
       text: text,
       timestamp: new Date(),
       read: true
@@ -235,7 +235,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     const msg: ChatMessage = {
       id: `msg_${Date.now()}`,
-      senderId: 'uuid123',
+      senderId: 'uid123',
       text: text.trim(),
       timestamp: new Date(),
       read: true
@@ -253,29 +253,29 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     return member ? member.nome : 'Desconhecido';
   }
 
-  searchUsers(term: string): Observable<ColleagueResponse[]> {
+  searchUsers(term: string): Observable<ColegaResponse[]> {
     return of([
-      { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-      { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-      { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
-      { uuid: 'uuid999', nome: 'Aluno4', curso: 'Curso3', polo: 'Polo1' },
-      { uuid: 'uuid998', nome: 'Camila Cerqueira', curso: 'Curso1', polo: 'POLO CAMPO LIMPO' },
+      { uid: 'uid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+      { uid: 'uid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+      { uid: 'uid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
+      { uid: 'uid999', nome: 'Aluno4', curso: 'Curso3', polo: 'Polo1' },
+      { uid: 'uid998', nome: 'Camila Cerqueira', curso: 'Curso1', polo: 'POLO CAMPO LIMPO' },
     ]);
   }
 
-  onUserSelected(user: ColleagueResponse) {
+  onUserSelected(user: ColegaResponse) {
     const existingConv = chatMock.conversations.find(c =>
       c.members.length === 2 &&
-      c.members.some(m => m.id === 'uuid123') &&
-      c.members.some(m => m.id === user.uuid)
+      c.members.some(m => m.id === 'uid123') &&
+      c.members.some(m => m.id === user.uid)
     );
 
     if (existingConv) {
       this.openConversation(existingConv);
     } else {
       this.chatService.createConversation([
-        { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
-        { id: user.uuid, nome: user.nome, polo: user.polo }
+        { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
+        { id: user.uid, nome: user.nome, polo: user.polo }
       ]).subscribe(conv => {
         this.selectedConversation = conv;
         this.messages$ = of(conv.messages);
@@ -289,11 +289,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   getConversationTitle(conv: ChatConversation): string {
     if (conv.members.length === 2) {
-      const other = conv.members.find(m => m.id !== 'uuid123');
+      const other = conv.members.find(m => m.id !== 'uid123');
       return other ? `[${other.polo || 'Sem polo'}] - ${other.nome}` : 'Conversa';
     } else {
       const names = conv.members
-        .filter(m => m.id !== 'uuid123')
+        .filter(m => m.id !== 'uid123')
         .map(m => m.nome.split(' ')[0]);
 
       if (conv.title) {
@@ -314,7 +314,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   getUnreadCount(conv: ChatConversation): number {
     if (!conv.messages) return 0;
     return conv.messages.filter(msg =>
-      msg.senderId !== 'uuid123' && !msg.read
+      msg.senderId !== 'uid123' && !msg.read
     ).length;
   }
 
@@ -360,16 +360,16 @@ getLastMessageTime(conv: ChatConversation): string {
       backdropClass: 'custom-dark-backdrop',
       data: {
         users$: [
-          { uuid: 'uuid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-          { uuid: 'uuid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-          { uuid: 'uuid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
+          { uid: 'uid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
+          { uid: 'uid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
+          { uid: 'uid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
         ]
       }
     }).afterClosed().subscribe(result => {
       if (result) {
         const members = [
-          { id: 'uuid123', nome: 'Aluno1', polo: 'Polo1' },
-          ...result.users.map((u: any) => ({ id: u.uuid, nome: u.nome, polo: u.polo }))
+          { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
+          ...result.users.map((u: any) => ({ id: u.uid, nome: u.nome, polo: u.polo }))
         ];
         this.chatService.createConversation(members).subscribe(conv => {
           conv.title = result.title;

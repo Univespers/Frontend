@@ -7,7 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ColleagueResponse } from '../../endpoints/colleague-endpoint.service';
+import { ColegaResponse } from '../../features/colegas/colegas-endpoint.service';
 
 @Component({
   selector: 'app-popup-dialog-mat',
@@ -30,27 +30,27 @@ import { ColleagueResponse } from '../../endpoints/colleague-endpoint.service';
 export class PopupDialogMatComponent {
   groupTitle = '';
   groupSearchControl = new FormControl('');
-  selectedUsers: ColleagueResponse[] = [];
+  selectedUsers: ColegaResponse[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<PopupDialogMatComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { users$: ColleagueResponse[] }
+    @Inject(MAT_DIALOG_DATA) public data: { users$: ColegaResponse[] }
   ) {}
 
   // NOVO: Função para exibir apenas o nome no input
-  displayFn(user: ColleagueResponse): string {
+  displayFn(user: ColegaResponse): string {
     return user ? user.nome : '';
   }
 
-  addUser(user: ColleagueResponse) {
-    if (!this.selectedUsers.find(u => u.uuid === user.uuid)) {
+  addUser(user: ColegaResponse) {
+    if (!this.selectedUsers.find(u => u.uid === user.uid)) {
       this.selectedUsers.push(user);
     }
     this.groupSearchControl.setValue('');
   }
 
-  removeUser(user: ColleagueResponse) {
-    this.selectedUsers = this.selectedUsers.filter(u => u.uuid !== user.uuid);
+  removeUser(user: ColegaResponse) {
+    this.selectedUsers = this.selectedUsers.filter(u => u.uid !== user.uid);
   }
 
   cancel() {
