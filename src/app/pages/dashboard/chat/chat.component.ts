@@ -11,9 +11,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ColegasEndpointService, ColegaResponse } from '../../../features/colegas/colegas-endpoint.service';
-import { ChatService } from '../../../chats/chat.service';
-import { chatMock } from '../../../chats/chat-mock';
-import { ChatConversation, ChatMessage } from '../../../chats/chat.model';
+import { ChatService } from '../../../features/chats/chat.service';
+import { chatMock } from '../../../features/chats/chat-mock';
+import { ChatConversation, ChatMessage } from '../../../features/chats/chat.model';
 import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
 
 interface MessageGroup {

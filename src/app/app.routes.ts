@@ -6,7 +6,7 @@ import { CadastroComponent } from './pages/cadastro/cadastro.component';
 import { ColegasComponent } from './pages/dashboard/colegas/colegas.component';
 import { PerfilComponent } from './pages/dashboard/perfil/perfil.component';
 import { PerfilEditComponent } from './pages/dashboard/perfil-edit/perfil-edit.component';
-import { ChatComponent } from './pages/student_domain/chat/chat.component';
+import { ChatComponent } from './pages/dashboard/chat/chat.component';
 import { LogoutComponent } from './pages/logout/logout.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
