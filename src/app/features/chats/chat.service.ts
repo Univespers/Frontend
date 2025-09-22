@@ -28,24 +28,24 @@ export class ChatService {
     }
 
     // 🔹 Firebase (exemplo futuro)
-    const conversationsRef = collection(this.firestore, 'conversations');
+    const conversationsRef = collection(this.firestore, `chats/${userId}/conversations`);
     return collectionData(conversationsRef, { idField: 'id' }) as Observable<ChatConversation[]>;
   }
 
   /** Obtém mensagens de uma conversa */
-  getMessages(conversationId: string): Observable<ChatMessage[]> {
+  getMessages(userId: string, conversationId: string): Observable<ChatMessage[]> {
     if (CurrentStatus.MOCK.CHAT) {
       const conv = chatMock.conversations.find(c => c.id === conversationId);
       return of(conv ? conv.messages : []);
     }
 
     // 🔹 Firebase
-    const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
+    const messagesRef = collection(this.firestore, `chats/${userId}/conversations/${conversationId}/messages`);
     return collectionData(messagesRef, { idField: 'id' }) as Observable<ChatMessage[]>;
   }
 
   /** Envia mensagem */
-  sendMessage(conversationId: string, message: ChatMessage): Observable<ChatMessage> {
+  sendMessage(userId: string, conversationId: string, message: ChatMessage): Observable<ChatMessage> {
     if (CurrentStatus.MOCK.CHAT) {
       const conv = chatMock.conversations.find(c => c.id === conversationId);
       if (conv) {
@@ -55,7 +55,7 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
+    const messagesRef = collection(this.firestore, `chats/${userId}/conversations/${conversationId}/messages`);
     return from(addDoc(messagesRef, { ...message, timestamp: serverTimestamp() })).pipe(
       map(data => {
         return { ...message, timestamp: serverTimestamp() };
@@ -64,7 +64,7 @@ export class ChatService {
   }
 
    /** Cria nova conversa */
-   createConversation(members: { id: string; nome: string; polo?: string }[]): Observable<ChatConversation> {
+   createConversation(userId: string, members: { id: string; nome: string; polo?: string }[]): Observable<ChatConversation> {
     if (CurrentStatus.MOCK.CHAT) {
       const newConv: ChatConversation = {
         id: `conv_${Date.now()}`,
@@ -78,15 +78,15 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const convRef = doc(collection(this.firestore, 'conversations'));
+    const convRef = doc(collection(this.firestore, `chats/${userId}/conversations`));
     return from(setDoc(convRef, { members, createdAt: serverTimestamp() })).pipe(
       map(data => {
-        return { id: "", messages: [], members, createdAt: serverTimestamp() };
+        return { id: `conv_${Date.now()}`, messages: [], members, createdAt: serverTimestamp() };
       })
     );
   }
 
-  markMessageAsRead(conversationId: string, messageId: string): Observable<void> {
+  markMessageAsRead(userId: string, conversationId: string, messageId: string): Observable<void> {
     if (CurrentStatus.MOCK.CHAT) {
       const conv = chatMock.conversations.find(c => c.id === conversationId);
       if (conv) {
@@ -97,7 +97,7 @@ export class ChatService {
     }
 
     // 🔹 Firebase futuro
-    const msgRef = doc(this.firestore, `conversations/${conversationId}/messages/${messageId}`);
+    const msgRef = doc(this.firestore, `chats/${userId}/conversations/${conversationId}/messages/${messageId}`);
     return from(updateDoc(msgRef, { read: true }));
   }
 

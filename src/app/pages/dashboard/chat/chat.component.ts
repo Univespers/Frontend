@@ -157,10 +157,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     // Marcar mensagens como lidas
     unreadMessages.forEach(msg => {
-      this.chatService.markMessageAsRead(conv.id, msg.id).subscribe();
+      this.chatService.markMessageAsRead('uid123', conv.id, msg.id).subscribe();
     });
 
-    this.messages$ = this.chatService.getMessages(conv.id);
+    this.messages$ = this.chatService.getMessages('uid123', conv.id);
 
     this.groupedMessages$ = this.messages$.pipe(
       map(messages => this.groupMessagesByDate(messages))
@@ -223,7 +223,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       read: true
     };
 
-    this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
+    this.chatService.sendMessage('uid123', this.selectedConversation.id, msg).subscribe(() => {
       // ✅ FORÇA recarregamento da conversa atual
       this.openConversation(this.selectedConversation!);
       textarea.value = '';
@@ -242,7 +242,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       read: true
     };
 
-    this.chatService.sendMessage(this.selectedConversation.id, msg).subscribe(() => {
+    this.chatService.sendMessage('uid123', this.selectedConversation.id, msg).subscribe(() => {
       // ✅ Também recarrega para o método antigo
       this.openConversation(this.selectedConversation!);
     });
@@ -274,7 +274,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     if (existingConv) {
       this.openConversation(existingConv);
     } else {
-      this.chatService.createConversation([
+      this.chatService.createConversation('uid123', [
         { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
         { id: user.uid, nome: user.nome, polo: user.polo }
       ]).subscribe(conv => {
@@ -366,7 +366,7 @@ getLastMessageTime(conv: ChatConversation): string {
           { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
           ...result.users.map((u: any) => ({ id: u.uid, nome: u.nome, polo: u.polo }))
         ];
-        this.chatService.createConversation(members).subscribe(conv => {
+        this.chatService.createConversation('uid123', members).subscribe(conv => {
           conv.title = result.title;
           this.openConversation(conv);
         });
