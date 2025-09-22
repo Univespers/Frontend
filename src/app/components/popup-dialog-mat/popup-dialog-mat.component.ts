@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ColegaResponse } from '../../features/colegas/colegas-endpoint.service';
+import { ColegaService } from 'src/app/features/colegas/colegas.service';
 
 @Component({
   selector: 'app-popup-dialog-mat',
@@ -31,11 +32,33 @@ export class PopupDialogMatComponent {
   groupTitle = '';
   groupSearchControl = new FormControl('');
   selectedUsers: ColegaResponse[] = [];
+  allUsers: ColegaResponse[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<PopupDialogMatComponent>,
+    private colegaservice: ColegaService,
     @Inject(MAT_DIALOG_DATA) public data: { users$: ColegaResponse[] }
-  ) {}
+  ) {
+    this.searchColegas("");
+  }
+
+  searchColegas(query: string) {
+    this.colegaservice.searchColegas(query, 10).subscribe({
+      next: (data) => {
+        this.allUsers = data.list.map(colega => {
+          return {
+            uid: colega.uid,
+            nome: colega.name,
+            curso: colega.course,
+            polo: colega.pole
+          };
+        });
+      },
+      error: (error) => {
+        // Error
+      }
+    });
+  }
 
   // NOVO: Função para exibir apenas o nome no input
   displayFn(user: ColegaResponse): string {

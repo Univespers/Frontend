@@ -10,14 +10,16 @@
   <mat-form-field class="full-width">
     <mat-label>Adicionar integrantes</mat-label>
     <input
+      #search
       type="text"
       matInput
       [formControl]="groupSearchControl"
       [matAutocomplete]="auto"
       placeholder="Buscar colegas..."
+      (input)="searchColegas(search.value)"
     />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="addUser($event.option.value)">
-      <mat-option *ngFor="let user of data.users$" [value]="user">
+      <mat-option *ngFor="let user of allUsers" [value]="user">
         {{ user.nome }}
       </mat-option>
     </mat-autocomplete>

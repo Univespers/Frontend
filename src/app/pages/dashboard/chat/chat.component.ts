@@ -359,13 +359,7 @@ getLastMessageTime(conv: ChatConversation): string {
       width: '600px',
       panelClass: 'custom-dark-dialog',
       backdropClass: 'custom-dark-backdrop',
-      data: {
-        users$: [
-          { uid: 'uid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-          { uid: 'uid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-          { uid: 'uid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' }
-        ]
-      }
+      data: {}
     }).afterClosed().subscribe(result => {
       if (result) {
         const members = [
