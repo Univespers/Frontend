@@ -10,11 +10,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule, DatePipe } from '@angular/common';
 import { debounceTime, Observable, startWith, switchMap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ColegasEndpointService, ColegaResponse } from '../../../features/colegas/colegas-endpoint.service';
+import { ColegaResponse } from '../../../features/colegas/colegas-endpoint.service';
 import { ChatService } from '../../../features/chats/chat.service';
 import { chatMock } from '../../../features/chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../features/chats/chat.model';
 import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
+import { ColegaService } from 'src/app/features/colegas/colegas.service';
 
 interface MessageGroup {
   date: string;
@@ -87,7 +88,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   };
 
   constructor(
-    private colegasService: ColegasEndpointService,
+    private colegasService: ColegaService,
     private chatService: ChatService,
     private dialog: MatDialog
   ) {}
