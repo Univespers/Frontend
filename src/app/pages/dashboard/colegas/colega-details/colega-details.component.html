@@ -1,0 +1,53 @@
+<div id="main">
+
+    @if(isLoading) {
+        <app-loading/>
+    } @else {
+        <!-- Colega-Details -->
+        <div id="colega-details">
+            <h2 id="colega-name">{{ colegaDetails?.name ?? "Nome" }}</h2>
+            <p id="colega-description">{{ colegaDetails?.description ?? "" }}</p>
+            <div>
+                <i class="item-icon fas fa-graduation-cap fa-lg fa-flip-horizontal"></i>
+                <span>{{ colegaDetails?.course ?? "Curso" }}</span>
+            </div>
+            <div>
+                <i class="item-icon fas fa-building fa-lg"></i>
+                <span>{{ colegaDetails?.pole ?? "Polo" }}</span>
+            </div>
+            <div [hidden]="!colegaDetails?.telephone">
+                <i class="item-icon fas fa-lg" [ngClass]="{'fab fa-whatsapp': colegaDetails?.isWhatsapp, 'fas fa-phone': !colegaDetails?.isWhatsapp}"></i>
+                <span>{{ colegaDetails?.telephone }}</span>
+            </div>
+            <div [hidden]="!getContato('email')">
+                <i class="item-icon fas fa-at fa-lg"></i>
+                <span>{{ getContato('email')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('linkedin')">
+                <i class="item-icon fab fa-linkedin fa-lg"></i>
+                <span>{{ getContato('linkedin')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('facebook')">
+                <i class="item-icon fab fa-facebook fa-lg"></i>
+                <span>{{ getContato('facebook')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('instagram')">
+                <i class="item-icon fab fa-instagram fa-lg"></i>
+                <span>{{ getContato('instagram')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('discord')">
+                <i class="item-icon fab fa-discord fa-lg"></i>
+                <span>{{ getContato('discord')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('github')">
+                <i class="item-icon fab fa-github fa-lg"></i>
+                <span>{{ getContato('github')?.name }}</span>
+            </div>
+            <div [hidden]="!getContato('reddit')">
+                <i class="item-icon fab fa-reddit fa-lg"></i>
+                <span>{{ getContato('reddit')?.name }}</span>
+            </div>
+        </div>
+    }
+
+</div>

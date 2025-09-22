@@ -1,0 +1,71 @@
+<form #userCursoForm="ngForm" (ngSubmit)="submit(userCursoForm)">
+    <p class="step-title">
+        <b>Dados do curso</b>
+    </p>
+    <div class="text-field-container">
+        <input id="curso" class="text-field"
+            type="text"
+            placeholder="Curso"
+            required
+            minlength="6"
+            maxlength="100"
+            name="curso"
+            #curso="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="polo" class="text-field"
+            type="text"
+            placeholder="Polo"
+            required
+            minlength="6"
+            maxlength="100"
+            name="polo"
+            #polo="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="semesterAtual" class="text-field"
+            type="text"
+            placeholder="Semestre atual"
+            required
+            minlength="6"
+            maxlength="100"
+            name="semesterAtual"
+            #semesterAtual="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="interesses" class="text-field"
+            type="text"
+            placeholder="Temas de interesse de pesquisa"
+            required
+            minlength="6"
+            maxlength="100"
+            name="interesses"
+            #interesses="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="habilidades" class="text-field"
+            type="text"
+            placeholder="Habilidades e competências"
+            required
+            minlength="6"
+            maxlength="100"
+            name="habilidades"
+            #habilidades="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="materiasCursando" class="text-field"
+            type="text"
+            placeholder="Matérias cursando atualmente"
+            required
+            minlength="6"
+            maxlength="100"
+            name="materiasCursando"
+            #materiasCursando="ngModel"
+            ngModel/>
+    </div>
+</form>

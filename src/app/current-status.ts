@@ -3,8 +3,16 @@ export class CurrentStatus {
   public static GROUP_NAME = "Univespers";
   public static PROJECT_NAME = "Univespers";
   public static CURRENT_YEAR = new Date().getFullYear();
-  public static CURRENT_VERSION = "1.3.2-alpha";
+  public static CURRENT_VERSION = "2.0.0-alpha";
 
-  constructor() {}
+  public static PRODUCTION = false;
+
+  public static DEBUG_MODE = true;
+  public static MOCK = {
+    AUTH: false,
+    PERFIL: true,
+    COLEGAS: false,
+    CHAT: true
+  };
 
 }

@@ -7,7 +7,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ColleagueResponse } from '../../endpoints/colleague-endpoint.service';
+import { ColegaResponse } from '../../features/colegas/colegas-endpoint.service';
+import { ColegaService } from 'src/app/features/colegas/colegas.service';
 
 @Component({
   selector: 'app-popup-dialog-mat',
@@ -30,27 +31,49 @@ import { ColleagueResponse } from '../../endpoints/colleague-endpoint.service';
 export class PopupDialogMatComponent {
   groupTitle = '';
   groupSearchControl = new FormControl('');
-  selectedUsers: ColleagueResponse[] = [];
+  selectedUsers: ColegaResponse[] = [];
+  allUsers: ColegaResponse[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<PopupDialogMatComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { users$: ColleagueResponse[] }
-  ) {}
+    private colegaservice: ColegaService,
+    @Inject(MAT_DIALOG_DATA) public data: { users$: ColegaResponse[] }
+  ) {
+    this.searchColegas("");
+  }
+
+  searchColegas(query: string) {
+    this.colegaservice.searchColegas(query, 10).subscribe({
+      next: (data) => {
+        this.allUsers = data.list.map(colega => {
+          return {
+            uid: colega.uid,
+            nome: colega.name,
+            curso: colega.course,
+            polo: colega.pole
+          };
+        });
+      },
+      error: (error) => {
+        // Error
+      }
+    });
+  }
 
   // NOVO: Função para exibir apenas o nome no input
-  displayFn(user: ColleagueResponse): string {
+  displayFn(user: ColegaResponse): string {
     return user ? user.nome : '';
   }
 
-  addUser(user: ColleagueResponse) {
-    if (!this.selectedUsers.find(u => u.uuid === user.uuid)) {
+  addUser(user: ColegaResponse) {
+    if (!this.selectedUsers.find(u => u.uid === user.uid)) {
       this.selectedUsers.push(user);
     }
     this.groupSearchControl.setValue('');
   }
 
-  removeUser(user: ColleagueResponse) {
-    this.selectedUsers = this.selectedUsers.filter(u => u.uuid !== user.uuid);
+  removeUser(user: ColegaResponse) {
+    this.selectedUsers = this.selectedUsers.filter(u => u.uid !== user.uid);
   }
 
   cancel() {

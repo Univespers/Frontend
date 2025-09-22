@@ -1,19 +1,20 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './pages/guest_domain/login/login.component';
-import { SigninComponent } from './pages/guest_domain/signin/signin.component';
-import { DashboardComponent } from './pages/student_domain/dashboard/dashboard.component';
-import { ColleaguesComponent } from './pages/student_domain/colleagues/colleagues.component';
-import { ProfileComponent } from './pages/student_domain/profile/profile.component';
-import { ProfileEditComponent } from './pages/student_domain/profile-edit/profile-edit.component';
-import { LogoutComponent } from './pages/student_domain/logout/logout.component';
-import { ChatComponent } from './pages/student_domain/chat/chat.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LoginComponent } from './pages/login/login.component';
+import { CadastroComponent } from './pages/cadastro/cadastro.component';
+import { ColegasComponent } from './pages/dashboard/colegas/colegas.component';
+import { PerfilComponent } from './pages/dashboard/perfil/perfil.component';
+import { PerfilEditComponent } from './pages/dashboard/perfil-edit/perfil-edit.component';
+import { ChatComponent } from './pages/dashboard/chat/chat.component';
+import { LogoutComponent } from './pages/logout/logout.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 import { routeGuard } from './pages/route.guard';
-import { studentAccessGuard } from './pages/student_domain/student-access.guard';
-import { guestAccessGuard } from './pages/guest_domain/guest-access.guard';
+import { estudanteAccessGuard } from './pages/estudante-access.guard';
+import { visitanteAccessGuard } from './pages/visitante-access.guard';
 import { unsavedChangesGuard } from './pages/unsaved-changes.guard';
+import { authResolver } from './features/auth/auth.resolver';
 
 export const routes: Routes = [
 
@@ -24,17 +25,17 @@ export const routes: Routes = [
   // Guest only
   { path: "", children: [
     { path: "login", component: LoginComponent },
-    { path: "cadastro", component: SigninComponent, canDeactivate: [ unsavedChangesGuard ] },
-  ], canActivateChild: [ guestAccessGuard ]},
+    { path: "cadastro", component: CadastroComponent, canDeactivate: [ unsavedChangesGuard ] },
+  ], resolve:{ authData: authResolver}, canActivateChild: [ visitanteAccessGuard ]},
 
   // Student only
   { path: "", component: DashboardComponent, children: [
-    { path: "colegas", component: ColleaguesComponent },
-    { path: "perfil", component: ProfileComponent },
-    { path: "perfil/editar", component: ProfileEditComponent, canDeactivate: [ unsavedChangesGuard ] },
-    { path: "logout", component: LogoutComponent },
+    { path: "perfil", component: PerfilComponent },
+    { path: "perfil/editar", component: PerfilEditComponent, canDeactivate: [ unsavedChangesGuard ] },
+    { path: "colegas", component: ColegasComponent },
     { path: "chat", component: ChatComponent },
-  ], canActivateChild: [ studentAccessGuard ]},
+    { path: "logout", component: LogoutComponent },
+  ], resolve:{ authData: authResolver}, canActivateChild: [ estudanteAccessGuard ]},
 
   // Not found page
   { path: "**", component: NotFoundComponent }

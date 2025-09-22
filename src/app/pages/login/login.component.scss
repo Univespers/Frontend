@@ -1,0 +1,106 @@
+@import "src/styles.scss";
+
+#main {
+    display: flex;
+    flex-direction: row; // Left-to-right
+    justify-content: center; // Center horizontally
+    align-items: center; // Center vertically
+
+    min-width: 100vw;
+    min-height: 100vh;
+    height: fit-content;
+    width: fit-content;
+    background-image: url("public/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    $horizontalPadding: 10px;
+    $verticalPadding: 15px;
+
+    app-loading {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #login-container {
+        width: 220px;
+        padding-inline: $horizontalPadding;
+        padding-bottom: $verticalPadding;
+
+        @include font-text-body;
+        color: $color-text-descriptive-dark;
+        background-color: rgba($color-background-secondary-dark, 0.7);
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-items: stretch;
+        }
+        img, input {
+            margin-bottom: $verticalPadding;
+        }
+        img {
+            pointer-events: none; // Undraggable image
+        }
+        input {
+            height: 30px;
+            padding-inline: $horizontalPadding;
+        }
+        .dashed-text-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-inline: -$horizontalPadding; // Reverses "#login-container" padding
+            margin-bottom: 10px;
+
+            hr {
+                flex-grow: 1;
+                border: none;
+                border-bottom: 2px solid rgba($color-background-secondary-light, 0.3);
+                height: 0px;
+            }
+            span {
+                margin-inline: 15px;
+            }
+        }
+        button {
+            height: 30px;
+            border: none;
+            color: $color-text-descriptive-dark;
+            background-color: transparent;
+            padding-inline: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            @include font-button;
+        }
+        button#login {
+            background-color: $color-button-primary;
+        }
+        button#login:hover {
+            background-color: $color-button-hover-primary;
+        }
+        button#login:active {
+            background-color: $color-button-active-primary;
+        }
+        button#forgot {
+            color: rgba($color-text-descriptive-dark, 0.9);
+        }
+        button#forgot:hover {
+            color: rgba($color-text-descriptive-dark, 1.0);
+        }
+        button#forgot:active {
+            color: rgba($color-text-descriptive-dark, 0.8);
+        }
+        button#cadastro {
+            background-color: $color-button-secondary;
+        }
+        button#cadastro:hover {
+            background-color: $color-button-hover-secondary;
+        }
+        button#cadastro:active {
+            background-color: $color-button-active-secondary;
+        }
+    }
+}

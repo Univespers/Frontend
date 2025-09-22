@@ -1,6 +1,6 @@
 import { CanDeactivateFn } from '@angular/router';
 
-import { RequiresSave } from 'src/app/utils/requires-save.interface';
+import { RequiresSave } from 'src/app/features/requires-save.interface';
 
 export const unsavedChangesGuard: CanDeactivateFn<RequiresSave> = (component) => {
   if (component.hasUnsavedChanges()) {

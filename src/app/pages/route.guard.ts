@@ -1,19 +1,19 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
-import { AuthService } from 'src/app/entities/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/auth.service';
 
 export const routeGuard: CanActivateFn = () => {
   const router = inject(Router);
   const auth = inject(AuthService);
 
   switch(true) {
-    case auth.isUserGuest():
+    case auth.isUserVisitante():
       router.navigate([ "/login" ]);
       return true;
 
-    case auth.isUserStudent():
-      router.navigate([ "/colegas" ]);
+    case auth.isUserEstudante():
+      router.navigate([ "/chat" ]);
       return true;
 
     default:

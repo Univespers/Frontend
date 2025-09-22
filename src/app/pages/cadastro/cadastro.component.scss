@@ -1,0 +1,93 @@
+@import "src/styles.scss";
+
+#main {
+    display: flex;
+    flex-direction: row; // Left-to-right
+    justify-content: center; // Center horizontally
+    align-items: start; // Center vertically
+
+    min-width: calc(100vw - (100vw - 100%)); // Chrome has scroll, which takes space
+    min-height: 100vh;
+    height: fit-content;
+    width: fit-content;
+    background-color: $color-background-primary;
+
+    $horizontalPadding: 50px;
+    $verticalPadding: 20px;
+
+    app-loading {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #side-logo {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 110px;
+        z-index: 1; // Side-logo's behind the content
+    }
+
+    #parent-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        z-index: 2; // Content's in front of the side-logo
+        margin-block: 40px;
+    }
+
+    #cadastro-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 50vw;
+        min-width: 550px;
+        padding-inline: $horizontalPadding;
+        padding-bottom: $verticalPadding;
+
+        @include font-text-body;
+        color: $color-text-body-light;
+        background-color: rgba($color-background-highlight, 0.8);
+
+        .header {
+            text-align: center;
+            padding-block: calc($verticalPadding / 2); // Increases height
+            width: calc(100% + $horizontalPadding * 2); // Reverses "#cadastro-container" padding
+
+            @include font-title-highlight;
+            color: $color-text-title-dark;
+            background-color: $color-background-secondary-dark;
+            margin-bottom: $verticalPadding;
+        }
+        app-stepper {
+            width: 80%; // 20% smaller
+        }
+        app-user-dados-form, app-user-contatos-form, app-user-curso-form {
+            width: 120%; // Larger than "stepper"= 20% bigger
+            margin-left: -10%; // Centered = (20 / 2)% to the left
+        }
+    }
+    button {
+        height: 30px;
+        border: none;
+        color: $color-text-descriptive-dark;
+        padding-inline: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 14px;
+        @include font-button;
+    }
+    button#cadastro {
+        background-color: $color-button-tertiary;
+        width: 100px;
+        margin-top: $verticalPadding;
+    }
+    button#cadastro:hover {
+        background-color: $color-button-hover-tertiary;
+    }
+    button#cadastro:active {
+        background-color: $color-button-active-tertiary;
+    }
+}
