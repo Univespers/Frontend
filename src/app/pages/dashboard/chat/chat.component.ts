@@ -255,13 +255,18 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   searchUsers(term: string): Observable<ColegaResponse[]> {
-    return of([
-      { uid: 'uid123', nome: 'Aluno1', curso: 'Curso1', polo: 'Polo1' },
-      { uid: 'uid456', nome: 'Aluno2', curso: 'Curso2', polo: 'Polo2' },
-      { uid: 'uid789', nome: 'Aluno3', curso: 'Curso3', polo: 'Polo2' },
-      { uid: 'uid999', nome: 'Aluno4', curso: 'Curso3', polo: 'Polo1' },
-      { uid: 'uid998', nome: 'Camila Cerqueira', curso: 'Curso1', polo: 'POLO CAMPO LIMPO' },
-    ]);
+    return this.colegasService.searchColegas(term, 20).pipe(
+      map(colegaList => {
+        return colegaList.list.map(colega => {
+          return {
+            uid: colega.uid,
+            nome: colega.name,
+            curso: colega.course,
+            polo: colega.pole
+          };
+        });
+      })
+    );
   }
 
   onUserSelected(user: ColegaResponse) {
