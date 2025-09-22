@@ -75,7 +75,7 @@ export class LoginComponent implements AfterContentInit {
       tap(() => {
         switch(true) {
           case this.authService.isUserEstudante():
-            this.redirectToColegas()
+            this.redirectToChat()
             break;
         }
         if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Login: DONE");
@@ -96,6 +96,10 @@ export class LoginComponent implements AfterContentInit {
   redirectToColegas() {
     if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Redirect to Colegas");
     this.router.navigate([ "/colegas" ]);
+  }
+  redirectToChat() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[LOGIN_PAGE] Redirect to Chat");
+    this.router.navigate([ "/chat" ]);
   }
 
 }

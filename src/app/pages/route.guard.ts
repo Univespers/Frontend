@@ -13,7 +13,7 @@ export const routeGuard: CanActivateFn = () => {
       return true;
 
     case auth.isUserEstudante():
-      router.navigate([ "/colegas" ]);
+      router.navigate([ "/chat" ]);
       return true;
 
     default:
