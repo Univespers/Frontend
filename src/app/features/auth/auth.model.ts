@@ -1,11 +1,12 @@
 export class Auth {
 
   constructor(
-    public type: AuthType
+    public type: AuthType,
+    public userUID: string
   ) {}
 
-  public static getAuth(authType: AuthType) {
-    return new Auth(authType);
+  public static getAuth(authType: AuthType, userUID: string) {
+    return new Auth(authType, userUID);
   }
 
 }

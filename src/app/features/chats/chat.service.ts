@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, from, map  } from 'rxjs';
+import { Observable, of, BehaviorSubject, from, map, switchMap, merge, forkJoin  } from 'rxjs';
 import { Firestore, collection, addDoc, doc, setDoc } from '@angular/fire/firestore';
 import { collectionData } from '@angular/fire/firestore';
 import { serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -27,7 +27,7 @@ export class ChatService {
       return this.conversations$; // ALTERADO: retorna BehaviorSubject para manter updates
     }
 
-    // 🔹 Firebase (exemplo futuro)
+    // 🔹 Firebase
     const conversationsRef = collection(this.firestore, `chats/${userId}/conversations`);
     return collectionData(conversationsRef, { idField: 'id' }) as Observable<ChatConversation[]>;
   }
@@ -57,7 +57,7 @@ export class ChatService {
     // 🔹 Firebase
     const messagesRef = collection(this.firestore, `chats/${userId}/conversations/${conversationId}/messages`);
     return from(addDoc(messagesRef, { ...message, timestamp: serverTimestamp() })).pipe(
-      map(data => {
+      map(() => {
         return { ...message, timestamp: serverTimestamp() };
       })
     );
@@ -78,10 +78,16 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const convRef = doc(collection(this.firestore, `chats/${userId}/conversations`));
-    return from(setDoc(convRef, { members, createdAt: serverTimestamp() })).pipe(
-      map(data => {
-        return { id: `conv_${Date.now()}`, messages: [], members, createdAt: serverTimestamp() };
+    const creationDate = serverTimestamp();
+    let userNewConvId: string;
+    const allMemberConvs = members.map(member => {
+      const convRef = doc(collection(this.firestore, `chats/${member.id}/conversations`));
+      if (member.id === userId) userNewConvId = convRef.id;
+      return from(setDoc(convRef, { members, createdAt: creationDate }));
+    });
+    return forkJoin(allMemberConvs).pipe(
+      map(() => {
+        return { id: userNewConvId, messages: [], members, createdAt: creationDate };
       })
     );
   }
@@ -96,7 +102,7 @@ export class ChatService {
       return of();
     }
 
-    // 🔹 Firebase futuro
+    // 🔹 Firebase
     const msgRef = doc(this.firestore, `chats/${userId}/conversations/${conversationId}/messages/${messageId}`);
     return from(updateDoc(msgRef, { read: true }));
   }
