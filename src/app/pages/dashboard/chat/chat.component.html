@@ -91,7 +91,7 @@
         >
           <div class="message-header">
             <strong>{{ getSenderPoloAndName(msg.senderId) }}</strong>
-            <small class="message-time">{{ msg.timestamp | date:'HH:mm' }}</small>
+            <small class="message-time">{{ msg.timestamp.toDate() | date:'HH:mm' }}</small>
           </div>
           <div class="message-content">
             <span>{{ msg.text }}</span>
