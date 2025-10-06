@@ -16,6 +16,7 @@ import { chatMock } from '../../../features/chats/chat-mock';
 import { ChatConversation, ChatMessage } from '../../../features/chats/chat.model';
 import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
 import { ColegaService } from 'src/app/features/colegas/colegas.service';
+import { AuthService } from 'src/app/features/auth/auth.service';
 
 interface MessageGroup {
   date: string;
@@ -90,6 +91,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   constructor(
     private colegasService: ColegaService,
     private chatService: ChatService,
+    private authService: AuthService,
     private dialog: MatDialog
   ) {}
 
@@ -101,7 +103,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     );
 
     // ✅ CORRETO: Observable do service
-    this.conversations$ = this.chatService.getConversations('uid123');
+    this.conversations$ = this.chatService.getConversations(this.authService.auth.userUID);
 
     this.filteredConversations$ = combineLatest([
       this.conversations$,
@@ -119,7 +121,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
           if (hasFilter) {
             if (filter === 'unread') {
-              passesFilter = conv.messages.some(msg => msg.senderId !== 'uid123' && !msg.read);
+              passesFilter = conv.messages.some(msg => msg.senderId !== this.authService.auth.userUID && !msg.read);
             } else if (filter === 'group') {
               passesFilter = conv.members.length > 2;
             }
@@ -151,16 +153,16 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.selectedConversation = conv;
 
     // NOVO: Marcar como lidas e atualizar contagem
-    const unreadMessages = conv.messages.filter(msg =>
-      msg.senderId !== 'uid123' && !msg.read
+    const unreadMessages = conv.messages?.filter(msg =>
+      msg.senderId !== this.authService.auth.userUID && !msg.read
     );
 
     // Marcar mensagens como lidas
-    unreadMessages.forEach(msg => {
-      this.chatService.markMessageAsRead('uid123', conv.id, msg.id).subscribe();
+    unreadMessages?.forEach(msg => {
+      this.chatService.markMessageAsRead(this.authService.auth.userUID, conv.id, msg.id).subscribe();
     });
 
-    this.messages$ = this.chatService.getMessages('uid123', conv.id);
+    this.messages$ = this.chatService.getMessages(this.authService.auth.userUID, conv.id);
 
     this.groupedMessages$ = this.messages$.pipe(
       map(messages => this.groupMessagesByDate(messages))
@@ -170,7 +172,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   getSenderPoloAndName(senderId: string): string {
-    if (senderId === 'uid123') {
+    if (senderId === this.authService.auth.userUID) {
       return 'Você';
     }
 
@@ -217,13 +219,13 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     const msg: ChatMessage = {
       id: `msg_${Date.now()}`,
-      senderId: 'uid123',
+      senderId: this.authService.auth.userUID,
       text: text,
       timestamp: new Date(),
       read: true
     };
 
-    this.chatService.sendMessage('uid123', this.selectedConversation.id, msg).subscribe(() => {
+    this.chatService.sendMessage(this.authService.auth.userUID, this.selectedConversation.id, msg).subscribe(() => {
       // ✅ FORÇA recarregamento da conversa atual
       this.openConversation(this.selectedConversation!);
       textarea.value = '';
@@ -236,13 +238,13 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     const msg: ChatMessage = {
       id: `msg_${Date.now()}`,
-      senderId: 'uid123',
+      senderId: this.authService.auth.userUID,
       text: text.trim(),
       timestamp: new Date(),
       read: true
     };
 
-    this.chatService.sendMessage('uid123', this.selectedConversation.id, msg).subscribe(() => {
+    this.chatService.sendMessage(this.authService.auth.userUID, this.selectedConversation.id, msg).subscribe(() => {
       // ✅ Também recarrega para o método antigo
       this.openConversation(this.selectedConversation!);
     });
@@ -272,34 +274,36 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   onUserSelected(user: ColegaResponse) {
     const existingConv = chatMock.conversations.find(c =>
       c.members.length === 2 &&
-      c.members.some(m => m.id === 'uid123') &&
+      c.members.some(m => m.id === this.authService.auth.userUID) &&
       c.members.some(m => m.id === user.uid)
     );
 
     if (existingConv) {
       this.openConversation(existingConv);
     } else {
-      this.chatService.createConversation('uid123', [
-        { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
-        { id: user.uid, nome: user.nome, polo: user.polo }
-      ]).subscribe(conv => {
-        this.selectedConversation = conv;
-        this.messages$ = of(conv.messages);
-        this.groupedMessages$ = this.messages$.pipe(
-          map(messages => this.groupMessagesByDate(messages))
-        );
-        this.shouldScrollToBottom = true;
+      this.colegasService.getColega(this.authService.auth.userUID).subscribe(estudante => {
+        this.chatService.createConversation(this.authService.auth.userUID, [
+          { id: this.authService.auth.userUID, nome: estudante.name, polo: estudante.pole },
+          { id: user.uid, nome: user.nome, polo: user.polo }
+        ]).subscribe(conv => {
+          this.selectedConversation = conv;
+          this.messages$ = of(conv.messages);
+          this.groupedMessages$ = this.messages$.pipe(
+            map(messages => this.groupMessagesByDate(messages))
+          );
+          this.shouldScrollToBottom = true;
+        });
       });
     }
   }
 
   getConversationTitle(conv: ChatConversation): string {
     if (conv.members.length === 2) {
-      const other = conv.members.find(m => m.id !== 'uid123');
+      const other = conv.members.find(m => m.id !== this.authService.auth.userUID);
       return other ? `[${other.polo || 'Sem polo'}] - ${other.nome}` : 'Conversa';
     } else {
       const names = conv.members
-        .filter(m => m.id !== 'uid123')
+        .filter(m => m.id !== this.authService.auth.userUID)
         .map(m => m.nome.split(' ')[0]);
 
       if (conv.title) {
@@ -311,7 +315,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   getLastMessage(conv: ChatConversation): string {
-    if (conv.messages.length === 0) return 'Sem mensagens ainda';
+    if (!conv.messages || conv.messages.length === 0) return 'Sem mensagens ainda';
     const last = conv.messages[conv.messages.length - 1];
     return last.text;
   }
@@ -320,7 +324,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   getUnreadCount(conv: ChatConversation): number {
     if (!conv.messages) return 0;
     return conv.messages.filter(msg =>
-      msg.senderId !== 'uid123' && !msg.read
+      msg.senderId !== this.authService.auth.userUID && !msg.read
     ).length;
   }
 
@@ -367,13 +371,15 @@ getLastMessageTime(conv: ChatConversation): string {
       data: {}
     }).afterClosed().subscribe(result => {
       if (result) {
-        const members = [
-          { id: 'uid123', nome: 'Aluno1', polo: 'Polo1' },
-          ...result.users.map((u: any) => ({ id: u.uid, nome: u.nome, polo: u.polo }))
-        ];
-        this.chatService.createConversation('uid123', members).subscribe(conv => {
-          conv.title = result.title;
-          this.openConversation(conv);
+        this.colegasService.getColega(this.authService.auth.userUID).subscribe(estudante => {
+          const members = [
+            { id: this.authService.auth.userUID, nome: estudante.name, polo: estudante.pole },
+            ...result.users.map((u: any) => ({ id: u.uid, nome: u.nome, polo: u.polo }))
+          ];
+          this.chatService.createConversation(this.authService.auth.userUID, members).subscribe(conv => {
+            conv.title = result.title;
+            this.openConversation(conv);
+          });
         });
       }
     });

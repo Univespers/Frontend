@@ -10,16 +10,16 @@ import { CurrentStatus } from 'src/app/current-status';
 })
 export class AuthService {
 
-  public auth: Auth = new Auth(AuthType.Visitante);
+  public auth: Auth = new Auth(AuthType.Visitante, "");
 
   constructor(
     private authEndpointService: AuthEndpointService
   ) {}
 
-  private updateAuthType(authType: AuthType) {
+  private updateAuth(authType: AuthType, userUID: string) {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Update Auth");
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] User auth type: " + authType);
-    this.auth = Auth.getAuth(authType); // Carrega Auth com o AuthType
+    this.auth = Auth.getAuth(authType, userUID); // Carrega Auth com o AuthType
   }
 
   // Auth types
@@ -35,7 +35,7 @@ export class AuthService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Cadastro");
     return this.authEndpointService.cadastro(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
-        tap(authType => this.updateAuthType(authType))
+        tap(authType => this.updateAuth(authType, userUID))
       )),
       map(authType => true) // Se sucesso
     );
@@ -46,7 +46,7 @@ export class AuthService {
     if(CurrentStatus.DEBUG_MODE) console.log("[AUTH_SERVICE] Call Login");
     return this.authEndpointService.login(email, password).pipe(
       switchMap(userUID => this.authEndpointService.getAuthType(userUID).pipe(
-        tap(authType => this.updateAuthType(authType))
+        tap(authType => this.updateAuth(authType, userUID))
       )),
       map(authType => true) // Se sucesso
     );
@@ -59,11 +59,11 @@ export class AuthService {
       first(),
       switchMap(userUID => {
         if(!userUID || userUID === true) {
-          this.updateAuthType(AuthType.Visitante);
+          this.updateAuth(AuthType.Visitante, "");
           return of("");
         }
         return this.authEndpointService.getAuthType(userUID).pipe(
-          tap(authType => this.updateAuthType(<AuthType>authType))
+          tap(authType => this.updateAuth(<AuthType>authType, userUID))
         )
       }),
       map(authType => true) // Se sucesso
@@ -74,7 +74,7 @@ export class AuthService {
   public logout(): Observable<boolean> {
     return this.authEndpointService.logout().pipe(
       tap(() => {
-        this.updateAuthType(AuthType.Visitante)
+        this.updateAuth(AuthType.Visitante, "")
       })
     );
   }

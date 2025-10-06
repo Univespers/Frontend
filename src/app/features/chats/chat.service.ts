@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, from, map  } from 'rxjs';
+import { Observable, of, BehaviorSubject, from, map, switchMap, merge, forkJoin  } from 'rxjs';
 import { Firestore, collection, addDoc, doc, setDoc } from '@angular/fire/firestore';
 import { collectionData } from '@angular/fire/firestore';
-import { serverTimestamp, updateDoc } from 'firebase/firestore';
+import { query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 
 import { ChatConversation, ChatMessage } from './chat.model';
 import { chatMock } from './chat-mock';
@@ -27,9 +27,17 @@ export class ChatService {
       return this.conversations$; // ALTERADO: retorna BehaviorSubject para manter updates
     }
 
-    // 🔹 Firebase (exemplo futuro)
-    const conversationsRef = collection(this.firestore, `chats/${userId}/conversations`);
-    return collectionData(conversationsRef, { idField: 'id' }) as Observable<ChatConversation[]>;
+    // 🔹 Firebase
+    const conversationsRef = query(collection(this.firestore, `conversations`), where(`membersSet.${userId}`, "!=", null));
+    return (collectionData(conversationsRef, { idField: 'id' }).pipe(
+      map(convs => {
+        return convs.map(conv => {
+          // De Set para Lista
+          conv["members"] = Object.values(conv["membersSet"]);
+          return conv;
+        });
+      })
+    )) as Observable<ChatConversation[]>;
   }
 
   /** Obtém mensagens de uma conversa */
@@ -40,7 +48,7 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const messagesRef = collection(this.firestore, `chats/${userId}/conversations/${conversationId}/messages`);
+    const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
     return collectionData(messagesRef, { idField: 'id' }) as Observable<ChatMessage[]>;
   }
 
@@ -55,9 +63,9 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const messagesRef = collection(this.firestore, `chats/${userId}/conversations/${conversationId}/messages`);
+    const messagesRef = collection(this.firestore, `conversations/${conversationId}/messages`);
     return from(addDoc(messagesRef, { ...message, timestamp: serverTimestamp() })).pipe(
-      map(data => {
+      map(() => {
         return { ...message, timestamp: serverTimestamp() };
       })
     );
@@ -78,10 +86,16 @@ export class ChatService {
     }
 
     // 🔹 Firebase
-    const convRef = doc(collection(this.firestore, `chats/${userId}/conversations`));
-    return from(setDoc(convRef, { members, createdAt: serverTimestamp() })).pipe(
-      map(data => {
-        return { id: `conv_${Date.now()}`, messages: [], members, createdAt: serverTimestamp() };
+    const creationDate = serverTimestamp();
+    const convRef = doc(collection(this.firestore, `conversations`));
+    // De Lista para Set
+    const membersSet = members.reduce((membersSet: {[index: string]:any}, member) => {
+      membersSet[member.id] = member;
+      return membersSet;
+    }, {});
+    return from(setDoc(convRef, { membersSet, createdAt: creationDate })).pipe(
+      map(() => {
+        return { id: convRef.id, messages: [], members, createdAt: creationDate };
       })
     );
   }
@@ -96,8 +110,8 @@ export class ChatService {
       return of();
     }
 
-    // 🔹 Firebase futuro
-    const msgRef = doc(this.firestore, `chats/${userId}/conversations/${conversationId}/messages/${messageId}`);
+    // 🔹 Firebase
+    const msgRef = doc(this.firestore, `conversations/${conversationId}/messages/${messageId}`);
     return from(updateDoc(msgRef, { read: true }));
   }
 
