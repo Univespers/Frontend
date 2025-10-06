@@ -29,12 +29,11 @@ export class ChatService {
 
     // 🔹 Firebase
     const conversationsRef = query(collection(this.firestore, `conversations`), where(`membersSet.${userId}`, "!=", null));
-    // return collectionData(conversationsRef, { idField: 'id' }) as Observable<(Modify<ChatConversation>)[]>;
     return (collectionData(conversationsRef, { idField: 'id' }).pipe(
       map(convs => {
         return convs.map(conv => {
           // De Set para Lista
-          conv["members"] = Array.from(conv["membersSet"], ([name, value]) => value);
+          conv["members"] = Object.values(conv["membersSet"]);
           return conv;
         });
       })
