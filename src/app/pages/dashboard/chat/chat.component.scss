@@ -10,7 +10,8 @@
 
 .chat-list {
   width: 40%;
-  margin: 10px;
+  margin: 10px !important;
+  padding-bottom: 10px;
   background: #afaeae;
   border-radius: 16px;
   overflow: hidden;
@@ -18,7 +19,8 @@
 
 .messages {
   width: 60%;
-  margin: 10px;
+  max-width: 95%;
+  margin: 10px !important;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -111,6 +113,12 @@
   margin: 4px 12px;
   padding: 10px 14px;
   background-color: #e3e3e3;
+  border: none;
+  display: block;
+  width: auto;
+  text-align: left;
+  width: calc(100% - (14px * 2));
+  font-size: 16px;
   border-radius: 10px;
   border-left: 4px solid transparent;
   border-bottom: 1px solid #ccc;

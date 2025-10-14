@@ -18,6 +18,10 @@ export class ButtonPopupMenuComponent {
 
   // Button text
   @Input() text: string = "";
+  @Input() description: string = "";
+
+  // Tab order
+  @Input() tabindex: number = 0;
 
   // Popup state
   isPopupShown = false;

@@ -1,23 +1,23 @@
-<div id="main">
-    <div id="sidebar">
-        <div id="logo-container" (click)="redirectToColegas()">
+<header id="main">
+    <nav id="sidebar">
+        <button title="Ir para tela principal" id="logo-container" (click)="redirectToColegas()" tabindex="1">
             <img id="logo" src="logo.png" alt="UNIVESPERS"/>
-        </div>
-        <div class="page-link" (click)="redirectToPerfil()" disabled>
+        </button>
+        <button class="page-link" (click)="redirectToPerfil()" disabled tabindex="2">
             <i class="item-icon fas fa-user fa-lg"></i>Perfil
-        </div>
-        <div class="page-link" (click)="redirectToColegas()" [class.active]="isActive('/colegas')">
+        </button>
+        <button class="page-link" (click)="redirectToColegas()" [class.active]="isActive('/colegas')" tabindex="3">
             <i class="item-icon fas fa-user-friends fa-flip-horizontal fa-lg"></i>Colegas
-        </div>
-        <div class="page-link" disabled>
+        </button>
+        <button class="page-link" disabled tabindex="4">
             <i class="item-icon fas fa-users-cog fa-flip-horizontal fa-lg"></i>Grupo
-        </div>
-        <div class="page-link" (click)="redirectToChat()" [class.active]="isActive('/chat')">
+        </button>
+        <button class="page-link" (click)="redirectToChat()" [class.active]="isActive('/chat')" tabindex="5">
             <i class="item-icon fas fa-comment-alt fa-lg"></i>Chat
-        </div>
-        <div class="page-link logout" (click)="redirectToLogout()">
+        </button>
+        <button class="page-link logout" (click)="redirectToLogout()" tabindex="6">
             <i class="item-icon fas fa-sign-out-alt fa-lg"></i>Logout
-        </div>
-    </div>
+        </button>
+    </nav>
     <router-outlet />
-</div>
+</header>

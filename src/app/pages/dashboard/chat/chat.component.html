@@ -9,6 +9,7 @@
           placeholder="Procurar usuário"
           [formControl]="searchControl"
           [matAutocomplete]="users"
+          tabindex="20"
         />
       </mat-form-field>
 
@@ -17,7 +18,7 @@
         [displayWith]="displayFn"
         (optionSelected)="onUserSelected($event.option.value)"
       >
-        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user" tabindex="21">
           {{ user.nome }}
         </mat-option>
       </mat-autocomplete>
@@ -25,7 +26,7 @@
 
     <!-- Botão para abrir popup de grupo -->
     <div class="new-group-container">
-      <button class="new-group-btn dark-button" (click)="openGroupPopup()">
+      <button class="new-group-btn dark-button" (click)="openGroupPopup()" tabindex="22">
         + Novo Grupo
       </button>
     </div>
@@ -34,20 +35,24 @@
     <div class="chat-filters">
       <button class="filter-btn"
               [class.active]="currentFilter==='all'"
-              (click)="setFilter('all')">Todos</button>
+              (click)="setFilter('all')"
+              tabindex="23">Todos</button>
       <button class="filter-btn"
               [class.active]="currentFilter==='unread'"
-              (click)="setFilter('unread')">Não lidos</button>
+              (click)="setFilter('unread')"
+              tabindex="24">Não lidos</button>
       <button class="filter-btn"
               [class.active]="currentFilter==='group'"
-              (click)="setFilter('group')">Grupos</button>
+              (click)="setFilter('group')"
+              tabindex="25">Grupos</button>
     </div>
 
-    <div
+    <button
       *ngFor="let conv of filteredConversations$ | async"
       (click)="openConversation(conv)"
       class="conversation-item"
       [class.selected]="selectedConversation?.id === conv.id"
+      tabindex="26"
     >
       <div class="conversation-content">
         <!-- Conteúdo principal à esquerda -->
@@ -69,7 +74,7 @@
           <small class="last-message-time">{{ getLastMessageTime(conv) }}</small>
         </div>
       </div>
-    </div>
+    </button>
   </div>
 
   <!-- Área de mensagens -->
@@ -102,7 +107,7 @@
 
     <div *ngIf="selectedConversation" class="message-input">
       <!-- NOVO: Botão de emoji -->
-      <button class="emoji-button" (click)="toggleEmojiPicker()">😊</button>
+      <button class="emoji-button" (click)="toggleEmojiPicker()" title="Teclado de emoji">😊</button>
 
       <textarea
         #newMsg
@@ -112,7 +117,7 @@
         class="message-textarea"
       ></textarea>
 
-      <button (click)="sendMessageFromTextarea(newMsg)">Enviar</button>
+      <button (click)="sendMessageFromTextarea(newMsg)" title="Enviar mensagem">Enviar</button>
 
       <!-- NOVO: Picker de emojis -->
       <div *ngIf="showEmojiPicker" class="emoji-picker">
