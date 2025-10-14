@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener, AfterContentInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +17,8 @@ import { ChatConversation, ChatMessage } from '../../../features/chats/chat.mode
 import { PopupDialogMatComponent } from '../../../components/popup-dialog-mat/popup-dialog-mat.component';
 import { ColegaService } from 'src/app/features/colegas/colegas.service';
 import { AuthService } from 'src/app/features/auth/auth.service';
+import { Theme, ThemeService } from 'src/app/features/theme.service';
+import { CurrentStatus } from 'src/app/current-status';
 
 interface MessageGroup {
   date: string;
@@ -42,7 +44,7 @@ interface MessageGroup {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit, AfterViewChecked {
+export class ChatComponent implements OnInit, AfterContentInit, AfterViewChecked {
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
@@ -89,11 +91,17 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   };
 
   constructor(
+    private themeService: ThemeService,
     private colegasService: ColegaService,
     private chatService: ChatService,
     private authService: AuthService,
     private dialog: MatDialog
   ) {}
+  
+  ngAfterContentInit() {
+    if(CurrentStatus.DEBUG_MODE) console.log("[CHAT_PAGE] Update theme");
+    this.themeService.setBackgroundTheme(Theme.Light);
+  }
 
   ngOnInit(): void {
     this.filteredUsers$ = this.searchControl.valueChanges.pipe(

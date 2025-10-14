@@ -107,7 +107,7 @@
 
     <div *ngIf="selectedConversation" class="message-input">
       <!-- NOVO: Botão de emoji -->
-      <button class="emoji-button" (click)="toggleEmojiPicker()">😊</button>
+      <button class="emoji-button" (click)="toggleEmojiPicker()" title="Teclado de emoji">😊</button>
 
       <textarea
         #newMsg
@@ -117,7 +117,7 @@
         class="message-textarea"
       ></textarea>
 
-      <button (click)="sendMessageFromTextarea(newMsg)">Enviar</button>
+      <button (click)="sendMessageFromTextarea(newMsg)" title="Enviar mensagem">Enviar</button>
 
       <!-- NOVO: Picker de emojis -->
       <div *ngIf="showEmojiPicker" class="emoji-picker">
