@@ -1,5 +1,5 @@
 <div id="popup-menu" (click)="stopEvent($event)">
-    <button id="action-button" (click)="togglePopup()">{{ text }}</button>
+    <button id="action-button" (click)="togglePopup()" [title]="description" [tabindex]="tabindex">{{ text }}</button>
     <div id="popup-background" [hidden]="!isPopupShown" (click)="hidePopup()"></div>
     <div id="contentContainer" [hidden]="!isPopupShown" (click)="hidePopup()" #contentContainer>
         <ng-content></ng-content>

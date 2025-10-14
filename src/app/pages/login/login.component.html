@@ -1,4 +1,4 @@
-<div id="main">
+<main id="main">
 
     @if(isLoading) {
         <app-loading [cover]="true"/>
@@ -16,17 +16,17 @@
                     name="userEmail"
                     #userEmail="ngModel"
                     ngModel/>
-                <div *ngIf="userEmail.touched && !userEmail.valid && userEmail.errors">
+                <!-- <div *ngIf="userEmail.touched && !userEmail.valid && userEmail.errors">
                     <div *ngIf="userEmail.errors['required']">
                         O email deve ser preenchido
                     </div>
                     <div *ngIf="userEmail.errors['minlength']">
-                        <!-- TODO: (Login) Error message -->
+                        <\!-- TODO: (Login) Error message --\>
                     </div>
                     <div *ngIf="userEmail.errors['maxlength']">
-                        <!-- TODO: (Login) Error message -->
+                        <\!-- TODO: (Login) Error message --\>
                     </div>
-                </div>
+                </div> -->
                 <input id="password"
                     type="password"
                     placeholder="Senha"
@@ -46,4 +46,4 @@
         </div>
     }
 
-</div>
+</main>

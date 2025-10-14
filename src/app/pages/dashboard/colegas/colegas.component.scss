@@ -123,9 +123,13 @@
                     border-radius: 10px; // Curved corners
                     border: 1px solid darken($color-background-highlight, 20%);
                     background-color: $color-background-highlight;
+                    padding: 0px;
+                    text-align: left;
 
                     .popup-item {
                         white-space: nowrap;
+                        list-style-type: none;
+                        margin: 0px;
                         padding: 5px;
                         @include font-text-body;
                         user-select: none;

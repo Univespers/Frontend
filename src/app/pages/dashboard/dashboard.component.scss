@@ -21,6 +21,8 @@
         #logo-container {
             user-select: none; // Undraggable
             cursor: pointer;
+            background-color: transparent;
+            border: none;
         }
         #logo {
             top: 0px;
@@ -35,6 +37,11 @@
             color: $color-background-highlight;
             user-select: none; // Undraggable
             cursor: pointer;
+            background-color: transparent;
+            border: none;
+            text-align: left;
+            height: 30px;
+            font-size : 16px;
 
             .item-icon {
                 width: 20px;

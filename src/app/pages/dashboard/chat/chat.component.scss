@@ -111,6 +111,11 @@
   margin: 4px 12px;
   padding: 10px 14px;
   background-color: #e3e3e3;
+  border: none;
+  display: block;
+  width: auto;
+  text-align: left;
+  width: calc(100% - (14px * 2));
   border-radius: 10px;
   border-left: 4px solid transparent;
   border-bottom: 1px solid #ccc;
