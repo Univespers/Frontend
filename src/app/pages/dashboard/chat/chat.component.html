@@ -92,7 +92,7 @@
         <div
           *ngFor="let msg of group.messages"
           class="message"
-          [ngClass]="msg.senderId === 'uuid123' ? 'mine' : 'their'"
+          [ngClass]="msg.senderId === authService.auth.userUID ? 'mine' : 'their'"
         >
           <div class="message-header">
             <strong>{{ getSenderPoloAndName(msg.senderId) }}</strong>

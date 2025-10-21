@@ -94,7 +94,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewChecked
     private themeService: ThemeService,
     private colegasService: ColegaService,
     private chatService: ChatService,
-    private authService: AuthService,
+    public authService: AuthService, // public = Visivel para o template
     private dialog: MatDialog
   ) {}
   
