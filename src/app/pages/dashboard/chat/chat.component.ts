@@ -426,7 +426,7 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewChecked
   }
 
   private formatMessageDate(timestamp: any): string {
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = timestamp ? timestamp.toDate ? timestamp.toDate() : new Date(timestamp) : new Date();
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
