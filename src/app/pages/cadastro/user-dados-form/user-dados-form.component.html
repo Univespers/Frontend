@@ -25,6 +25,28 @@
             ngModel/>
     </div>
     <div class="text-field-container">
+        <input id="senha" class="text-field"
+            type="password"
+            placeholder="Senha"
+            required
+            minlength="6"
+            maxlength="100"
+            name="senha"
+            #senha="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
+        <input id="senhaConfirmation" class="text-field"
+            type="password"
+            placeholder="Confirmar senha"
+            required
+            minlength="6"
+            maxlength="100"
+            name="senhaConfirmation"
+            #senhaConfirmation="ngModel"
+            ngModel/>
+    </div>
+    <div class="text-field-container">
         <input id="telefone" class="text-field"
             type="tel"
             placeholder="Telefone"
@@ -49,28 +71,6 @@
                 <label for="telIsWhatsapp"> WhatsApp</label>
             </div>
         </div>
-    </div>
-    <div class="text-field-container">
-        <input id="senha" class="text-field"
-            type="password"
-            placeholder="Senha"
-            required
-            minlength="6"
-            maxlength="100"
-            name="senha"
-            #senha="ngModel"
-            ngModel/>
-    </div>
-    <div class="text-field-container">
-        <input id="senhaConfirmation" class="text-field"
-            type="password"
-            placeholder="Confirmar senha"
-            required
-            minlength="6"
-            maxlength="100"
-            name="senhaConfirmation"
-            #senhaConfirmation="ngModel"
-            ngModel/>
     </div>
     <div class="text-field-container">
         <textarea id="descricao"
