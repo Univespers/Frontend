@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, from, map, switchMap, merge, forkJoin  } from 'rxjs';
+import { Observable, of, BehaviorSubject, from, map, switchMap, merge, forkJoin, mergeAll, tap  } from 'rxjs';
 import { Firestore, collection, addDoc, doc, setDoc } from '@angular/fire/firestore';
 import { collectionData } from '@angular/fire/firestore';
 import { query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
@@ -32,11 +32,24 @@ export class ChatService {
     return (collectionData(conversationsRef, { idField: 'id' }).pipe(
       map(convs => {
         return convs.map(conv => {
-          // De Set para Lista
+          // De Set para Listas
           conv["members"] = Object.values(conv["membersSet"]);
           return conv;
         });
-      })
+      }),
+      switchMap(convs => {
+        return [...convs].map(conv => {
+          return this.getMessages("", conv.id).pipe(
+            tap(msg => {
+              conv["messages"] = msg; // Preenche "messages"
+            }),
+            map(msg => {
+              return convs; // Retorna conversas
+            })
+          );
+        });
+      }),
+      mergeAll()
     )) as Observable<ChatConversation[]>;
   }
 
