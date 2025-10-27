@@ -280,27 +280,40 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewChecked
   }
 
   onUserSelected(user: ColegaResponse) {
-    const existingConv = chatMock.conversations.find(c =>
-      c.members.length === 2 &&
-      c.members.some(m => m.id === this.authService.auth.userUID) &&
-      c.members.some(m => m.id === user.uid)
-    );
-
-    if (existingConv) {
-      this.openConversation(existingConv);
+    let existingConv;
+    if (CurrentStatus.MOCK.CHAT) {
+      existingConv = chatMock.conversations.find(conv =>
+        conv.members.length === 2 &&
+        conv.members.some(m => m.id === this.authService.auth.userUID) &&
+        conv.members.some(m => m.id === user.uid)
+      );
+      if (existingConv) {
+        this.openConversation(existingConv);
+      }
     } else {
-      this.colegasService.getColega(this.authService.auth.userUID).subscribe(estudante => {
-        this.chatService.createConversation(this.authService.auth.userUID, [
-          { id: this.authService.auth.userUID, nome: estudante.name, polo: estudante.pole },
-          { id: user.uid, nome: user.nome, polo: user.polo }
-        ]).subscribe(conv => {
-          this.selectedConversation = conv;
-          this.messages$ = of(conv.messages);
-          this.groupedMessages$ = this.messages$.pipe(
-            map(messages => this.groupMessagesByDate(messages))
-          );
-          this.shouldScrollToBottom = true;
-        });
+      this.chatService.getConversations(this.authService.auth.userUID).subscribe(convs => {
+        existingConv = convs.find(conv =>
+          conv.members.length === 2 &&
+          conv.members.some(m => m.id === this.authService.auth.userUID) &&
+          conv.members.some(m => m.id === user.uid)
+        );
+        if (existingConv) {
+          this.openConversation(existingConv);
+        } else {
+          this.colegasService.getColega(this.authService.auth.userUID).subscribe(estudante => {
+            this.chatService.createConversation(this.authService.auth.userUID, [
+              { id: this.authService.auth.userUID, nome: estudante.name, polo: estudante.pole },
+              { id: user.uid, nome: user.nome, polo: user.polo }
+            ]).subscribe(conv => {
+              this.selectedConversation = conv;
+              this.messages$ = of(conv.messages);
+              this.groupedMessages$ = this.messages$.pipe(
+                map(messages => this.groupMessagesByDate(messages))
+              );
+              this.shouldScrollToBottom = true;
+            });
+          });
+        }
       });
     }
   }
@@ -342,34 +355,34 @@ export class ChatComponent implements OnInit, AfterContentInit, AfterViewChecked
   }
 
   // NOVO: Método para obter horário da última mensagem
-getLastMessageTime(conv: ChatConversation): string {
-  if (!conv.messages || conv.messages.length === 0) return '';
+  getLastMessageTime(conv: ChatConversation): string {
+    if (!conv.messages || conv.messages.length === 0) return '';
 
-  const lastMessage = conv.messages[conv.messages.length - 1];
-  const messageDate = lastMessage.timestamp.toDate ? lastMessage.timestamp.toDate() : new Date(lastMessage.timestamp);
-  const now = new Date();
+    const lastMessage = conv.messages[conv.messages.length - 1];
+    const messageDate = lastMessage.timestamp.toDate ? lastMessage.timestamp.toDate() : new Date(lastMessage.timestamp);
+    const now = new Date();
 
-  // Se for hoje, mostra apenas hora
-  if (messageDate.toDateString() === now.toDateString()) {
-    return messageDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    // Se for hoje, mostra apenas hora
+    if (messageDate.toDateString() === now.toDateString()) {
+      return messageDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Se for ontem, mostra "Ontem"
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (messageDate.toDateString() === yesterday.toDateString()) {
+      return 'Ontem';
+    }
+
+    // Se for até 7 dias atrás, mostra dia da semana
+    const diffDays = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays <= 7) {
+      return messageDate.toLocaleDateString('pt-BR', { weekday: 'short' });
+    }
+
+    // Mais de 7 dias: mostra data completa
+    return messageDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
   }
-
-  // Se for ontem, mostra "Ontem"
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
-  if (messageDate.toDateString() === yesterday.toDateString()) {
-    return 'Ontem';
-  }
-
-  // Se for até 7 dias atrás, mostra dia da semana
-  const diffDays = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays <= 7) {
-    return messageDate.toLocaleDateString('pt-BR', { weekday: 'short' });
-  }
-
-  // Mais de 7 dias: mostra data completa
-  return messageDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-}
 
   openGroupPopup() {
     this.dialog.open(PopupDialogMatComponent, {
